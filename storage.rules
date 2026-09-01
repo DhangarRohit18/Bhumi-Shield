@@ -1,0 +1,26 @@
+﻿rules_version = '2';
+service firebase.storage {
+  match /b/{bucket}/o {
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+    
+    // Field evidence uploads: geotagged photos, drone survey ortophotos, videos
+    match /evidence/{projectId}/{allPaths=**} {
+      allow read: if isAuthenticated();
+      allow write: if isAuthenticated() && request.resource.size < 50 * 1024 * 1024; // 50MB max
+    }
+    
+    // Official gazette notices, legal deeds, awards
+    match /documents/{projectId}/{allPaths=**} {
+      allow read: if isAuthenticated();
+      allow write: if isAuthenticated() && request.resource.size < 25 * 1024 * 1024; // 25MB max
+    }
+
+    // Public attachments
+    match /public/{allPaths=**} {
+      allow read: if true;
+      allow write: if isAuthenticated();
+    }
+  }
+}

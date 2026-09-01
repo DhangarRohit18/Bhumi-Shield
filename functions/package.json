@@ -1,0 +1,15 @@
+{
+  "name": "bhumi-shield-functions",
+  "scripts": {
+    "build": "tsc"
+  },
+  "main": "lib/index.js",
+  "dependencies": {
+    "firebase-functions": "^6.3.0"
+  },
+  "devDependencies": {
+    "firebase-admin": "^14.3.0",
+    "typescript": "^5.7.0"
+  },
+  "private": true
+}

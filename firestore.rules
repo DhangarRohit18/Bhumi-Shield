@@ -1,0 +1,252 @@
+﻿rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Helper functions for Role-Based Access Control
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+    
+    function getUserData() {
+      return get(/databases/$(database)/documents/users/$(request.auth.uid)).data;
+    }
+    
+    function getUserRole() {
+      return isAuthenticated() && (request.auth.token.role != null ? request.auth.token.role : getUserData().role);
+    }
+    
+    function isNationalAdmin() {
+      return getUserRole() == 'National Admin';
+    }
+    
+    function isStateAdmin() {
+      return getUserRole() == 'State Admin';
+    }
+    
+    function isDistrictOfficer() {
+      return getUserRole() == 'District Officer';
+    }
+    
+    function isAcquisitionOfficer() {
+      return getUserRole() == 'Acquisition Officer';
+    }
+    
+    function isFieldSupervisor() {
+      return getUserRole() == 'Field Supervisor';
+    }
+    
+    function isFieldOfficer() {
+      return getUserRole() == 'Field Officer';
+    }
+    
+    function isAuditor() {
+      return getUserRole() == 'Auditor';
+    }
+    
+    function isPublicUser() {
+      return getUserRole() == 'Public User';
+    }
+    
+    function isAnyAdmin() {
+      return isNationalAdmin() || isStateAdmin();
+    }
+    
+    function isOfficer() {
+      return isAnyAdmin() || isDistrictOfficer() || isAcquisitionOfficer();
+    }
+    
+    function isFieldStaff() {
+      return isFieldSupervisor() || isFieldOfficer();
+    }
+
+    // 1. Users collection
+    match /users/{userId} {
+      allow read: if isAuthenticated();
+      allow create: if isNationalAdmin() || request.auth.uid == userId;
+      allow update: if isNationalAdmin() || request.auth.uid == userId || (isStateAdmin() && resource.data.stateId == getUserData().stateId);
+      allow delete: if isNationalAdmin();
+    }
+
+    // 2. Roles & Permissions metadata
+    match /roles/{roleId} {
+      allow read: if isAuthenticated();
+      allow write: if isNationalAdmin();
+    }
+
+    // 3. Administrative Master Collections (States, Districts, Departments)
+    match /states/{stateId} {
+      allow read: if isAuthenticated();
+      allow write: if isNationalAdmin();
+    }
+    
+    match /districts/{districtId} {
+      allow read: if isAuthenticated();
+      allow write: if isAnyAdmin();
+    }
+    
+    match /departments/{deptId} {
+      allow read: if isAuthenticated();
+      allow write: if isAnyAdmin();
+    }
+
+    // 4. Projects & Villages
+    match /projects/{projectId} {
+      allow read: if true; // Public access for gazette notifications and transparency
+      allow create, update: if isOfficer();
+      allow delete: if isNationalAdmin();
+    }
+    
+    match /villages/{villageId} {
+      allow read: if isAuthenticated();
+      allow write: if isOfficer();
+    }
+
+    // 5. Parcels & Land Details
+    match /parcels/{parcelId} {
+      allow read: if isAuthenticated();
+      allow create, update: if isOfficer() || isFieldStaff();
+      allow delete: if isAnyAdmin();
+    }
+
+    // 6. Affected Families (PAFs) & Landowners
+    match /affected_families/{familyId} {
+      allow read: if isAuthenticated() && (isOfficer() || isFieldStaff() || isAuditor() || resource.data.primaryOwnerAadhaarHash == request.auth.uid || resource.data.userId == request.auth.uid);
+      allow write: if isOfficer();
+    }
+
+    // 7. Workflow Events & Statutory Progress (Sec 4, 11, 19, 23, etc.)
+    match /workflow_events/{eventId} {
+      allow read: if true;
+      allow create: if isOfficer() || isFieldSupervisor();
+      allow update, delete: if isNationalAdmin();
+    }
+
+    // 8. Tasks & Approvals
+    match /tasks/{taskId} {
+      allow read: if isAuthenticated();
+      allow create, update: if isOfficer() || isFieldSupervisor() || resource.data.assignedTo == request.auth.uid;
+      allow delete: if isAnyAdmin();
+    }
+    
+    match /approvals/{approvalId} {
+      allow read: if isAuthenticated();
+      allow create, update: if isOfficer();
+      allow delete: if isNationalAdmin();
+    }
+
+    // 9. Documents & Document Versions
+    match /documents/{docId} {
+      allow read: if isAuthenticated();
+      allow write: if isOfficer() || isFieldSupervisor();
+    }
+    
+    match /document_versions/{versionId} {
+      allow read: if isAuthenticated();
+      allow create: if isOfficer() || isFieldSupervisor();
+      allow update, delete: if isNationalAdmin();
+    }
+
+    // 10. Compensation & Disbursements
+    match /compensation/{compId} {
+      allow read: if isAuthenticated() && (isOfficer() || isAuditor() || resource.data.beneficiaryId == request.auth.uid);
+      allow write: if isOfficer();
+    }
+
+    // 11. Resettlement & Rehabilitation (R&R)
+    match /rr_cases/{rrId} {
+      allow read: if isAuthenticated();
+      allow write: if isOfficer();
+    }
+
+    // 12. Legal Cases & Tribunals
+    match /legal_cases/{caseId} {
+      allow read: if isAuthenticated();
+      allow write: if isOfficer() || isAuditor();
+    }
+
+    // 13. Grievances & Citizen Feedback
+    match /grievances/{grievanceId} {
+      allow read: if isAuthenticated() && (isOfficer() || isFieldStaff() || isAuditor() || resource.data.submittedBy == request.auth.uid);
+      allow create: if isAuthenticated();
+      allow update: if isOfficer() || isFieldStaff();
+      allow delete: if isAnyAdmin();
+    }
+
+    // 14. Field Visits & Field Evidence
+    match /field_visits/{visitId} {
+      allow read: if isAuthenticated();
+      allow write: if isOfficer() || isFieldStaff();
+    }
+    
+    match /field_evidence/{evidenceId} {
+      allow read: if isAuthenticated();
+      allow create, update: if isOfficer() || isFieldStaff();
+      allow delete: if isNationalAdmin();
+    }
+
+    // 15. QR Assets & IoT Devices/Events
+    match /qr_assets/{assetId} {
+      allow read: if isAuthenticated();
+      allow write: if isOfficer() || isFieldStaff();
+    }
+    
+    match /iot_devices/{devId} {
+      allow read: if isAuthenticated();
+      allow write: if isOfficer();
+    }
+    
+    match /iot_events/{evtId} {
+      allow read: if isAuthenticated();
+      allow create: if true; // Automated IoT gateway ingest
+      allow update, delete: if isNationalAdmin();
+    }
+
+    // 16. Intelligence & Governance: Bottlenecks, Dependencies, Predictions, Interventions, Simulations
+    match /bottlenecks/{bnId} {
+      allow read: if isAuthenticated();
+      allow write: if isOfficer() || isAuditor();
+    }
+    
+    match /dependencies/{depId} {
+      allow read: if isAuthenticated();
+      allow write: if isOfficer();
+    }
+    
+    match /predictions/{predId} {
+      allow read: if isAuthenticated();
+      allow write: if isOfficer() || isNationalAdmin();
+    }
+    
+    match /interventions/{intId} {
+      allow read: if isAuthenticated();
+      allow write: if isOfficer() || isAnyAdmin();
+    }
+    
+    match /simulations/{simId} {
+      allow read: if isAuthenticated();
+      allow write: if isOfficer() || isAnyAdmin();
+    }
+
+    // 17. Notifications
+    match /notifications/{notifId} {
+      allow read: if isAuthenticated() && (resource.data.userId == request.auth.uid || resource.data.targetRole == getUserRole());
+      allow create: if isAuthenticated();
+      allow update: if isAuthenticated() && resource.data.userId == request.auth.uid;
+      allow delete: if isAuthenticated() && resource.data.userId == request.auth.uid;
+    }
+
+    // 18. Audit Logs (Immutable Append-Only Ledger)
+    match /audit_logs/{logId} {
+      allow read: if isAuthenticated() && (isAuditor() || isNationalAdmin() || isStateAdmin());
+      allow create: if isAuthenticated(); // Appends audit records
+      allow update, delete: if false; // Strict immutability
+    }
+
+    // 19. Model Feedback
+    match /model_feedback/{fbId} {
+      allow read: if isAuthenticated() && (isOfficer() || isNationalAdmin());
+      allow create: if isAuthenticated();
+      allow update, delete: if isNationalAdmin();
+    }
+  }
+}
