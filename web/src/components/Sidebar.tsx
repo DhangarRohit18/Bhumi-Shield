@@ -94,19 +94,16 @@ export const Sidebar: React.FC<SidebarProps> = ({
             <button
               key={w.id}
               onClick={() => setActiveTab(w.id)}
-              className={`w-full flex items-start gap-3 p-3 rounded-xl text-left transition-all cursor-pointer ${
+              className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-left transition-all cursor-pointer ${
                 isActive
                   ? 'bg-[#BF7834] text-white border border-[#BF7834] shadow-md font-extrabold'
                   : 'text-[#64748B] hover:text-[#0F172A] hover:bg-[#FFFBEB]'
               }`}
             >
-              <div className={`p-1.5 rounded-lg shrink-0 mt-0.5 ${isActive ? 'bg-[#9A5A20] text-white' : 'bg-[#F1F5F9] text-[#475569]'}`}>
+              <div className={`p-1.5 rounded-lg shrink-0 ${isActive ? 'bg-[#9A5A20] text-white' : 'bg-[#F1F5F9] text-[#475569]'}`}>
                 <Icon className="w-4 h-4" />
               </div>
-              <div>
-                <p className={`text-xs font-extrabold leading-snug ${isActive ? 'text-white' : 'text-[#0F172A]'}`}>{w.name}</p>
-                <p className={`text-[10px] mt-0.5 leading-snug line-clamp-1 ${isActive ? 'text-amber-100' : 'text-[#64748B]'}`}>{w.description}</p>
-              </div>
+              <p className={`text-xs font-extrabold ${isActive ? 'text-white' : 'text-[#0F172A]'}`}>{w.name}</p>
             </button>
           );
         })}

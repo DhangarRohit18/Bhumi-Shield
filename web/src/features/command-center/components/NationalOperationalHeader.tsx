@@ -26,9 +26,6 @@ export const NationalOperationalHeader: React.FC<HeaderProps> = ({
           <h1 className="text-xl font-black tracking-tight text-[#0F172A]">
             National Command Center
           </h1>
-          <p className="text-xs text-[#64748B]">
-            Pan-India Corridor Monitoring • RFCTLARR Act (2013)
-          </p>
         </div>
 
         <div className="flex items-center gap-2">
