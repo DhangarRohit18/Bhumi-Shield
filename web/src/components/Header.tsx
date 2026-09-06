@@ -38,9 +38,6 @@ export const Header: React.FC<HeaderProps> = ({ onLogout }) => {
                 MoRTH Govt. of India
               </span>
             </div>
-            <p className="text-[11px] text-[#64748B] font-medium">
-              National Land Acquisition & Monitoring Platform
-            </p>
           </div>
         </div>
 
