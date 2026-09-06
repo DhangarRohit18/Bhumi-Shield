@@ -134,6 +134,7 @@ export const CommandCenter: React.FC = () => {
           parcels={filteredParcels}
           bottlenecks={filteredBottlenecks}
           iotDevices={allIoTDevices}
+          compensations={allCompensations}
           onSelectProject={(projectId) => setDrillDown((prev) => ({ ...prev, projectId }))}
           onSelectParcel={(parcelId) => setDrillDown((prev) => ({ ...prev, parcelId }))}
         />

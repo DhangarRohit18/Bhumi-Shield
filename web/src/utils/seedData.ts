@@ -1,4 +1,4 @@
-﻿import {
+import {
   projectService,
   parcelService,
   affectedFamilyService,
@@ -17,8 +17,10 @@
   districtService,
   villageService,
   departmentService,
+  officerWorkloadService,
 } from '../services/entities.service';
 import { auditService } from '../services/audit.service';
+import { calculateOfficerWorkloadScore } from './intelligenceCalculations';
 
 export async function seedBhumiShieldDemoData(logCallback?: (msg: string) => void) {
   const log = (msg: string) => {
@@ -316,7 +318,77 @@ export async function seedBhumiShieldDemoData(logCallback?: (msg: string) => voi
     ],
   }, 'pred-proj1-latest');
 
-  // 13. Audit Log Chronicle
+  // 13. Officer Workload Balancer Dataset (District Palghar vs District Thane)
+  log('Seeding Officer Workload Intelligence Dataset...');
+  await officerWorkloadService.create({
+    officerUid: 'off-mh-palghar-01',
+    officerName: 'Sanjay V. Patil (CALA Palghar)',
+    role: 'Acquisition Officer',
+    districtId: 'dist-palghar',
+    stateId: 'state-mh',
+    assignedCases: 48,
+    pendingCases: 38,
+    completedCases: 10,
+    overdueCases: 9,
+    averageResolutionDays: 24,
+    maxCapacity: 35,
+    complexityScore: 4.2,
+    calculatedWorkloadScore: calculateOfficerWorkloadScore(38, 9, 4.2, 35),
+    isAvailable: false,
+  }, 'off-mh-palghar-01');
+
+  await officerWorkloadService.create({
+    officerUid: 'off-mh-palghar-02',
+    officerName: 'Meera Deshmukh (SDO Palghar)',
+    role: 'Acquisition Officer',
+    districtId: 'dist-palghar',
+    stateId: 'state-mh',
+    assignedCases: 42,
+    pendingCases: 31,
+    completedCases: 11,
+    overdueCases: 7,
+    averageResolutionDays: 21,
+    maxCapacity: 35,
+    complexityScore: 3.8,
+    calculatedWorkloadScore: calculateOfficerWorkloadScore(31, 7, 3.8, 35),
+    isAvailable: false,
+  }, 'off-mh-palghar-02');
+
+  await officerWorkloadService.create({
+    officerUid: 'off-mh-thane-01',
+    officerName: 'Anand R. Shinde (CALA Thane)',
+    role: 'Acquisition Officer',
+    districtId: 'dist-thane',
+    stateId: 'state-mh',
+    assignedCases: 18,
+    pendingCases: 7,
+    completedCases: 11,
+    overdueCases: 1,
+    averageResolutionDays: 14,
+    maxCapacity: 35,
+    complexityScore: 2.1,
+    calculatedWorkloadScore: calculateOfficerWorkloadScore(7, 1, 2.1, 35),
+    isAvailable: true,
+  }, 'off-mh-thane-01');
+
+  await officerWorkloadService.create({
+    officerUid: 'off-mh-thane-02',
+    officerName: 'Pooja Kulkarni (SDO Thane)',
+    role: 'Acquisition Officer',
+    districtId: 'dist-thane',
+    stateId: 'state-mh',
+    assignedCases: 16,
+    pendingCases: 6,
+    completedCases: 10,
+    overdueCases: 0,
+    averageResolutionDays: 12,
+    maxCapacity: 35,
+    complexityScore: 2.0,
+    calculatedWorkloadScore: calculateOfficerWorkloadScore(6, 0, 2.0, 35),
+    isAvailable: true,
+  }, 'off-mh-thane-02');
+
+  // 14. Audit Log Chronicle
   log('Recording Immutable Audit Trail for National Command Center...');
   await auditService.logAction({
     targetCollection: 'system',

@@ -1,4 +1,4 @@
-﻿// BHUMI-SHIELD Domain & Firestore Schema Types (28+ Collections)
+// BHUMI-SHIELD Domain & Firestore Schema Types (28+ Collections)
 
 export type UserRole =
   | 'National Admin'
@@ -393,4 +393,68 @@ export interface ModelFeedback extends BaseEntity {
   actualDelayDays?: number;
   accuracyRating: 1 | 2 | 3 | 4 | 5;
   officerObservations: string;
+}
+
+// 32. officer_workload
+export interface OfficerWorkloadRecord extends BaseEntity {
+  officerUid: string;
+  officerName: string;
+  role: UserRole;
+  districtId: string;
+  stateId: string;
+  assignedCases: number;
+  pendingCases: number;
+  completedCases: number;
+  overdueCases: number;
+  averageResolutionDays: number;
+  maxCapacity: number;
+  complexityScore: number; // 1 to 5
+  calculatedWorkloadScore: number; // percentage 0 to 100+
+  isAvailable: boolean;
+}
+
+export interface WorkloadReassignmentPlan {
+  id: string;
+  sourceDistrictId: string;
+  targetDistrictId: string;
+  sourceOfficerUid: string;
+  sourceOfficerName: string;
+  targetOfficerUid: string;
+  targetOfficerName: string;
+  reassignedCasesCount: number;
+  caseIds: string[];
+  rationale: string;
+  preSourceLoadPct: number;
+  postSourceLoadPct: number;
+  preTargetLoadPct: number;
+  postTargetLoadPct: number;
+  projectedDelayReductionDays: number;
+  status: 'PROPOSED' | 'APPROVED' | 'REJECTED';
+}
+
+// 33. heatmap_intelligence
+export type HeatmapLayerType =
+  | 'DELAY_RISK'
+  | 'COMPENSATION_BURDEN'
+  | 'OWNERSHIP_COMPLEXITY'
+  | 'LITIGATION'
+  | 'RR_BURDEN'
+  | 'DOCUMENT_COMPLETENESS';
+
+export interface ParcelIntelligenceMetrics {
+  parcelId: string;
+  khasraNo: string;
+  delayRiskScore: number; // 0 to 100
+  delayRiskLevel: 'LOW' | 'MEDIUM' | 'HIGH' | 'CRITICAL';
+  compensationBurdenINR: number;
+  pendingCompensationINR: number;
+  ownershipCount: number;
+  ownershipConflict: boolean;
+  hasActiveLitigation: boolean;
+  litigationCaseNo?: string;
+  affectedFamiliesCount: number;
+  pendingRRCount: number;
+  documentCompletenessPct: number;
+  primaryRiskReason: string;
+  recommendedAction: string;
 }

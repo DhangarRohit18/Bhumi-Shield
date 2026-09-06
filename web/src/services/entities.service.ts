@@ -1,4 +1,4 @@
-﻿import { FirestoreGenericService } from './firestoreGeneric.service';
+import { FirestoreGenericService } from './firestoreGeneric.service';
 import {
   UserProfile,
   RoleDefinition,
@@ -30,6 +30,7 @@ import {
   SimulationRun,
   AppNotification,
   ModelFeedback,
+  OfficerWorkloadRecord,
 } from '../types';
 
 export const userService = new FirestoreGenericService<UserProfile>('users');
@@ -62,3 +63,4 @@ export const interventionService = new FirestoreGenericService<InterventionStrat
 export const simulationService = new FirestoreGenericService<SimulationRun>('simulations');
 export const notificationService = new FirestoreGenericService<AppNotification>('notifications');
 export const modelFeedbackService = new FirestoreGenericService<ModelFeedback>('model_feedback');
+export const officerWorkloadService = new FirestoreGenericService<OfficerWorkloadRecord>('officer_workloads');

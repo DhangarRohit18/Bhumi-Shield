@@ -5,20 +5,23 @@ import {
   bottleneckService,
   interventionService,
   projectService,
+  officerWorkloadService,
 } from '../../services/entities.service';
 import { DETECTED_DIAGNOSTIC_ISSUES } from './utils/diagnosticData';
 import { IssueDiagnosticCard } from './components/IssueDiagnosticCard';
 import { DependencyGraphView } from './components/DependencyGraphView';
 import { WhatIfSimulator } from './components/WhatIfSimulator';
-import { Brain, Network, Sliders, AlertTriangle, ShieldCheck, Zap } from 'lucide-react';
+import { WorkloadBalancer } from './components/WorkloadBalancer';
+import { Brain, Network, Sliders, AlertTriangle, ShieldCheck, Zap, Scale } from 'lucide-react';
 
 export const OperationsIntelligenceCenter: React.FC = () => {
   const { activeRole } = useAuth();
-  const [activeSubTab, setActiveSubTab] = useState<'diagnostics' | 'dependencies' | 'simulator'>('diagnostics');
+  const [activeSubTab, setActiveSubTab] = useState<'workload' | 'diagnostics' | 'dependencies' | 'simulator'>('workload');
   const [modelMode, setModelMode] = useState<'production' | 'prototype'>('production');
 
   const { data: allBottlenecks } = useFirestoreCollection(bottleneckService);
   const { data: allProjects } = useFirestoreCollection(projectService);
+  const { data: allOfficerWorkloads } = useFirestoreCollection(officerWorkloadService);
 
   return (
     <div className="flex flex-col min-h-screen bg-[#F8FAFC] text-[#0F172A] font-sans">
@@ -37,7 +40,7 @@ export const OperationsIntelligenceCenter: React.FC = () => {
                 </span>
               </div>
               <p className="text-xs text-[#64748B] mt-0.5 font-medium">
-                7-Layer Root Cause Diagnostics • Statutory Critical Path DAG • What-If Intervention Simulator
+                Officer Workload Balancer • 7-Layer Diagnostics • Statutory Critical Path DAG • What-If Simulator
               </p>
             </div>
           </div>
@@ -69,6 +72,18 @@ export const OperationsIntelligenceCenter: React.FC = () => {
 
         {/* Subtab Navigation */}
         <div className="flex space-x-2 pt-2 border-t border-[#E2E8F0]">
+          <button
+            onClick={() => setActiveSubTab('workload')}
+            className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs transition-all cursor-pointer ${
+              activeSubTab === 'workload'
+                ? 'bg-[#0F172A] text-white font-extrabold shadow-sm'
+                : 'text-[#64748B] hover:text-[#0F172A] hover:bg-[#F8FAFC] font-bold'
+            }`}
+          >
+            <Scale className="w-3.5 h-3.5" />
+            <span>Officer Workload Balancer</span>
+          </button>
+
           <button
             onClick={() => setActiveSubTab('diagnostics')}
             className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs transition-all cursor-pointer ${
@@ -109,6 +124,10 @@ export const OperationsIntelligenceCenter: React.FC = () => {
 
       {/* Subtab Content */}
       <div className="p-6 flex-1 space-y-6 bg-[#F8FAFC]">
+        {activeSubTab === 'workload' && (
+          <WorkloadBalancer officers={allOfficerWorkloads} />
+        )}
+
         {activeSubTab === 'diagnostics' && (
           <div className="space-y-4">
             <div className="flex justify-between items-center">

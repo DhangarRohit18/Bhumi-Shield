@@ -183,8 +183,14 @@ export const ProjectDigitalTwin: React.FC = () => {
               parcels={projectParcels}
               bottlenecks={projectBottlenecks}
               iotDevices={projectIoTDevices}
+              compensations={projectCompensations}
+              legalCases={projectLegalCases}
+              rrCases={projectRRCases}
+              documents={projectDocuments}
+              tasks={projectTasks}
               onSelectProject={() => {}}
               onSelectParcel={() => {}}
+              onOpenDigitalTwin={() => setActiveTab('parcels')}
             />
           </div>
         )}
