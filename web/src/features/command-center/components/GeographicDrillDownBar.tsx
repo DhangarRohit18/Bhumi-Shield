@@ -1,4 +1,4 @@
-﻿import React from 'react';
+import React from 'react';
 import { ChevronRight, Globe, Layers, Navigation, Home } from 'lucide-react';
 import { StateMaster, DistrictMaster, Project, Village, Parcel } from '../../../types';
 
@@ -56,22 +56,22 @@ export const GeographicDrillDownBar: React.FC<DrillDownProps> = ({
     : parcels;
 
   return (
-    <div className="bg-[#FAF8F5] border-b border-[#E2D9CC] px-6 py-2.5 flex flex-wrap items-center justify-between gap-3 text-xs">
-      <div className="flex items-center flex-wrap gap-1.5 font-medium text-slate-800">
+    <div className="bg-white border-b border-[#E2E8F0] px-6 py-3 flex flex-wrap items-center justify-between gap-3 text-xs font-sans shadow-sm">
+      <div className="flex items-center flex-wrap gap-1.5 font-medium text-[#0F172A]">
         <button
           onClick={() => onDrillDownChange({})}
           disabled={isLockedToState || isLockedToDistrict}
-          className={`flex items-center gap-1 px-2.5 py-1 rounded-lg transition-all ${
+          className={`flex items-center gap-1 px-3 py-1.5 rounded-xl transition-all ${
             !drillDown.stateId
-              ? 'bg-[#E2D9CC] text-[#4A3B2C] font-bold border border-[#C5B49E]'
-              : 'hover:bg-[#E2D9CC]/50 text-slate-700'
+              ? 'bg-[#0F172A] text-white font-bold border border-[#0F172A] shadow-sm'
+              : 'hover:bg-[#F1F5F9] text-[#475569]'
           }`}
         >
-          <Globe className="w-3.5 h-3.5 text-[#8C7355]" />
+          <Globe className="w-3.5 h-3.5" />
           <span>India (National)</span>
         </button>
 
-        <ChevronRight className="w-3.5 h-3.5 text-[#C5B49E] shrink-0" />
+        <ChevronRight className="w-3.5 h-3.5 text-[#CBD5E1] shrink-0" />
 
         <select
           value={drillDown.stateId || ''}
@@ -82,7 +82,7 @@ export const GeographicDrillDownBar: React.FC<DrillDownProps> = ({
           }
           disabled={isLockedToState || isLockedToDistrict}
           aria-label="State Selection"
-          className="bg-white border border-[#C5B49E] rounded-lg px-2.5 py-1 text-slate-900 focus:outline-none focus:border-[#8C7355] cursor-pointer"
+          className="bg-[#F8FAFC] border border-[#CBD5E1] rounded-xl px-2.5 py-1.5 text-[#0F172A] font-bold focus:outline-none focus:border-[#0F172A] cursor-pointer shadow-sm"
         >
           <option value="">All States ({states.length})</option>
           {states.map((s) => (
@@ -92,7 +92,7 @@ export const GeographicDrillDownBar: React.FC<DrillDownProps> = ({
           ))}
         </select>
 
-        <ChevronRight className="w-3.5 h-3.5 text-[#C5B49E] shrink-0" />
+        <ChevronRight className="w-3.5 h-3.5 text-[#CBD5E1] shrink-0" />
 
         <select
           value={drillDown.districtId || ''}
@@ -107,7 +107,7 @@ export const GeographicDrillDownBar: React.FC<DrillDownProps> = ({
           }
           disabled={isLockedToDistrict}
           aria-label="District Selection"
-          className="bg-white border border-[#C5B49E] rounded-lg px-2.5 py-1 text-slate-900 focus:outline-none focus:border-[#8C7355] cursor-pointer"
+          className="bg-[#F8FAFC] border border-[#CBD5E1] rounded-xl px-2.5 py-1.5 text-[#0F172A] font-bold focus:outline-none focus:border-[#0F172A] cursor-pointer shadow-sm"
         >
           <option value="">All Districts ({availableDistricts.length})</option>
           {availableDistricts.map((d) => (
@@ -117,7 +117,7 @@ export const GeographicDrillDownBar: React.FC<DrillDownProps> = ({
           ))}
         </select>
 
-        <ChevronRight className="w-3.5 h-3.5 text-[#C5B49E] shrink-0" />
+        <ChevronRight className="w-3.5 h-3.5 text-[#CBD5E1] shrink-0" />
 
         <select
           value={drillDown.projectId || ''}
@@ -130,7 +130,7 @@ export const GeographicDrillDownBar: React.FC<DrillDownProps> = ({
             })
           }
           aria-label="Project Selection"
-          className="bg-white border border-[#C5B49E] rounded-lg px-2.5 py-1 text-slate-900 focus:outline-none focus:border-[#8C7355] cursor-pointer max-w-[180px] truncate"
+          className="bg-[#F8FAFC] border border-[#CBD5E1] rounded-xl px-2.5 py-1.5 text-[#0F172A] font-bold focus:outline-none focus:border-[#0F172A] cursor-pointer max-w-[180px] truncate shadow-sm"
         >
           <option value="">All Corridors ({availableProjects.length})</option>
           {availableProjects.map((p) => (
@@ -140,7 +140,7 @@ export const GeographicDrillDownBar: React.FC<DrillDownProps> = ({
           ))}
         </select>
 
-        <ChevronRight className="w-3.5 h-3.5 text-[#C5B49E] shrink-0" />
+        <ChevronRight className="w-3.5 h-3.5 text-[#CBD5E1] shrink-0" />
 
         <select
           value={drillDown.villageId || ''}
@@ -152,7 +152,7 @@ export const GeographicDrillDownBar: React.FC<DrillDownProps> = ({
             })
           }
           aria-label="Village Selection"
-          className="bg-white border border-[#C5B49E] rounded-lg px-2.5 py-1 text-slate-900 focus:outline-none focus:border-[#8C7355] cursor-pointer"
+          className="bg-[#F8FAFC] border border-[#CBD5E1] rounded-xl px-2.5 py-1.5 text-[#0F172A] font-bold focus:outline-none focus:border-[#0F172A] cursor-pointer shadow-sm"
         >
           <option value="">All Villages ({availableVillages.length})</option>
           {availableVillages.map((v) => (
@@ -162,7 +162,7 @@ export const GeographicDrillDownBar: React.FC<DrillDownProps> = ({
           ))}
         </select>
 
-        <ChevronRight className="w-3.5 h-3.5 text-[#C5B49E] shrink-0" />
+        <ChevronRight className="w-3.5 h-3.5 text-[#CBD5E1] shrink-0" />
 
         <select
           value={drillDown.parcelId || ''}
@@ -173,7 +173,7 @@ export const GeographicDrillDownBar: React.FC<DrillDownProps> = ({
             })
           }
           aria-label="Parcel Selection"
-          className="bg-white border border-[#C5B49E] rounded-lg px-2.5 py-1 text-slate-900 focus:outline-none focus:border-[#8C7355] cursor-pointer font-mono"
+          className="bg-[#F8FAFC] border border-[#CBD5E1] rounded-xl px-2.5 py-1.5 text-[#0F172A] font-mono font-bold focus:outline-none focus:border-[#0F172A] cursor-pointer shadow-sm"
         >
           <option value="">All Parcels ({availableParcels.length})</option>
           {availableParcels.map((p) => (
@@ -187,7 +187,7 @@ export const GeographicDrillDownBar: React.FC<DrillDownProps> = ({
       {(drillDown.stateId || drillDown.districtId || drillDown.projectId || drillDown.villageId || drillDown.parcelId) && !isLockedToState && !isLockedToDistrict && (
         <button
           onClick={() => onDrillDownChange({})}
-          className="text-[11px] text-[#8C7355] hover:text-[#4A3B2C] font-bold underline flex items-center gap-1 cursor-pointer"
+          className="text-[11px] text-[#475569] hover:text-[#0F172A] font-bold underline flex items-center gap-1 cursor-pointer"
         >
           <span>Reset to India Overview</span>
         </button>

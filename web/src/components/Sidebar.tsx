@@ -1,4 +1,4 @@
-﻿import React from 'react';
+import React from 'react';
 import {
   Globe,
   Cpu,
@@ -60,8 +60,8 @@ export const Sidebar: React.FC<SidebarProps> = ({
     },
     {
       id: 'digital_twin',
-      name: 'Project Digital Twin',
-      description: 'Unified project workspace with 12 specialized tabs',
+      name: 'Bhumi-Chakra: Corridor Sentinel',
+      description: 'Micro-cadastral twin & 12 statutory lifecycle stages',
       icon: Cpu,
     },
     {
@@ -81,9 +81,9 @@ export const Sidebar: React.FC<SidebarProps> = ({
   const visibleWorkspaces = allWorkspaces.filter((w) => allowedWorkspaces.includes(w.id));
 
   return (
-    <aside className="w-full md:w-64 border-r border-[#E2D9CC] bg-[#FDFBF7] p-4 flex flex-col justify-between shrink-0 font-sans">
+    <aside className="w-full md:w-64 border-r border-[#E2E8F0] bg-white p-4 flex flex-col justify-between shrink-0 font-sans shadow-sm">
       <div className="space-y-2">
-        <p className="text-[10px] font-bold uppercase tracking-wider text-[#786C5E] px-3 mb-2">
+        <p className="text-[10px] font-bold uppercase tracking-wider text-[#64748B] px-3 mb-2">
           Authorized Workspaces ({activeRole})
         </p>
 
@@ -96,27 +96,27 @@ export const Sidebar: React.FC<SidebarProps> = ({
               onClick={() => setActiveTab(w.id)}
               className={`w-full flex items-start gap-3 p-3 rounded-xl text-left transition-all cursor-pointer ${
                 isActive
-                  ? 'bg-white text-slate-900 border border-[#C5B49E] shadow-sm ring-1 ring-[#C5B49E]/50 font-bold'
-                  : 'text-[#786C5E] hover:text-slate-900 hover:bg-[#FAF8F5]'
+                  ? 'bg-[#BF7834] text-white border border-[#BF7834] shadow-md font-extrabold'
+                  : 'text-[#64748B] hover:text-[#0F172A] hover:bg-[#FFFBEB]'
               }`}
             >
-              <div className={`p-1.5 rounded-lg shrink-0 mt-0.5 ${isActive ? 'bg-[#E2D9CC] text-[#4A3B2C]' : 'bg-[#FAF8F5] text-[#786C5E]'}`}>
+              <div className={`p-1.5 rounded-lg shrink-0 mt-0.5 ${isActive ? 'bg-[#9A5A20] text-white' : 'bg-[#F1F5F9] text-[#475569]'}`}>
                 <Icon className="w-4 h-4" />
               </div>
               <div>
-                <p className="text-xs font-bold text-slate-900 leading-snug">{w.name}</p>
-                <p className="text-[10px] text-[#786C5E] mt-0.5 leading-snug line-clamp-1">{w.description}</p>
+                <p className={`text-xs font-extrabold leading-snug ${isActive ? 'text-white' : 'text-[#0F172A]'}`}>{w.name}</p>
+                <p className={`text-[10px] mt-0.5 leading-snug line-clamp-1 ${isActive ? 'text-amber-100' : 'text-[#64748B]'}`}>{w.description}</p>
               </div>
             </button>
           );
         })}
       </div>
 
-      <div className="mt-8 pt-4 border-t border-[#E2D9CC] space-y-2">
+      <div className="mt-8 pt-4 border-t border-[#E2E8F0] space-y-2">
         <button
           onClick={handleSeed}
           disabled={seeding}
-          className="w-full flex items-center justify-between px-3 py-2 rounded-lg text-xs font-bold border border-[#C5B49E] text-[#4A3B2C] bg-[#E2D9CC] hover:bg-[#D5C7B7] transition-all cursor-pointer"
+          className="w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs font-bold border border-[#CBD5E1] text-[#0F172A] bg-[#F1F5F9] hover:bg-[#E2E8F0] transition-all cursor-pointer shadow-sm"
         >
           <span className="flex items-center gap-2">
             <Database className="w-3.5 h-3.5" />
@@ -125,9 +125,9 @@ export const Sidebar: React.FC<SidebarProps> = ({
           <RefreshCw className={`w-3.5 h-3.5 ${seeding ? 'animate-spin' : ''}`} />
         </button>
 
-        <div className="p-2.5 rounded-lg bg-white border border-[#E2D9CC] text-[11px] text-[#786C5E] flex items-center gap-2">
-          <Lock className="w-3.5 h-3.5 text-[#8C7355] shrink-0" />
-          <span>Active Role: <strong className="text-slate-900">{activeRole}</strong></span>
+        <div className="p-2.5 rounded-xl bg-[#F8FAFC] border border-[#E2E8F0] text-[11px] text-[#64748B] flex items-center gap-2">
+          <Lock className="w-3.5 h-3.5 text-[#475569] shrink-0" />
+          <span>Active Role: <strong className="text-[#0F172A]">{activeRole}</strong></span>
         </div>
       </div>
     </aside>

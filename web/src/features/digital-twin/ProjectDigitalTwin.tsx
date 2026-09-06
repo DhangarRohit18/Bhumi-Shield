@@ -1,4 +1,4 @@
-﻿import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useAuth } from '../../contexts/AuthContext';
 import { useFirestoreCollection } from '../../hooks/useFirestore';
 import {
@@ -125,7 +125,7 @@ export const ProjectDigitalTwin: React.FC = () => {
   };
 
   return (
-    <div className="flex flex-col min-h-screen bg-white text-slate-900">
+    <div className="flex flex-col min-h-screen bg-[#F8FAFC] text-[#0F172A]">
       <TwinHeader
         project={activeProject}
         projects={allProjects}
@@ -173,7 +173,7 @@ export const ProjectDigitalTwin: React.FC = () => {
           <div className="space-y-4">
             <div className="flex justify-between items-center">
               <div>
-                <h2 className="text-sm font-bold text-slate-900">Spatial Digital Twin & Corridor Bounds</h2>
+                <h2 className="text-sm font-bold text-[#2D2823]">Bhumi-Chakra: Spatial Sentinel & Corridor Bounds</h2>
                 <p className="text-xs text-[#786C5E]">Interactive GIS geometry, surveyed plot polygons & boundary telemetry</p>
               </div>
             </div>

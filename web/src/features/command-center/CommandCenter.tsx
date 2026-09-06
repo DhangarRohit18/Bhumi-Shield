@@ -1,4 +1,4 @@
-﻿import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo } from 'react';
 import { useAuth } from '../../contexts/AuthContext';
 import { useFirestoreCollection } from '../../hooks/useFirestore';
 import {
@@ -105,15 +105,14 @@ export const CommandCenter: React.FC = () => {
   }, [allCompensations]);
 
   return (
-    <div className="flex flex-col min-h-screen bg-white text-slate-900 font-sans">
+    <div className="flex flex-col min-h-screen bg-[#F8FAFC] text-[#0F172A] font-sans">
       <NationalOperationalHeader
         activeRole={activeRole}
         scopeLabel={scopeLabel}
-        totalProjects={filteredProjects.length}
-        criticalProjectsCount={filteredProjects.filter((p) => p.status === 'DELAYED' || p.status === 'LITIGATION').length}
-        openBottlenecksCount={filteredBottlenecks.length}
-        totalDisbursedCr={totalDisbursedCr}
-        recentChangesCount={allWorkflowEvents.length}
+        totalCorridors={filteredProjects.length}
+        triagedBottlenecks={filteredBottlenecks.length}
+        delayedProjects={filteredProjects.filter((p) => p.status === 'DELAYED' || p.status === 'LITIGATION').length}
+        totalDisbursedINR={totalDisbursedCr * 10000000}
       />
 
       <GeographicDrillDownBar
@@ -128,7 +127,7 @@ export const CommandCenter: React.FC = () => {
         isLockedToDistrict={isLockedToDistrict}
       />
 
-      <div className="p-6 space-y-6 bg-white">
+      <div className="p-6 space-y-6 bg-[#F8FAFC]">
         <GISCommandMap
           drillDown={drillDown}
           projects={filteredProjects}

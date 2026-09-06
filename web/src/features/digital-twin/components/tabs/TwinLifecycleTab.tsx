@@ -1,4 +1,4 @@
-﻿import React, { useState } from 'react';
+import React, { useState } from 'react';
 import { WorkflowEvent } from '../../../../types';
 import { CheckCircle2, Circle, Clock, ShieldCheck, ScrollText } from 'lucide-react';
 
@@ -41,21 +41,21 @@ export const TwinLifecycleTab: React.FC<LifecycleProps> = ({
 
   return (
     <div className="space-y-6 font-sans">
-      {/* Statutory Stage Advancement Action Banner in Pure Beige */}
+      {/* Statutory Stage Advancement Action Banner in Crisp White & Executive Slate */}
       {nextStageObj && (
-        <div className="p-5 rounded-2xl bg-[#FAF8F5] border border-[#E2D9CC] shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div className="p-5 rounded-2xl bg-white border border-[#E2E8F0] shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div className="flex items-center gap-3">
-            <div className="p-2.5 rounded-xl bg-[#E2D9CC] text-[#4A3B2C] border border-[#C5B49E]">
-              <ScrollText className="w-5 h-5 text-[#8C7355]" />
+            <div className="p-2.5 rounded-xl bg-[#0F172A] text-white border border-[#0F172A]">
+              <ScrollText className="w-5 h-5 text-white" />
             </div>
             <div>
-              <span className="text-[10px] uppercase font-bold text-[#8C7355] tracking-wider">
+              <span className="text-[10px] uppercase font-extrabold text-[#0F172A] tracking-wider">
                 Statutory Milestone Progression
               </span>
-              <h3 className="text-sm font-bold text-slate-900">
+              <h3 className="text-sm font-extrabold text-[#0F172A]">
                 Ready to advance to {nextStageObj.label}?
               </h3>
-              <p className="text-xs text-[#786C5E] mt-0.5">
+              <p className="text-xs text-[#64748B] mt-0.5 font-medium">
                 Will publish official administrative decree and trigger next statutory SLA window.
               </p>
             </div>
@@ -64,17 +64,17 @@ export const TwinLifecycleTab: React.FC<LifecycleProps> = ({
           <button
             onClick={handleAdvance}
             disabled={advancing}
-            className="px-4 py-2.5 rounded-xl bg-[#E2D9CC] hover:bg-[#D5C7B7] text-[#4A3B2C] border border-[#C5B49E] text-xs font-bold shadow-sm flex items-center justify-center gap-2 transition-all cursor-pointer"
+            className="px-4 py-2.5 rounded-xl bg-[#0F172A] hover:bg-[#1E293B] text-white border border-[#0F172A] text-xs font-bold shadow-sm flex items-center justify-center gap-2 transition-all cursor-pointer"
           >
-            <ShieldCheck className="w-4 h-4 text-[#4A3B2C]" />
+            <ShieldCheck className="w-4 h-4 text-white" />
             <span>{advancing ? 'Publishing Order...' : `Advance to ${nextStageObj.label}`}</span>
           </button>
         </div>
       )}
 
       {/* 8-Stage Visual Pipeline Grid */}
-      <div className="p-6 rounded-2xl bg-white border border-[#E2D9CC] shadow-sm space-y-4">
-        <h3 className="text-sm font-bold text-slate-900 border-b border-[#E2D9CC] pb-3">
+      <div className="p-6 rounded-2xl bg-white border border-[#E2E8F0] shadow-sm space-y-4">
+        <h3 className="text-sm font-extrabold text-[#0F172A] border-b border-[#E2E8F0] pb-3">
           RFCTLARR Act (2013) Statutory Lifecycle Sequence
         </h3>
 
@@ -88,35 +88,35 @@ export const TwinLifecycleTab: React.FC<LifecycleProps> = ({
                 key={stg.key}
                 className={`p-4 rounded-xl border transition-all ${
                   isCurrent
-                    ? 'bg-[#FAF8F5] border-[#8C7355] shadow-sm ring-1 ring-[#8C7355]/40'
+                    ? 'bg-[#F8FAFC] border-[#0F172A] shadow-sm ring-1 ring-[#0F172A]/40'
                     : isCompleted
-                    ? 'bg-white border-[#E2D9CC]'
-                    : 'bg-[#FAF8F5]/40 border-[#E2D9CC]/60 opacity-60'
+                    ? 'bg-white border-[#E2E8F0]'
+                    : 'bg-[#F8FAFC]/50 border-[#E2E8F0] opacity-60'
                 }`}
               >
                 <div className="flex items-center justify-between">
-                  <span className="text-[10px] font-mono font-bold bg-[#E2D9CC] text-[#4A3B2C] px-1.5 py-0.5 rounded border border-[#C5B49E]">
+                  <span className="text-[10px] font-mono font-bold bg-[#E2E8F0] text-[#0F172A] px-1.5 py-0.5 rounded border border-[#CBD5E1]">
                     {stg.actSec}
                   </span>
                   {isCompleted ? (
-                    <CheckCircle2 className="w-4 h-4 text-emerald-700" />
+                    <CheckCircle2 className="w-4 h-4 text-[#10B981]" />
                   ) : isCurrent ? (
-                    <Clock className="w-4 h-4 text-[#8C7355] animate-pulse" />
+                    <Clock className="w-4 h-4 text-[#0F172A] animate-pulse" />
                   ) : (
-                    <Circle className="w-4 h-4 text-[#C5B49E]" />
+                    <Circle className="w-4 h-4 text-[#94A3B8]" />
                   )}
                 </div>
 
-                <h4 className="text-xs font-bold text-slate-900 mt-2">{stg.label}</h4>
-                <p className="text-[11px] text-[#786C5E] mt-1 line-clamp-2 leading-relaxed">{stg.desc}</p>
+                <h4 className="text-xs font-bold text-[#0F172A] mt-2">{stg.label}</h4>
+                <p className="text-[11px] text-[#64748B] mt-1 line-clamp-2 leading-relaxed font-medium">{stg.desc}</p>
 
-                <div className="mt-3 pt-2 border-t border-[#E2D9CC] text-[10px]">
+                <div className="mt-3 pt-2 border-t border-[#E2E8F0] text-[10px]">
                   {isCompleted ? (
-                    <span className="text-emerald-800 font-bold">Statutory Milestone Concluded</span>
+                    <span className="text-[#0F172A] font-bold">Statutory Milestone Concluded</span>
                   ) : isCurrent ? (
-                    <span className="text-[#8C7355] font-bold">Active Statutory Phase</span>
+                    <span className="text-[#0F172A] font-extrabold">Active Statutory Phase</span>
                   ) : (
-                    <span className="text-slate-600">Pending Sequence</span>
+                    <span className="text-[#64748B]">Pending Sequence</span>
                   )}
                 </div>
               </div>

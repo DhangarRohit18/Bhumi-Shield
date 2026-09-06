@@ -45,7 +45,36 @@ class FieldOperationsService {
     });
   }
 
-  // 2. Fetch Dynamic Parcel Passport by QR Code
+  // 2. Stream IoT Devices
+  Stream<List<IoTDeviceModel>> streamIoTDevices() {
+    return _firestore.collection('iot_devices').snapshots().map((snap) {
+      if (snap.docs.isEmpty) {
+        return [
+          IoTDeviceModel(
+            id: 'iot-01',
+            deviceId: 'IOT-PILLAR-SN-901',
+            deviceType: 'DGPS Boundary Pillar Sentinel',
+            batteryPercentage: 94,
+            status: 'ONLINE',
+            lat: 19.6967,
+            lng: 72.7699,
+          ),
+          IoTDeviceModel(
+            id: 'iot-02',
+            deviceId: 'IOT-PILLAR-SN-902',
+            deviceType: 'DGPS Boundary Pillar Sentinel',
+            batteryPercentage: 88,
+            status: 'ONLINE',
+            lat: 19.7021,
+            lng: 72.7745,
+          ),
+        ];
+      }
+      return snap.docs.map((doc) => IoTDeviceModel.fromMap(doc.data(), doc.id)).toList();
+    });
+  }
+
+  // 3. Fetch Dynamic Parcel Passport by QR Code
   Future<ParcelPassport> getParcelPassportByQR(String qrCode) async {
     return ParcelPassport(
       khasraSurveyNo: '142/A-1',
@@ -59,44 +88,15 @@ class FieldOperationsService {
       basicValuationINR: 12500000,
       solatiumAmountINR: 12500000,
       totalAwardPayableINR: 27500000,
-      legalTitleStatus: 'Clean Title (No Court Injunction)',
-      currentStatutoryStage: 'Sec 19 Final Declaration Completed',
+      legalTitleStatus: 'Clear Statutory Title (Mutation Done)',
+      currentStatutoryStage: 'Section 19 Declaration (Gazette Issued)',
       qrAssetId: qrCode,
       lat: 19.6967,
       lng: 72.7699,
     );
   }
 
-  // 3. Meaningful IoT Events Stream
-  Stream<List<IoTEventModel>> streamIoTEvents(String projectId) {
-    return _firestore.collection('iot_events').snapshots().map((snap) {
-      if (snap.docs.isEmpty) {
-        return [
-          IoTEventModel(
-            id: 'evt-01',
-            deviceId: 'IOT-PILLAR-SN-901',
-            projectId: projectId,
-            eventType: 'LOCATION_UPDATED',
-            severity: 'INFO',
-            telemetryPayload: {'lat': 19.6967, 'lng': 72.7699, 'accuracyM': 0.12},
-            timestamp: DateTime.now().millisecondsSinceEpoch - 120000,
-          ),
-          IoTEventModel(
-            id: 'evt-02',
-            deviceId: 'IOT-PILLAR-SN-901',
-            projectId: projectId,
-            eventType: 'TAMPER_DETECTED',
-            severity: 'WARNING',
-            telemetryPayload: {'tiltAngleDeg': 1.4, 'vibrationG': 0.04, 'batteryV': 3.94},
-            timestamp: DateTime.now().millisecondsSinceEpoch - 360000,
-          ),
-        ];
-      }
-      return snap.docs.map((doc) => IoTEventModel.fromMap(doc.data(), doc.id)).toList();
-    });
-  }
-
-  // 4. Submit Evidence to Local Offline Queue
+  // 4. Queue Evidence Locally
   Future<EvidenceSubmission> queueOfflineEvidence({
     required String projectId,
     required String parcelId,

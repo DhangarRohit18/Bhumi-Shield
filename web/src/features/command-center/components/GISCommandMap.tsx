@@ -1,4 +1,4 @@
-﻿import React, { useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { MapContainer, TileLayer, Polyline, CircleMarker, Popup, useMap } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import { Project, Parcel, Bottleneck, IoTDevice } from '../../../types';
@@ -58,16 +58,16 @@ export const GISCommandMap: React.FC<MapProps> = ({
   onSelectParcel,
 }) => {
   return (
-    <div className="relative w-full h-[480px] rounded-2xl overflow-hidden border border-[#E2D9CC] shadow-sm bg-white">
+    <div className="relative w-full h-[480px] rounded-2xl overflow-hidden border border-[#E2E8F0] shadow-sm bg-white font-sans">
       {/* Map Floating Header Bar */}
-      <div className="absolute top-3 left-3 z-[1000] bg-white/95 backdrop-blur-sm border border-[#E2D9CC] rounded-xl px-3.5 py-2 text-xs shadow-sm pointer-events-none">
+      <div className="absolute top-3 left-3 z-[1000] bg-white/95 backdrop-blur-sm border border-[#E2E8F0] rounded-xl px-3.5 py-2 text-xs shadow-sm pointer-events-none">
         <div className="flex items-center gap-2">
-          <span className="w-2 h-2 rounded-full bg-[#8C7355] animate-ping" />
-          <span className="font-bold text-slate-900 uppercase tracking-wider text-[11px]">
-            GIS Cadastral & Corridor Layer
+          <span className="w-2 h-2 rounded-full bg-[#0F172A] animate-ping" />
+          <span className="font-extrabold text-[#0F172A] uppercase tracking-wider text-[11px]">
+            GIS Cadastral & Corridor Spatial Layer
           </span>
         </div>
-        <p className="text-[10px] text-[#786C5E] mt-0.5">
+        <p className="text-[10px] text-[#64748B] mt-0.5 font-medium">
           {STRATEGIC_CORRIDORS.length} National Alignments • {parcels.length} Cadastral Plots • {iotDevices.length} Sentinels
         </p>
       </div>
@@ -86,13 +86,13 @@ export const GISCommandMap: React.FC<MapProps> = ({
 
         <MapViewController drillDown={drillDown} parcels={parcels} />
 
-        {/* Strategic Corridor Polylines in Beige/Dark Sandstone & Earth tones */}
+        {/* Strategic Corridor Polylines in Deep Slate */}
         {STRATEGIC_CORRIDORS.map((corridor) => (
           <Polyline
             key={corridor.projectId}
             positions={corridor.points}
             pathOptions={{
-              color: corridor.projectId === 'proj-bullet-train-sec-3' ? '#8C7355' : '#4A3B2C',
+              color: corridor.projectId === 'proj-bullet-train-sec-3' ? '#0F172A' : '#334155',
               weight: 4,
               opacity: 0.9,
               dashArray: corridor.projectId === 'proj-eastern-dfc' ? '6, 8' : undefined,
@@ -102,15 +102,15 @@ export const GISCommandMap: React.FC<MapProps> = ({
             }}
           >
             <Popup>
-              <div className="p-1 text-slate-900 text-xs">
-                <p className="font-bold">{corridor.projectName}</p>
-                <p className="text-[10px] text-[#786C5E]">Click to focus corridor metrics</p>
+              <div className="p-1 text-[#0F172A] text-xs font-sans">
+                <p className="font-extrabold">{corridor.projectName}</p>
+                <p className="text-[10px] text-[#64748B]">Click to focus corridor metrics</p>
               </div>
             </Popup>
           </Polyline>
         ))}
 
-        {/* Cadastral Land Parcel Markers */}
+        {/* Cadastral Land Parcel Markers in Slate Tones */}
         {parcels.map((parcel) => {
           if (!parcel.geoCenter) return null;
           const isAwarded = parcel.status === 'AWARDED' || parcel.status === 'DISBURSED';
@@ -122,8 +122,8 @@ export const GISCommandMap: React.FC<MapProps> = ({
               center={[parcel.geoCenter.lat, parcel.geoCenter.lng]}
               radius={isSelected ? 10 : 7}
               pathOptions={{
-                color: isAwarded ? '#047857' : '#B45309',
-                fillColor: isAwarded ? '#047857' : '#B45309',
+                color: isAwarded ? '#0F172A' : '#475569',
+                fillColor: isAwarded ? '#0F172A' : '#64748B',
                 fillOpacity: 0.85,
                 weight: isSelected ? 3 : 1,
               }}
@@ -132,13 +132,13 @@ export const GISCommandMap: React.FC<MapProps> = ({
               }}
             >
               <Popup>
-                <div className="p-1 text-slate-900 text-xs">
-                  <p className="font-bold text-slate-900">Survey #{parcel.khasraSurveyNo}</p>
-                  <p className="text-[11px] text-slate-700">Area: {parcel.areaAcres} Acres ({parcel.landClassification})</p>
-                  <p className="text-[11px] font-bold text-emerald-800">
+                <div className="p-1 text-[#0F172A] text-xs font-sans">
+                  <p className="font-extrabold text-[#0F172A]">Survey #{parcel.khasraSurveyNo}</p>
+                  <p className="text-[11px] text-[#334155]">Area: {parcel.areaAcres} Acres ({parcel.landClassification})</p>
+                  <p className="text-[11px] font-bold text-[#0F172A]">
                     Award: ₹{(parcel.totalCompensationINR / 100000).toFixed(2)} Lakhs
                   </p>
-                  <p className="text-[10px] text-slate-600 font-mono">Status: {parcel.status}</p>
+                  <p className="text-[10px] text-[#64748B] font-mono">Status: {parcel.status}</p>
                 </div>
               </Popup>
             </CircleMarker>
@@ -152,16 +152,16 @@ export const GISCommandMap: React.FC<MapProps> = ({
             center={[dev.location.lat, dev.location.lng]}
             radius={5}
             pathOptions={{
-              color: dev.status === 'ONLINE' ? '#8C7355' : '#991B1B',
-              fillColor: dev.status === 'ONLINE' ? '#8C7355' : '#991B1B',
+              color: dev.status === 'ONLINE' ? '#0F172A' : '#64748B',
+              fillColor: dev.status === 'ONLINE' ? '#0F172A' : '#94A3B8',
               fillOpacity: 0.9,
               weight: 1,
             }}
           >
             <Popup>
-              <div className="p-1 text-slate-900 text-xs">
+              <div className="p-1 text-[#0F172A] text-xs font-sans">
                 <p className="font-bold">{dev.deviceId}</p>
-                <p className="text-[10px] text-slate-700">Battery: {dev.batteryPercentage}% • Status: {dev.status}</p>
+                <p className="text-[10px] text-[#64748B]">Battery: {dev.batteryPercentage}% • Status: {dev.status}</p>
               </div>
             </Popup>
           </CircleMarker>
@@ -169,18 +169,18 @@ export const GISCommandMap: React.FC<MapProps> = ({
       </MapContainer>
 
       {/* Map Legend Footer */}
-      <div className="absolute bottom-3 right-3 z-[1000] bg-white/95 backdrop-blur-sm border border-[#E2D9CC] rounded-xl px-3 py-2 text-[10px] shadow-sm flex items-center gap-3">
+      <div className="absolute bottom-3 right-3 z-[1000] bg-white/95 backdrop-blur-sm border border-[#E2E8F0] rounded-xl px-3 py-2 text-[10px] shadow-sm flex items-center gap-3">
         <div className="flex items-center gap-1.5">
-          <span className="w-2.5 h-2.5 rounded-full bg-emerald-700" />
-          <span className="text-slate-800 font-medium">Awarded Parcel</span>
+          <span className="w-2.5 h-2.5 rounded-full bg-[#0F172A]" />
+          <span className="text-[#0F172A] font-bold">Awarded Parcel</span>
         </div>
         <div className="flex items-center gap-1.5">
-          <span className="w-2.5 h-2.5 rounded-full bg-amber-600" />
-          <span className="text-slate-800 font-medium">Under Inquiry / Notification</span>
+          <span className="w-2.5 h-2.5 rounded-full bg-[#475569]" />
+          <span className="text-[#0F172A] font-bold">Under Inquiry</span>
         </div>
         <div className="flex items-center gap-1.5">
-          <span className="w-2.5 h-2.5 rounded-full bg-[#8C7355]" />
-          <span className="text-slate-800 font-medium">IoT Boundary Sentinel</span>
+          <span className="w-2.5 h-2.5 rounded-full bg-[#94A3B8]" />
+          <span className="text-[#0F172A] font-bold">IoT Sentinel</span>
         </div>
       </div>
     </div>

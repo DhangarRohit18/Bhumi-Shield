@@ -1,4 +1,4 @@
-﻿import React, { useState } from 'react';
+import React, { useState } from 'react';
 import { Shield, ArrowRight } from 'lucide-react';
 import { UserRole } from '../../types';
 import { useAuth } from '../../contexts/AuthContext';
@@ -32,7 +32,7 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ onLoginSuccess }) => {
     'Acquisition Officer': {
       title: 'Competent Authority for Land Acquisition (CALA / SDO)',
       desc: 'Section 19 declarations, Section 23/30 awards, solatium, and PFMS approvals.',
-      defaultTarget: 'Project Digital Twin',
+      defaultTarget: 'Bhumi-Chakra: Corridor Sentinel',
     },
     'Field Supervisor': {
       title: 'District Field Supervisor & Survey In-charge',
@@ -42,7 +42,7 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ onLoginSuccess }) => {
     'Field Officer': {
       title: 'Field Revenue Officer / Talathi',
       desc: 'Cadastral Khasra ground inspection, boundary pillar QR scanning & evidence ingest.',
-      defaultTarget: 'Project Digital Twin (Parcels)',
+      defaultTarget: 'Bhumi-Chakra (Parcels & Evidence)',
     },
     'Auditor': {
       title: 'Principal Auditor / Vigilance Officer',
@@ -63,36 +63,54 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ onLoginSuccess }) => {
   };
 
   return (
-    <div className="min-h-screen bg-white flex flex-col justify-between font-sans text-slate-900">
-      {/* Top Government Bar */}
-      <header className="border-b border-[#E2D9CC] bg-[#FDFBF7] px-8 py-4 flex items-center justify-between">
-        <div className="flex items-center gap-3">
-          <div className="p-2 rounded bg-[#E2D9CC] text-[#4A3B2C] border border-[#C5B49E]">
-            <Shield className="w-5 h-5 text-[#8C7355]" />
+    <div className="min-h-screen bg-[#F8FAFC] flex flex-col justify-between font-sans text-[#0F172A]">
+      {/* Bhoomi Rashi Official Top Utility Bar in Light Blue */}
+      <div className="bg-[#E0F2FE] text-[#0369A1] text-[11px] px-8 py-2 flex items-center justify-between border-b border-[#BAE6FD] font-semibold">
+        <div className="flex items-center gap-4">
+          <span className="flex items-center gap-1.5 text-[#0369A1]">
+            <span className="text-[#BF7834] font-extrabold">📞 Phone:</span> 011-23711824
+          </span>
+          <span className="hidden sm:flex items-center gap-1.5 text-[#0369A1]">
+            <span className="text-[#BF7834] font-extrabold">✉️ Support:</span> supportla-morth@gov.in
+          </span>
+        </div>
+        <div className="flex items-center gap-4 text-[#0284C7]">
+          <span className="font-extrabold text-[#0369A1]">Highway Land Register [Rule 4(1)]</span>
+          <span>•</span>
+          <span className="font-extrabold text-[#BF7834]">Ministry of Road Transport & Highways</span>
+        </div>
+      </div>
+
+      {/* Main Government Navbar Header */}
+      <header className="border-b border-[#E2E8F0] bg-white px-8 py-4 flex items-center justify-between shadow-sm">
+        <div className="flex items-center gap-3.5">
+          <div className="p-2.5 rounded-xl bg-[#BF7834] text-white shadow-sm">
+            <Shield className="w-6 h-6 text-white" />
           </div>
           <div>
             <div className="flex items-center gap-2">
-              <span className="font-extrabold text-base tracking-wider text-slate-900">BHUMI-SHIELD</span>
-              <span className="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded bg-[#E2D9CC] text-[#4A3B2C] border border-[#C5B49E]">
+              <span className="font-black text-xl tracking-wide text-[#BF7834]">BHUMI-SHIELD</span>
+              <span className="text-sm font-extrabold text-[#1E293B]">| Land Acquisition Portal</span>
+              <span className="text-[10px] uppercase font-extrabold tracking-wider px-2.5 py-0.5 rounded-full bg-[#FFFBEB] text-[#BF7834] border border-[#FDE68A]">
                 Govt. of India
               </span>
             </div>
-            <p className="text-[11px] text-[#786C5E] font-medium">
-              National Land Acquisition Mission & Statutory Sentinel Platform
+            <p className="text-[11px] text-[#64748B] font-semibold mt-0.5">
+              Ministry of Road Transport & Highways • National Land Acquisition Mission & Statutory Sentinel
             </p>
           </div>
         </div>
-        <span className="text-xs font-mono text-[#786C5E] font-semibold">
+        <span className="text-xs font-mono text-[#BF7834] font-black bg-[#FFFBEB] px-3 py-1 rounded-lg border border-[#FDE68A]">
           RFCTLARR ACT (2013) COMPLIANT
         </span>
       </header>
 
       {/* Login Card Container */}
-      <main className="flex-1 flex items-center justify-center p-6 bg-[#FAF8F5]">
-        <div className="max-w-xl w-full bg-white border border-[#E2D9CC] rounded-2xl p-8 shadow-sm space-y-6">
-          <div className="text-center space-y-1.5 border-b border-[#E2D9CC] pb-5">
-            <h1 className="text-xl font-bold text-slate-900">Official Portal Authentication</h1>
-            <p className="text-xs text-[#786C5E]">
+      <main className="flex-1 flex items-center justify-center p-6 bg-[#F8FAFC]">
+        <div className="max-w-xl w-full bg-white border border-[#E2E8F0] rounded-2xl p-8 shadow-md space-y-6">
+          <div className="text-center space-y-1.5 border-b border-[#E2E8F0] pb-5">
+            <h1 className="text-xl font-black text-[#BF7834]">Official Portal Authentication</h1>
+            <p className="text-xs text-[#64748B] font-semibold">
               Select your designated statutory government role to access your authorized workspace
             </p>
           </div>
@@ -100,14 +118,14 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ onLoginSuccess }) => {
           <form onSubmit={handleLogin} className="space-y-4 text-xs">
             {/* Role Selection */}
             <div>
-              <label className="block text-slate-700 font-bold mb-1.5 uppercase text-[10px] tracking-wider">
+              <label className="block text-[#1E293B] font-extrabold mb-1.5 uppercase text-[10px] tracking-wider">
                 Select Statutory Role & Clearance
               </label>
               <select
                 value={selectedRole}
                 onChange={(e) => setSelectedRole(e.target.value as UserRole)}
                 aria-label="Statutory Role Clearance"
-                className="w-full bg-[#FDFBF7] border border-[#C5B49E] rounded-xl px-3.5 py-2.5 text-xs font-bold text-slate-900 focus:outline-none focus:border-[#8C7355] cursor-pointer"
+                className="w-full bg-[#F8FAFC] border border-[#CBD5E1] rounded-xl px-3.5 py-2.5 text-xs font-extrabold text-[#0F172A] focus:outline-none focus:border-[#BF7834] cursor-pointer shadow-sm"
               >
                 {Object.keys(roleDescriptions).map((role) => (
                   <option key={role} value={role}>
@@ -118,21 +136,21 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ onLoginSuccess }) => {
             </div>
 
             {/* Role Description Callout */}
-            <div className="p-3.5 bg-[#FDFBF7] border border-[#E2D9CC] rounded-xl space-y-1">
-              <p className="font-bold text-slate-900 text-xs">
+            <div className="p-4 bg-[#FFFBEB] border border-[#FDE68A] rounded-xl space-y-1">
+              <p className="font-extrabold text-[#BF7834] text-xs">
                 {roleDescriptions[selectedRole].title}
               </p>
-              <p className="text-[11px] text-[#786C5E] leading-relaxed">
+              <p className="text-[11px] text-[#78350F] leading-relaxed font-medium">
                 {roleDescriptions[selectedRole].desc}
               </p>
-              <div className="pt-1.5 border-t border-[#E2D9CC] text-[10px] text-[#8C7355] font-semibold">
+              <div className="pt-2 border-t border-[#FDE68A] text-[10px] text-[#BF7834] font-extrabold">
                 Designated Landing: <strong>{roleDescriptions[selectedRole].defaultTarget}</strong>
               </div>
             </div>
 
             {/* Official ID */}
             <div>
-              <label className="block text-slate-700 font-bold mb-1 uppercase text-[10px] tracking-wider">
+              <label className="block text-[#1E293B] font-extrabold mb-1 uppercase text-[10px] tracking-wider">
                 Govt. Official ID / Aadhaar SSO Token
               </label>
               <input
@@ -140,13 +158,13 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ onLoginSuccess }) => {
                 required
                 value={officialId}
                 onChange={(e) => setOfficialId(e.target.value)}
-                className="w-full bg-[#FDFBF7] border border-[#C5B49E] rounded-xl px-3.5 py-2 text-xs font-mono text-slate-900 focus:outline-none focus:border-[#8C7355]"
+                className="w-full bg-[#F8FAFC] border border-[#CBD5E1] rounded-xl px-3.5 py-2.5 text-xs font-mono text-[#0F172A] font-bold focus:outline-none focus:border-[#BF7834]"
               />
             </div>
 
             {/* Access Passcode */}
             <div>
-              <label className="block text-slate-700 font-bold mb-1 uppercase text-[10px] tracking-wider">
+              <label className="block text-[#1E293B] font-extrabold mb-1 uppercase text-[10px] tracking-wider">
                 Digital Signature Certificate (DSC) Passcode
               </label>
               <input
@@ -154,7 +172,7 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ onLoginSuccess }) => {
                 required
                 value={accessKey}
                 onChange={(e) => setAccessKey(e.target.value)}
-                className="w-full bg-[#FDFBF7] border border-[#C5B49E] rounded-xl px-3.5 py-2 text-xs font-mono text-slate-900 focus:outline-none focus:border-[#8C7355]"
+                className="w-full bg-[#F8FAFC] border border-[#CBD5E1] rounded-xl px-3.5 py-2.5 text-xs font-mono text-[#0F172A] font-bold focus:outline-none focus:border-[#BF7834]"
               />
             </div>
 
@@ -162,10 +180,10 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ onLoginSuccess }) => {
             <div className="pt-3">
               <button
                 type="submit"
-                className="w-full py-3 bg-[#E2D9CC] hover:bg-[#D5C7B7] text-[#4A3B2C] border border-[#C5B49E] font-bold rounded-xl text-xs flex items-center justify-center gap-2 shadow-sm transition-all cursor-pointer"
+                className="w-full py-3.5 bg-[#BF7834] hover:bg-[#A36224] text-white font-extrabold rounded-xl text-xs flex items-center justify-center gap-2 shadow-md transition-all cursor-pointer"
               >
                 <span>Authenticate & Open Workspace</span>
-                <ArrowRight className="w-4 h-4 text-[#4A3B2C]" />
+                <ArrowRight className="w-4 h-4 text-white" />
               </button>
             </div>
           </form>
@@ -173,8 +191,8 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ onLoginSuccess }) => {
       </main>
 
       {/* Footer */}
-      <footer className="border-t border-[#E2E8F0] bg-white px-8 py-3 text-center text-[11px] text-[#786C5E]">
-        National Informatics Mission • Government of India • Secured with Firebase App Check & Digital Signatures
+      <footer className="border-t border-[#E2E8F0] bg-white px-8 py-3.5 text-center text-[11px] text-[#64748B] font-semibold shadow-sm">
+        Designed & Developed for Ministry of Road Transport & Highways (MoRTH) • Secured with Firebase App Check & Digital Signatures
       </footer>
     </div>
   );

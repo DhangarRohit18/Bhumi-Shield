@@ -97,11 +97,44 @@ class ParcelPassport {
   });
 }
 
+class IoTDeviceModel {
+  final String id;
+  final String deviceId;
+  final String deviceType;
+  final int batteryPercentage;
+  final String status;
+  final double lat;
+  final double lng;
+
+  IoTDeviceModel({
+    required this.id,
+    required this.deviceId,
+    required this.deviceType,
+    required this.batteryPercentage,
+    required this.status,
+    required this.lat,
+    required this.lng,
+  });
+
+  factory IoTDeviceModel.fromMap(Map<String, dynamic> map, String id) {
+    final loc = map['location'] as Map<String, dynamic>? ?? {};
+    return IoTDeviceModel(
+      id: id,
+      deviceId: map['deviceId'] ?? 'IOT-PILLAR-SN-901',
+      deviceType: map['deviceType'] ?? 'DGPS Boundary Pillar Sentinel',
+      batteryPercentage: map['batteryPercentage'] ?? 94,
+      status: map['status'] ?? 'ONLINE',
+      lat: (loc['lat'] as num?)?.toDouble() ?? 19.6967,
+      lng: (loc['lng'] as num?)?.toDouble() ?? 72.7699,
+    );
+  }
+}
+
 class IoTEventModel {
   final String id;
   final String deviceId;
   final String projectId;
-  final String eventType; // LOCATION_UPDATED, MOVEMENT_DETECTED, TAMPER_DETECTED, DEVICE_OFFLINE, FIELD_EVENT
+  final String eventType;
   final String severity;
   final Map<String, dynamic> telemetryPayload;
   final int timestamp;

@@ -1,4 +1,4 @@
-﻿import React, { useState } from 'react';
+import React, { useState } from 'react';
 import { useAuth } from './contexts/AuthContext';
 import { seedBhumiShieldDemoData } from './utils/seedData';
 import { Header } from './components/Header';
@@ -57,35 +57,33 @@ export const App: React.FC = () => {
 
   // 2. Once authenticated, render Authorized Workspace
   return (
-    <div className="min-h-screen bg-white text-slate-900 flex flex-col font-sans">
-      {/* Global Government Header with Logout Button */}
-      <Header onLogout={handleLogout} />
+    <div className="flex h-screen bg-[#F8FAFC] text-[#0F172A] overflow-hidden font-sans">
+      <Sidebar
+        activeTab={activeTab}
+        setActiveTab={setActiveTab}
+        seeding={seeding}
+        handleSeed={handleSeed}
+      />
 
-      {/* Synthetic Data Evaluation Banner in Restrained Pure Beige */}
-      <div className="bg-[#E2D9CC] border-b border-[#C5B49E] px-6 py-1.5 flex items-center justify-between text-[11px] text-[#4A3B2C] font-semibold">
-        <div className="flex items-center gap-2">
-          <span className="w-2 h-2 rounded-full bg-[#8C7355] animate-pulse" />
-          <span>BHUMI-SHIELD PLATFORM ENVIRONMENT • EVALUATION & FIELD SENTINEL DATASET ACTIVE</span>
+      <div className="flex-1 flex flex-col min-w-0 overflow-hidden bg-[#F8FAFC]">
+        <Header onLogout={handleLogout} />
+
+        {/* Synthetic Data Evaluation Banner in Light Blue */}
+        <div className="bg-[#E0F2FE] border-b border-[#BAE6FD] px-6 py-1.5 flex items-center justify-between text-[11px] text-[#0369A1] font-bold shadow-sm">
+          <div className="flex items-center gap-2">
+            <span className="w-2 h-2 rounded-full bg-[#10B981] animate-pulse" />
+            <span>BHUMI-SHIELD PLATFORM ENVIRONMENT • EVALUATION & FIELD SENTINEL DATASET ACTIVE</span>
+          </div>
+          <span className="font-mono text-[10px] text-[#0284C7] font-extrabold">RFCTLARR (2013) STATUTORY PROTOCOL</span>
         </div>
-        <span className="font-mono text-[10px]">RFCTLARR (2013) STATUTORY PROTOCOL</span>
-      </div>
 
-      {seedNotification && (
-        <div className="bg-[#FDFBF7] border-b border-[#E2D9CC] px-6 py-2 text-xs font-semibold text-[#4A3B2C] flex items-center justify-between">
-          <span>{seedNotification}</span>
-        </div>
-      )}
+        {seedNotification && (
+          <div className="bg-white border-b border-[#E2E8F0] px-6 py-2 text-xs font-bold text-[#0F172A] flex items-center justify-between shadow-sm">
+            <span>{seedNotification}</span>
+          </div>
+        )}
 
-      {/* Main Workspace Layout */}
-      <div className="flex-1 flex flex-col md:flex-row">
-        <Sidebar
-          activeTab={activeTab}
-          setActiveTab={setActiveTab}
-          seeding={seeding}
-          handleSeed={handleSeed}
-        />
-
-        <main className="flex-1 overflow-y-auto bg-white">
+        <main className="flex-1 overflow-y-auto bg-[#F8FAFC] p-4">
           {activeTab === 'command_center' && <CommandCenter />}
           {activeTab === 'digital_twin' && <ProjectDigitalTwin />}
           {activeTab === 'ops_intelligence' && <OperationsIntelligenceCenter />}

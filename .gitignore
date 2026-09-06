@@ -8,3 +8,6 @@ build
 .flutter-plugins
 .flutter-plugins-dependencies
 service-account.json
+
+releases/bhumi-shield-field-sentinel.apk
+

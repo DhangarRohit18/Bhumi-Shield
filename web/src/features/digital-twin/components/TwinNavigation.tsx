@@ -1,4 +1,4 @@
-﻿import React from 'react';
+import React from 'react';
 import {
   LayoutDashboard,
   GitBranch,
@@ -82,8 +82,8 @@ export const TwinNavigation: React.FC<TwinNavProps> = ({
   const visibleTabs = allTabs.filter((t) => allowedTabs.includes(t.id));
 
   return (
-    <div className="bg-[#FAF8F5] border-b border-[#E2D9CC] px-6 overflow-x-auto font-sans">
-      <div className="flex space-x-1 py-2 min-w-max">
+    <div className="bg-white border-b border-[#E2E8F0] px-4 py-1.5 font-sans overflow-x-auto">
+      <div className="flex items-center gap-1.5 min-w-max">
         {visibleTabs.map((t) => {
           const Icon = t.icon;
           const isActive = activeTab === t.id;
@@ -91,18 +91,18 @@ export const TwinNavigation: React.FC<TwinNavProps> = ({
             <button
               key={t.id}
               onClick={() => onTabChange(t.id)}
-              className={`flex items-center gap-2 px-3 py-2 rounded-xl text-xs font-semibold transition-all cursor-pointer ${
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
                 isActive
-                  ? 'bg-[#E2D9CC] text-[#4A3B2C] border border-[#C5B49E] shadow-sm font-bold'
-                  : 'text-[#786C5E] hover:text-slate-900 hover:bg-white'
+                  ? 'bg-[#0F172A] text-white shadow-sm'
+                  : 'text-[#64748B] hover:text-[#0F172A] hover:bg-[#F1F5F9]'
               }`}
             >
-              <Icon className={`w-3.5 h-3.5 ${isActive ? 'text-[#8C7355]' : 'text-[#786C5E]'}`} />
+              <Icon className={`w-3.5 h-3.5 ${isActive ? 'text-white' : 'text-[#64748B]'}`} />
               <span>{t.name}</span>
               {t.count !== undefined && (
                 <span
-                  className={`text-[10px] font-mono px-1.5 py-0.2 rounded font-bold ${
-                    isActive ? 'bg-white text-[#4A3B2C] border border-[#C5B49E]' : 'bg-[#E2D9CC]/60 text-slate-700'
+                  className={`text-[10px] font-mono px-2 py-0.5 rounded-full font-bold ${
+                    isActive ? 'bg-[#1E293B] text-white' : 'bg-[#F1F5F9] text-[#0F172A] border border-[#CBD5E1]'
                   }`}
                 >
                   {t.count}
