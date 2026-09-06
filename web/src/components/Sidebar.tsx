@@ -54,26 +54,26 @@ export const Sidebar: React.FC<SidebarProps> = ({
   }[] = [
     {
       id: 'command_center',
-      name: 'National Command Center',
-      description: 'National overview, GIS corridors & drill-down',
+      name: 'Command Center',
+      description: 'Corridor GIS & Macro Overview',
       icon: Globe,
     },
     {
       id: 'digital_twin',
-      name: 'Bhumi-Chakra: Corridor Sentinel',
-      description: 'Micro-cadastral twin & 12 statutory lifecycle stages',
+      name: 'Digital Twin',
+      description: 'Cadastral Plots & Sec 30 Awards',
       icon: Cpu,
     },
     {
       id: 'ops_intelligence',
-      name: 'Operations & Intelligence',
-      description: '7-layer diagnostics, DAG critical path & What-If',
+      name: 'Interventions',
+      description: 'Root-Cause Diagnostics & What-If',
       icon: Brain,
     },
     {
       id: 'admin',
-      name: 'Administration & Security',
-      description: 'Master RBAC, SLA rules, PII protection & audit',
+      name: 'Audit & Security',
+      description: 'SHA-256 Ledger & Access Control',
       icon: Shield,
     },
   ];
@@ -81,10 +81,10 @@ export const Sidebar: React.FC<SidebarProps> = ({
   const visibleWorkspaces = allWorkspaces.filter((w) => allowedWorkspaces.includes(w.id));
 
   return (
-    <aside className="w-full md:w-64 border-r border-[#E2E8F0] bg-white p-4 flex flex-col justify-between shrink-0 font-sans shadow-sm">
+    <aside className="w-full md:w-60 border-r border-[#E2E8F0] bg-white p-4 flex flex-col justify-between shrink-0 font-sans shadow-sm">
       <div className="space-y-2">
         <p className="text-[10px] font-bold uppercase tracking-wider text-[#64748B] px-3 mb-2">
-          Authorized Workspaces ({activeRole})
+          Workspaces
         </p>
 
         {visibleWorkspaces.map((w) => {

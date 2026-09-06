@@ -22,43 +22,24 @@ export const Header: React.FC<HeaderProps> = ({ onLogout }) => {
   ];
 
   return (
-    <header className="flex flex-col sticky top-0 z-50 shadow-sm font-sans">
-      {/* Bhoomi Rashi Official Top Utility Bar in Light Blue */}
-      <div className="bg-[#E0F2FE] text-[#0369A1] text-[10px] px-4 py-1 flex items-center justify-between border-b border-[#BAE6FD] font-semibold">
+    <header className="flex flex-col sticky top-0 z-50 shadow-sm font-sans bg-white border-b border-[#E2E8F0]">
+      {/* Main Clean Government Navbar */}
+      <div className="px-6 py-3 flex flex-col md:flex-row md:items-center justify-between gap-3">
         <div className="flex items-center gap-3">
-          <span className="flex items-center gap-1 text-[#0369A1]">
-            <span className="text-[#BF7834] font-extrabold">📞 Helpline:</span> 011-23711824
-          </span>
-          <span className="hidden sm:flex items-center gap-1 text-[#0369A1]">
-            <span className="text-[#BF7834] font-extrabold">✉️ Email:</span> supportla-morth@gov.in
-          </span>
-        </div>
-        <div className="flex items-center gap-3 text-[#0284C7]">
-          <span className="font-extrabold text-[#0369A1]">Highway Land Register [Rule 4(1)]</span>
-          <span className="hidden md:inline">•</span>
-          <span className="hidden md:inline font-bold">RFCTLARR Act (2013)</span>
-          <span className="hidden md:inline">•</span>
-          <span className="font-extrabold text-[#BF7834]">Govt. of India (MoRTH)</span>
-        </div>
-      </div>
-
-      {/* Main Government Navbar */}
-      <div className="border-b border-[#E2E8F0] bg-white text-[#0F172A] px-4 py-2 flex flex-col md:flex-row md:items-center justify-between gap-2">
-        <div className="flex items-center gap-2.5">
-          <div className="p-1.5 rounded-lg bg-[#BF7834] text-white shadow-sm">
+          <div className="p-2 rounded-xl bg-[#BF7834] text-white shadow-sm flex items-center justify-center">
             <Shield className="w-5 h-5 text-white" />
           </div>
           <div>
             <div className="flex items-center gap-2">
-              <h1 className="font-black text-base tracking-wide text-[#BF7834]">
-                BHUMI-SHIELD <span className="text-[#1E293B] font-extrabold text-sm">| Land Acquisition Portal</span>
+              <h1 className="font-black text-lg tracking-tight text-[#0F172A]">
+                BHUMI-SHIELD
               </h1>
-              <span className="text-[9px] uppercase font-extrabold tracking-wider px-2 py-0.5 rounded-full bg-[#FFFBEB] text-[#BF7834] border border-[#FDE68A]">
+              <span className="text-[10px] uppercase font-extrabold tracking-wider px-2.5 py-0.5 rounded-full bg-[#FFFBEB] text-[#BF7834] border border-[#FDE68A]">
                 MoRTH Govt. of India
               </span>
             </div>
-            <p className="text-[10px] text-[#64748B] font-semibold">
-              Ministry of Road Transport & Highways • National Infrastructure & Statutory Sentinel Platform
+            <p className="text-[11px] text-[#64748B] font-medium">
+              National Land Acquisition & Monitoring Platform
             </p>
           </div>
         </div>

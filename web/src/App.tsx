@@ -68,15 +68,6 @@ export const App: React.FC = () => {
       <div className="flex-1 flex flex-col min-w-0 overflow-hidden bg-[#F8FAFC]">
         <Header onLogout={handleLogout} />
 
-        {/* Synthetic Data Evaluation Banner in Light Blue */}
-        <div className="bg-[#E0F2FE] border-b border-[#BAE6FD] px-6 py-1.5 flex items-center justify-between text-[11px] text-[#0369A1] font-bold shadow-sm">
-          <div className="flex items-center gap-2">
-            <span className="w-2 h-2 rounded-full bg-[#10B981] animate-pulse" />
-            <span>BHUMI-SHIELD PLATFORM ENVIRONMENT • EVALUATION & FIELD SENTINEL DATASET ACTIVE</span>
-          </div>
-          <span className="font-mono text-[10px] text-[#0284C7] font-extrabold">RFCTLARR (2013) STATUTORY PROTOCOL</span>
-        </div>
-
         {seedNotification && (
           <div className="bg-white border-b border-[#E2E8F0] px-6 py-2 text-xs font-bold text-[#0F172A] flex items-center justify-between shadow-sm">
             <span>{seedNotification}</span>
