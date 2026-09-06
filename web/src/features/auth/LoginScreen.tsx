@@ -64,23 +64,6 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ onLoginSuccess }) => {
 
   return (
     <div className="min-h-screen bg-[#F8FAFC] flex flex-col justify-between font-sans text-[#0F172A]">
-      {/* Bhoomi Rashi Official Top Utility Bar in Light Blue */}
-      <div className="bg-[#E0F2FE] text-[#0369A1] text-[11px] px-8 py-2 flex items-center justify-between border-b border-[#BAE6FD] font-semibold">
-        <div className="flex items-center gap-4">
-          <span className="flex items-center gap-1.5 text-[#0369A1]">
-            <span className="text-[#BF7834] font-extrabold">📞 Phone:</span> 011-23711824
-          </span>
-          <span className="hidden sm:flex items-center gap-1.5 text-[#0369A1]">
-            <span className="text-[#BF7834] font-extrabold">✉️ Support:</span> supportla-morth@gov.in
-          </span>
-        </div>
-        <div className="flex items-center gap-4 text-[#0284C7]">
-          <span className="font-extrabold text-[#0369A1]">Highway Land Register [Rule 4(1)]</span>
-          <span>•</span>
-          <span className="font-extrabold text-[#BF7834]">Ministry of Road Transport & Highways</span>
-        </div>
-      </div>
-
       {/* Main Government Navbar Header */}
       <header className="border-b border-[#E2E8F0] bg-white px-8 py-4 flex items-center justify-between shadow-sm">
         <div className="flex items-center gap-3.5">
@@ -89,15 +72,11 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ onLoginSuccess }) => {
           </div>
           <div>
             <div className="flex items-center gap-2">
-              <span className="font-black text-xl tracking-wide text-[#BF7834]">BHUMI-SHIELD</span>
-              <span className="text-sm font-extrabold text-[#1E293B]">| Land Acquisition Portal</span>
+              <span className="font-black text-xl tracking-wide text-[#0F172A]">BHUMI-SHIELD</span>
               <span className="text-[10px] uppercase font-extrabold tracking-wider px-2.5 py-0.5 rounded-full bg-[#FFFBEB] text-[#BF7834] border border-[#FDE68A]">
-                Govt. of India
+                MoRTH Govt. of India
               </span>
             </div>
-            <p className="text-[11px] text-[#64748B] font-semibold mt-0.5">
-              Ministry of Road Transport & Highways • National Land Acquisition Mission & Statutory Sentinel
-            </p>
           </div>
         </div>
         <span className="text-xs font-mono text-[#BF7834] font-black bg-[#FFFBEB] px-3 py-1 rounded-lg border border-[#FDE68A]">
