@@ -13,48 +13,16 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ onLoginSuccess }) => {
   const [officialId, setOfficialId] = useState('GOV-MH-8921');
   const [accessKey, setAccessKey] = useState('••••••••••••');
 
-  const roleDescriptions: Record<UserRole, { title: string; desc: string; defaultTarget: string }> = {
-    'National Admin': {
-      title: 'National Administrator / Cabinet Secretariat',
-      desc: 'Pan-India corridor oversight, policy interventions, and inter-state approvals.',
-      defaultTarget: 'National Command Center',
-    },
-    'State Admin': {
-      title: 'State Revenue Secretary / Divisional Commissioner',
-      desc: 'Statewide land acquisition velocity, district coordination & forest NOC clearance.',
-      defaultTarget: 'National Command Center (State Scope)',
-    },
-    'District Officer': {
-      title: 'District Magistrate & Collector',
-      desc: 'District revenue circles, Section 15 objection hearings, and SLA enforcement.',
-      defaultTarget: 'National Command Center (District Scope)',
-    },
-    'Acquisition Officer': {
-      title: 'Competent Authority for Land Acquisition (CALA / SDO)',
-      desc: 'Section 19 declarations, Section 23/30 awards, solatium, and PFMS approvals.',
-      defaultTarget: 'Bhumi-Chakra: Corridor Sentinel',
-    },
-    'Field Supervisor': {
-      title: 'District Field Supervisor & Survey In-charge',
-      desc: 'Joint Measurement Surveys (JMS), squad allocation, and DGPS verification.',
-      defaultTarget: 'Operations & Intelligence',
-    },
-    'Field Officer': {
-      title: 'Field Revenue Officer / Talathi',
-      desc: 'Cadastral Khasra ground inspection, boundary pillar QR scanning & evidence ingest.',
-      defaultTarget: 'Bhumi-Chakra (Parcels & Evidence)',
-    },
-    'Auditor': {
-      title: 'Principal Auditor / Vigilance Officer',
-      desc: 'Forensic audit trails, SHA-256 tamper-proof checks, and fund ledger verification.',
-      defaultTarget: 'Administration & Security',
-    },
-    'Public User': {
-      title: 'Citizen / Project Affected Landowner (PAF)',
-      desc: 'Public gazette notifications, transparent award inquiry & grievance redressal.',
-      defaultTarget: 'National Command Center (Public View)',
-    },
-  };
+  const roles: UserRole[] = [
+    'National Admin',
+    'State Admin',
+    'District Officer',
+    'Acquisition Officer',
+    'Field Supervisor',
+    'Field Officer',
+    'Auditor',
+    'Public User',
+  ];
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
@@ -98,7 +66,7 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ onLoginSuccess }) => {
             {/* Role Selection */}
             <div>
               <label className="block text-[#1E293B] font-extrabold mb-1.5 uppercase text-[10px] tracking-wider">
-                Select Statutory Role & Clearance
+                Select Role
               </label>
               <select
                 value={selectedRole}
@@ -106,25 +74,12 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ onLoginSuccess }) => {
                 aria-label="Statutory Role Clearance"
                 className="w-full bg-[#F8FAFC] border border-[#CBD5E1] rounded-xl px-3.5 py-2.5 text-xs font-extrabold text-[#0F172A] focus:outline-none focus:border-[#BF7834] cursor-pointer shadow-sm"
               >
-                {Object.keys(roleDescriptions).map((role) => (
+                {roles.map((role) => (
                   <option key={role} value={role}>
-                    {role} — {roleDescriptions[role as UserRole].title}
+                    {role}
                   </option>
                 ))}
               </select>
-            </div>
-
-            {/* Role Description Callout */}
-            <div className="p-4 bg-[#FFFBEB] border border-[#FDE68A] rounded-xl space-y-1">
-              <p className="font-extrabold text-[#BF7834] text-xs">
-                {roleDescriptions[selectedRole].title}
-              </p>
-              <p className="text-[11px] text-[#78350F] leading-relaxed font-medium">
-                {roleDescriptions[selectedRole].desc}
-              </p>
-              <div className="pt-2 border-t border-[#FDE68A] text-[10px] text-[#BF7834] font-extrabold">
-                Designated Landing: <strong>{roleDescriptions[selectedRole].defaultTarget}</strong>
-              </div>
             </div>
 
             {/* Official ID */}
