@@ -187,9 +187,38 @@ export async function seedBhumiShieldDemoData(logCallback?: (msg: string) => voi
   await villageService.create({ projectId: proj1Id, districtId: 'dist-palghar', name: 'Umroli', censusCode: 'VIL-MH-52103', totalParcelsCount: 35 }, 'vil-umroli');
   await villageService.create({ projectId: proj3Id, districtId: 'dist-varanasi', name: 'Rohania', censusCode: 'VIL-UP-10901', totalParcelsCount: 64 }, 'vil-rohania');
 
-  // 6. Cadastral Parcels
-  log('Seeding Cadastral Land Parcels...');
-  const parcel1Id = 'pcl-pal-0142';
+  // 6. Cadastral Land Parcels across All Strategic National Corridors
+  log('Seeding Comprehensive Pan-India Cadastral Land Parcels...');
+  
+  // MAHSR Corridor (Mumbai - Ahmedabad)
+  await parcelService.create({
+    projectId: proj1Id,
+    villageId: 'vil-manikpur',
+    khasraSurveyNo: '12/A-BKC',
+    areaAcres: 3.80,
+    landClassification: 'Commercial',
+    estimatedMarketValueINR: 48000000,
+    calculatedSolatiumINR: 48000000,
+    totalCompensationINR: 105600000,
+    status: 'AWARDED',
+    qrAssetId: 'QR-PIL-MH-0012',
+    geoCenter: { lat: 19.0760, lng: 72.8777 },
+  }, 'pcl-mum-0012');
+
+  await parcelService.create({
+    projectId: proj1Id,
+    villageId: 'vil-manikpur',
+    khasraSurveyNo: '512/3-THN',
+    areaAcres: 2.10,
+    landClassification: 'Residential',
+    estimatedMarketValueINR: 22000000,
+    calculatedSolatiumINR: 22000000,
+    totalCompensationINR: 48400000,
+    status: 'NOTIFIED',
+    qrAssetId: 'QR-PIL-MH-0512',
+    geoCenter: { lat: 19.2183, lng: 72.9781 },
+  }, 'pcl-thn-0512');
+
   await parcelService.create({
     projectId: proj1Id,
     villageId: 'vil-manikpur',
@@ -202,12 +231,11 @@ export async function seedBhumiShieldDemoData(logCallback?: (msg: string) => voi
     status: 'AWARDED',
     qrAssetId: 'QR-PIL-MH-0921',
     geoCenter: { lat: 19.6967, lng: 72.7699 },
-  }, parcel1Id);
+  }, 'pcl-pal-0142');
 
-  const parcel2Id = 'pcl-pal-0143';
   await parcelService.create({
     projectId: proj1Id,
-    villageId: 'vil-manikpur',
+    villageId: 'vil-kelve',
     khasraSurveyNo: '143/2-B',
     areaAcres: 1.15,
     landClassification: 'Residential',
@@ -216,10 +244,193 @@ export async function seedBhumiShieldDemoData(logCallback?: (msg: string) => voi
     totalCompensationINR: 19580000,
     status: 'NOTIFIED',
     qrAssetId: 'QR-PIL-MH-0922',
-    geoCenter: { lat: 19.6982, lng: 72.7712 },
-  }, parcel2Id);
+    geoCenter: { lat: 19.6200, lng: 72.7400 },
+  }, 'pcl-pal-0143');
 
-  const parcel3Id = 'pcl-vns-0881';
+  await parcelService.create({
+    projectId: proj1Id,
+    villageId: 'vil-manikpur',
+    khasraSurveyNo: '88/B-VAPI',
+    areaAcres: 3.10,
+    landClassification: 'Commercial',
+    estimatedMarketValueINR: 18500000,
+    calculatedSolatiumINR: 18500000,
+    totalCompensationINR: 40700000,
+    status: 'NOTIFIED',
+    qrAssetId: 'QR-PIL-GJ-0088',
+    geoCenter: { lat: 20.3893, lng: 72.9106 },
+  }, 'pcl-vapi-0088');
+
+  await parcelService.create({
+    projectId: proj1Id,
+    villageId: 'vil-manikpur',
+    khasraSurveyNo: '204/C-SRT',
+    areaAcres: 5.40,
+    landClassification: 'Commercial',
+    estimatedMarketValueINR: 36000000,
+    calculatedSolatiumINR: 36000000,
+    totalCompensationINR: 79200000,
+    status: 'AWARDED',
+    qrAssetId: 'QR-PIL-GJ-0204',
+    geoCenter: { lat: 21.1702, lng: 72.8311 },
+  }, 'pcl-srt-0204');
+
+  await parcelService.create({
+    projectId: proj1Id,
+    villageId: 'vil-manikpur',
+    khasraSurveyNo: '312/1-VAD',
+    areaAcres: 4.60,
+    landClassification: 'Agricultural',
+    estimatedMarketValueINR: 24000000,
+    calculatedSolatiumINR: 24000000,
+    totalCompensationINR: 52800000,
+    status: 'AWARDED',
+    qrAssetId: 'QR-PIL-GJ-0312',
+    geoCenter: { lat: 22.3072, lng: 73.1812 },
+  }, 'pcl-vad-0312');
+
+  await parcelService.create({
+    projectId: proj1Id,
+    villageId: 'vil-manikpur',
+    khasraSurveyNo: '401/P-AHM',
+    areaAcres: 6.20,
+    landClassification: 'Commercial',
+    estimatedMarketValueINR: 52000000,
+    calculatedSolatiumINR: 52000000,
+    totalCompensationINR: 114400000,
+    status: 'POSSESSED',
+    qrAssetId: 'QR-PIL-GJ-0401',
+    geoCenter: { lat: 23.0225, lng: 72.5714 },
+  }, 'pcl-ahm-0401');
+
+  // Delhi-Mumbai Expressway Corridor
+  await parcelService.create({
+    projectId: proj2Id,
+    villageId: 'vil-manikpur',
+    khasraSurveyNo: '11/DND-DEL',
+    areaAcres: 4.80,
+    landClassification: 'Commercial',
+    estimatedMarketValueINR: 64000000,
+    calculatedSolatiumINR: 64000000,
+    totalCompensationINR: 140800000,
+    status: 'POSSESSED',
+    qrAssetId: 'QR-PIL-DL-0011',
+    geoCenter: { lat: 28.6139, lng: 77.2090 },
+  }, 'pcl-del-0011');
+
+  await parcelService.create({
+    projectId: proj2Id,
+    villageId: 'vil-manikpur',
+    khasraSurveyNo: '77/D-GGN',
+    areaAcres: 3.50,
+    landClassification: 'Agricultural',
+    estimatedMarketValueINR: 28000000,
+    calculatedSolatiumINR: 28000000,
+    totalCompensationINR: 61600000,
+    status: 'NOTIFIED',
+    qrAssetId: 'QR-PIL-HR-0077',
+    geoCenter: { lat: 28.2500, lng: 77.0600 },
+  }, 'pcl-ggn-0077');
+
+  await parcelService.create({
+    projectId: proj2Id,
+    villageId: 'vil-manikpur',
+    khasraSurveyNo: '119/2-JPR',
+    areaAcres: 5.10,
+    landClassification: 'Agricultural',
+    estimatedMarketValueINR: 19000000,
+    calculatedSolatiumINR: 19000000,
+    totalCompensationINR: 41800000,
+    status: 'AWARDED',
+    qrAssetId: 'QR-PIL-RJ-0119',
+    geoCenter: { lat: 26.8900, lng: 76.3300 },
+  }, 'pcl-jpr-0119');
+
+  await parcelService.create({
+    projectId: proj2Id,
+    villageId: 'vil-manikpur',
+    khasraSurveyNo: '605/A-KTA',
+    areaAcres: 4.40,
+    landClassification: 'Agricultural',
+    estimatedMarketValueINR: 17500000,
+    calculatedSolatiumINR: 17500000,
+    totalCompensationINR: 38500000,
+    status: 'NOTIFIED',
+    qrAssetId: 'QR-PIL-RJ-0605',
+    geoCenter: { lat: 25.1852, lng: 75.8364 },
+  }, 'pcl-kta-0605');
+
+  await parcelService.create({
+    projectId: proj2Id,
+    villageId: 'vil-manikpur',
+    khasraSurveyNo: '220/1-RTM',
+    areaAcres: 3.90,
+    landClassification: 'Agricultural',
+    estimatedMarketValueINR: 14000000,
+    calculatedSolatiumINR: 14000000,
+    totalCompensationINR: 30800000,
+    status: 'IDENTIFIED',
+    qrAssetId: 'QR-PIL-MP-0220',
+    geoCenter: { lat: 23.3315, lng: 75.0367 },
+  }, 'pcl-rtm-0220');
+
+  // Eastern Dedicated Freight Corridor (EDFC)
+  await parcelService.create({
+    projectId: proj3Id,
+    villageId: 'vil-rohania',
+    khasraSurveyNo: '55/A-KHJ',
+    areaAcres: 3.20,
+    landClassification: 'Agricultural',
+    estimatedMarketValueINR: 15000000,
+    calculatedSolatiumINR: 15000000,
+    totalCompensationINR: 33000000,
+    status: 'AWARDED',
+    qrAssetId: 'QR-PIL-UP-0055',
+    geoCenter: { lat: 28.2500, lng: 77.8500 },
+  }, 'pcl-khj-0055');
+
+  await parcelService.create({
+    projectId: proj3Id,
+    villageId: 'vil-rohania',
+    khasraSurveyNo: '91/C-TDL',
+    areaAcres: 2.80,
+    landClassification: 'Agricultural',
+    estimatedMarketValueINR: 13500000,
+    calculatedSolatiumINR: 13500000,
+    totalCompensationINR: 29700000,
+    status: 'NOTIFIED',
+    qrAssetId: 'QR-PIL-UP-0091',
+    geoCenter: { lat: 27.2000, lng: 78.2300 },
+  }, 'pcl-tdl-0091');
+
+  await parcelService.create({
+    projectId: proj3Id,
+    villageId: 'vil-rohania',
+    khasraSurveyNo: '712/4-KNP',
+    areaAcres: 5.60,
+    landClassification: 'Commercial',
+    estimatedMarketValueINR: 32000000,
+    calculatedSolatiumINR: 32000000,
+    totalCompensationINR: 70400000,
+    status: 'NOTIFIED',
+    qrAssetId: 'QR-PIL-UP-0712',
+    geoCenter: { lat: 26.4499, lng: 80.3319 },
+  }, 'pcl-knp-0712');
+
+  await parcelService.create({
+    projectId: proj3Id,
+    villageId: 'vil-rohania',
+    khasraSurveyNo: '415/2-PRY',
+    areaAcres: 4.10,
+    landClassification: 'Agricultural',
+    estimatedMarketValueINR: 18000000,
+    calculatedSolatiumINR: 18000000,
+    totalCompensationINR: 39600000,
+    status: 'IDENTIFIED',
+    qrAssetId: 'QR-PIL-UP-0415',
+    geoCenter: { lat: 25.4358, lng: 81.8463 },
+  }, 'pcl-pry-0415');
+
   await parcelService.create({
     projectId: proj3Id,
     villageId: 'vil-rohania',
@@ -232,7 +443,61 @@ export async function seedBhumiShieldDemoData(logCallback?: (msg: string) => voi
     status: 'IDENTIFIED',
     qrAssetId: 'QR-PIL-UP-4401',
     geoCenter: { lat: 25.3176, lng: 82.9739 },
-  }, parcel3Id);
+  }, 'pcl-vns-0881');
+
+  await parcelService.create({
+    projectId: proj3Id,
+    villageId: 'vil-rohania',
+    khasraSurveyNo: '102/B-SON',
+    areaAcres: 3.70,
+    landClassification: 'Agricultural',
+    estimatedMarketValueINR: 12000000,
+    calculatedSolatiumINR: 12000000,
+    totalCompensationINR: 26400000,
+    status: 'AWARDED',
+    qrAssetId: 'QR-PIL-BR-0102',
+    geoCenter: { lat: 24.7955, lng: 85.0002 },
+  }, 'pcl-son-0102');
+
+  // Seed Legal Cases for realistic litigation hotspots
+  await legalCaseService.create({
+    projectId: proj1Id,
+    parcelId: 'pcl-thn-0512',
+    caseNumber: 'WP/MH/2026/102',
+    courtName: 'Bombay High Court',
+    litigantName: 'Thane Farmers Landowners Welfare Assoc.',
+    advocateName: 'Adv. S. K. Deshmukh',
+    natureOfDispute: 'ENHANCEMENT_CLAIM',
+    stayGranted: true,
+    nextHearingDate: '2026-09-24',
+    status: 'PENDING',
+  }, 'case-thn-102');
+
+  await legalCaseService.create({
+    projectId: proj2Id,
+    parcelId: 'pcl-kta-0605',
+    caseNumber: 'WP/RJ/2026/441',
+    courtName: 'Rajasthan High Court (Jaipur Bench)',
+    litigantName: 'Chambal Agro Landholders Society',
+    advocateName: 'Adv. R. N. Sharma',
+    natureOfDispute: 'PROCEDURAL_CHALLENGE',
+    stayGranted: true,
+    nextHearingDate: '2026-09-30',
+    status: 'PENDING',
+  }, 'case-kta-441');
+
+  await legalCaseService.create({
+    projectId: proj3Id,
+    parcelId: 'pcl-tdl-0091',
+    caseNumber: 'WP/UP/2026/889',
+    courtName: 'Allahabad High Court',
+    litigantName: 'Tundla Gram Panchayat Sangh',
+    advocateName: 'Adv. M. P. Singh',
+    natureOfDispute: 'STAY_PETITION',
+    stayGranted: true,
+    nextHearingDate: '2026-10-12',
+    status: 'PENDING',
+  }, 'case-tdl-889');
 
   // 7. Emerging Bottlenecks (Critical Operational Triage)
   log('Seeding Emerging Operational Bottlenecks...');
@@ -299,7 +564,7 @@ export async function seedBhumiShieldDemoData(logCallback?: (msg: string) => voi
   log('Seeding Compensation and PAF Entitlements...');
   await affectedFamilyService.create({
     projectId: proj1Id,
-    parcelIds: [parcel1Id],
+    parcelIds: ['pcl-pal-0142'],
     headOfFamilyName: 'Smt. Anusaya Pandurang Patil',
     aadharNumberMasked: 'XXXX-XXXX-8821',
     familyMembersCount: 5,
@@ -313,7 +578,7 @@ export async function seedBhumiShieldDemoData(logCallback?: (msg: string) => voi
 
   await compensationService.create({
     projectId: proj1Id,
-    parcelId: parcel1Id,
+    parcelId: 'pcl-pal-0142',
     affectedFamilyId: 'paf-patil-001',
     basicLandValueINR: 12500000,
     solatiumFactor: 1.0,
@@ -330,7 +595,7 @@ export async function seedBhumiShieldDemoData(logCallback?: (msg: string) => voi
   log('Seeding Real-time Statutory Workflow Timeline...');
   await workflowEventService.create({
     projectId: proj1Id,
-    parcelId: parcel1Id,
+    parcelId: 'pcl-pal-0142',
     stage: 'Award_Disbursement',
     actionTaken: 'Direct DBT / PFMS transmission completed for Parcel 142/A-1 award decree',
     actorId: 'officer-acq-01',

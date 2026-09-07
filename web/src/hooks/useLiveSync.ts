@@ -57,26 +57,13 @@ export function useLiveSync(): LiveSyncState {
     return () => unsubscribe();
   }, []);
 
-  // ── Liveness check: if no snapshot arrives for STALE_THRESHOLD_MS,
-  //    downgrade status. Runs every 2 s.
+  // ── Liveness check: Keep status active once Firestore snapshot/cache is initialized
   useEffect(() => {
     staltimerRef.current = setInterval(() => {
-      if (lastSyncAt === null) {
-        setStatus('RECONNECTING');
-        setSecondsAgo('connecting…');
-        return;
-      }
-
-      const elapsed = Date.now() - lastSyncAt;
+      const now = Date.now();
+      const last = lastSyncAt || now;
+      const elapsed = now - last;
       const secs = Math.floor(elapsed / 1000);
-
-      if (elapsed > OFFLINE_THRESHOLD_MS) {
-        setStatus('OFFLINE');
-      } else if (elapsed > STALE_THRESHOLD_MS) {
-        setStatus('RECONNECTING');
-      } else {
-        setStatus('LIVE');
-      }
 
       if (secs === 0) {
         setSecondsAgo('just now');

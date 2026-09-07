@@ -1,4 +1,4 @@
-﻿rules_version = '2';
+rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
 
@@ -16,47 +16,55 @@ service cloud.firestore {
     }
     
     function isNationalAdmin() {
-      return getUserRole() == 'National Admin';
+      return getUserRole() == 'CENTRAL_ADMIN';
     }
     
     function isStateAdmin() {
-      return getUserRole() == 'State Admin';
+      return getUserRole() == 'STATE_ADMIN';
     }
     
     function isDistrictOfficer() {
-      return getUserRole() == 'District Officer';
+      return getUserRole() == 'DISTRICT_ADMIN';
     }
     
     function isAcquisitionOfficer() {
-      return getUserRole() == 'Acquisition Officer';
+      return getUserRole() == 'ACQUISITION_OFFICER';
     }
     
     function isFieldSupervisor() {
-      return getUserRole() == 'Field Supervisor';
+      return getUserRole() == 'PROJECT_AUTHORITY';
     }
     
     function isFieldOfficer() {
-      return getUserRole() == 'Field Officer';
+      return getUserRole() == 'FIELD_OFFICER';
     }
     
     function isAuditor() {
-      return getUserRole() == 'Auditor';
+      return getUserRole() == 'VERIFICATION_OPERATOR';
     }
     
     function isPublicUser() {
-      return getUserRole() == 'Public User';
+      return getUserRole() == 'CITIZEN';
     }
     
     function isAnyAdmin() {
-      return isNationalAdmin() || isStateAdmin();
+      return isNationalAdmin() || isStateAdmin() || isDistrictOfficer();
     }
     
     function isOfficer() {
-      return isAnyAdmin() || isDistrictOfficer() || isAcquisitionOfficer();
+      return isAnyAdmin() || isAcquisitionOfficer();
     }
     
     function isFieldStaff() {
       return isFieldSupervisor() || isFieldOfficer();
+    }
+
+    // Lock Checking Helper
+    function isRecordLocked(entityId) {
+      let lockPath = /databases/$(database)/documents/data_locks/$(entityId + '_ALL');
+      return exists(lockPath) && 
+             get(lockPath).data.isUnlocked == false && 
+             !(getUserRole() in get(lockPath).data.allowedRoles);
     }
 
     // 1. Users collection
@@ -92,7 +100,8 @@ service cloud.firestore {
     // 4. Projects & Villages
     match /projects/{projectId} {
       allow read: if true; // Public access for gazette notifications and transparency
-      allow create, update: if isOfficer();
+      allow create: if isOfficer();
+      allow update: if isOfficer() && !isRecordLocked(projectId);
       allow delete: if isNationalAdmin();
     }
     
@@ -104,7 +113,8 @@ service cloud.firestore {
     // 5. Parcels & Land Details
     match /parcels/{parcelId} {
       allow read: if isAuthenticated();
-      allow create, update: if isOfficer() || isFieldStaff();
+      allow create: if isOfficer() || isFieldStaff();
+      allow update: if (isOfficer() || isFieldStaff()) && !isRecordLocked(parcelId);
       allow delete: if isAnyAdmin();
     }
 
@@ -149,13 +159,15 @@ service cloud.firestore {
     // 10. Compensation & Disbursements
     match /compensation/{compId} {
       allow read: if isAuthenticated() && (isOfficer() || isAuditor() || resource.data.beneficiaryId == request.auth.uid);
-      allow write: if isOfficer();
+      allow create: if isOfficer();
+      allow update: if isOfficer() && !isRecordLocked(compId);
     }
 
     // 11. Resettlement & Rehabilitation (R&R)
     match /rr_cases/{rrId} {
       allow read: if isAuthenticated();
-      allow write: if isOfficer();
+      allow create: if isOfficer();
+      allow update: if isOfficer() && !isRecordLocked(rrId);
     }
 
     // 12. Legal Cases & Tribunals
@@ -247,6 +259,12 @@ service cloud.firestore {
       allow read: if isAuthenticated() && (isOfficer() || isNationalAdmin());
       allow create: if isAuthenticated();
       allow update, delete: if isNationalAdmin();
+    }
+
+    // 34. Data Locks
+    match /data_locks/{lockId} {
+      allow read: if isAuthenticated();
+      allow write: if isAnyAdmin();
     }
   }
 }
