@@ -58,8 +58,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         // Fallback default demonstration session
         const demoProfile: UserProfile = {
           uid: 'demo-user-master-001',
-          email: 'admin.national@bhumishield.gov.in',
-          displayName: 'Dr. Rajesh Verma, IAS',
+          email: 'system.admin@gov.in',
+          displayName: 'System Admin',
           role: activeRole,
           isActive: true,
           createdAt: Date.now(),

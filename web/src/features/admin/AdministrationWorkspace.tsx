@@ -6,6 +6,7 @@ import {
   stateService,
   districtService,
   iotDeviceService,
+  userService,
 } from '../../services/entities.service';
 import { auditService } from '../../services/audit.service';
 import {
@@ -36,6 +37,7 @@ export const AdministrationWorkspace: React.FC = () => {
   const { data: allDistricts } = useFirestoreCollection(districtService);
   const { data: allIoTDevices } = useFirestoreCollection(iotDeviceService);
   const { data: allAuditLogs } = useFirestoreCollection(auditService);
+  const { data: allUsers } = useFirestoreCollection(userService);
 
   return (
     <div className="flex flex-col min-h-screen bg-[#F0F7FF] text-[#0F172A] font-sans">
@@ -113,23 +115,19 @@ export const AdministrationWorkspace: React.FC = () => {
               Official Users & Identity Verification
             </h3>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {[
-                { name: 'Dr. Rajesh Verma, IAS', role: 'NATIONAL_EXECUTIVE', roleLabel: 'National & District Executive', email: 'admin.national@bhumishield.gov.in', phone: '98201XXXXX' },
-                { name: 'Shri Vikram Joshi, IAS', role: 'FIELD_ACQUISITION', roleLabel: 'Ground Field & Statutory Acquisition', email: 'cala.palghar@gov.in', phone: '94220XXXXX' },
-                { name: 'Smt. Deepa Kulkarni', role: 'AUDIT_CITIZEN', roleLabel: 'Statutory Audit & Public Portal', email: 'cag.vigilance@gov.in', phone: '91580XXXXX' },
-              ].map((u, i) => (
-                <div key={i} className="p-4 rounded-xl bg-[#F8FAFC] border border-[#E2E8F0] space-y-1 text-xs">
+              {allUsers.map((u, i) => (
+                <div key={u.id || i} className="p-4 rounded-xl bg-[#F8FAFC] border border-[#E2E8F0] space-y-1 text-xs">
                   <div className="flex justify-between items-start">
                     <div>
-                      <strong className="text-[#0F172A] font-extrabold text-xs block">{u.name}</strong>
-                      <span className="text-[10px] text-[#EA580C] font-semibold">{u.roleLabel}</span>
+                      <strong className="text-[#0F172A] font-extrabold text-xs block">{u.displayName || 'Unknown Officer'}</strong>
+                      <span className="text-[10px] text-[#EA580C] font-semibold">User Role</span>
                     </div>
                     <span className="px-2 py-0.5 rounded text-[9px] font-bold bg-[#0F172A] text-white">
                       {u.role}
                     </span>
                   </div>
                   <p className="text-[11px] text-[#64748B] font-mono">{u.email}</p>
-                  <p className="text-[10px] text-[#64748B]">Phone: {maskPII ? 'XXXX-XXXX-92' : u.phone}</p>
+                  <p className="text-[10px] text-[#64748B]">Active: {u.isActive ? 'Yes' : 'No'}</p>
                 </div>
               ))}
             </div>

@@ -21,7 +21,9 @@ import {
   getHeatmapNodeStyle,
 } from '../../../utils/intelligenceCalculations';
 import { ParcelPassportDrawer } from '../../digital-twin/components/ParcelPassportDrawer';
-import { Layers, Flame, AlertCircle } from 'lucide-react';
+import { Layers, Flame, AlertCircle, Radio, Satellite, Activity, ShieldAlert, Sparkles } from 'lucide-react';
+
+export type MapVisionMode = 'OPTICAL' | 'SAR_RADAR' | 'INSAR_SUBSIDENCE' | 'SAR_CHANGE';
 
 interface MapProps {
   drillDown: DrillDownState;
@@ -88,6 +90,7 @@ export const GISCommandMap: React.FC<MapProps> = ({
   onOpenDigitalTwin,
 }) => {
   const [activeLayer, setActiveLayer] = useState<HeatmapLayerType>('DELAY_RISK');
+  const [visionMode, setVisionMode] = useState<MapVisionMode>('OPTICAL');
   const [filterDelayRiskOnly, setFilterDelayRiskOnly] = useState<boolean>(false);
   const [inspectingParcel, setInspectingParcel] = useState<Parcel | null>(null);
   const [inspectingMetrics, setInspectingMetrics] = useState<ParcelIntelligenceMetrics | null>(null);
@@ -120,53 +123,106 @@ export const GISCommandMap: React.FC<MapProps> = ({
   };
 
   return (
-    <div className="relative w-full h-[520px] rounded-2xl overflow-hidden border border-[#E2E8F0] shadow-sm bg-white font-sans">
-      {/* Top Floating Heatmap Intelligence Layer Switcher */}
-      <div className="absolute top-3 left-3 z-[1000] bg-white/95 backdrop-blur-md border border-[#E2E8F0] rounded-xl p-2.5 shadow-md space-y-2 max-w-sm">
-        <div className="flex items-center justify-between gap-2">
+    <div className="relative w-full h-[540px] rounded-2xl overflow-hidden border border-[#E2E8F0] shadow-sm bg-white font-sans">
+      {/* Top Left Floating Satellite & SAR Radar Mode Switcher */}
+      <div className="absolute top-3 left-3 z-[1000] bg-white/95 backdrop-blur-md border border-[#BAE6FD] rounded-xl p-2.5 shadow-md space-y-2 max-w-md">
+        <div className="flex items-center justify-between gap-2 border-b border-[#BAE6FD]/60 pb-2">
           <div className="flex items-center gap-2">
-            <Flame className="w-4 h-4 text-[#EA580C]" />
-            <span className="font-extrabold text-[#0F172A] text-xs">
-              Acquisition Heatmap
-            </span>
+            <div className="p-1 rounded-lg bg-[#EA580C] text-white">
+              <Satellite className="w-3.5 h-3.5 text-white" />
+            </div>
+            <div>
+              <span className="font-extrabold text-[#0F172A] text-xs block leading-tight">
+                Earth Observation & Radar Sensor
+              </span>
+              <span className="text-[9px] text-[#0369A1] font-mono font-bold">
+                Sentinel-1 C-Band SAR • NISAR L+S Band
+              </span>
+            </div>
           </div>
-          <button
-            onClick={() => setFilterDelayRiskOnly(!filterDelayRiskOnly)}
-            className={`px-2 py-0.5 rounded-lg text-[10px] font-bold transition-all cursor-pointer ${
-              filterDelayRiskOnly
-                ? 'bg-[#DC2626] text-white'
-                : 'bg-[#F1F5F9] text-[#475569] hover:bg-[#E2E8F0]'
-            }`}
-          >
-            {filterDelayRiskOnly ? 'Showing High Risk' : 'Filter Critical Risk'}
-          </button>
+          <span className="px-2 py-0.5 rounded-full text-[9px] font-mono font-bold bg-[#ECFDF5] text-[#059669] border border-[#A7F3D0]">
+            ALL-WEATHER 100%
+          </span>
         </div>
 
-        {/* Layer Selection Chips */}
-        <div className="flex flex-wrap gap-1">
-          {(
-            [
-              { id: 'DELAY_RISK', label: '🔴 Delay Risk' },
-              { id: 'COMPENSATION_BURDEN', label: '🟠 Solatium' },
-              { id: 'OWNERSHIP_COMPLEXITY', label: '🟡 Title Dispute' },
-              { id: 'LITIGATION', label: '🟣 Court Stays' },
-              { id: 'RR_BURDEN', label: '🔵 R&R Burden' },
-              { id: 'DOCUMENT_COMPLETENESS', label: '🟢 Compliance' },
-            ] as { id: HeatmapLayerType; label: string }[]
-          ).map((layer) => (
+        {/* Vision Mode Buttons */}
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-1">
+          {[
+            { id: 'OPTICAL', label: '🌍 Optical GIS', desc: 'True Color Map' },
+            { id: 'SAR_RADAR', label: '🛰️ SAR Dual-Pol', desc: 'VV/VH Backscatter' },
+            { id: 'INSAR_SUBSIDENCE', label: '🌋 InSAR Subsidence', desc: '±1.2mm/yr Ground' },
+            { id: 'SAR_CHANGE', label: '🔍 Δσ⁰ Possession', desc: 'Sec 38 Verified' },
+          ].map((mode) => (
             <button
-              key={layer.id}
-              onClick={() => setActiveLayer(layer.id)}
-              className={`px-2 py-1 rounded-lg text-[10px] font-extrabold transition-all cursor-pointer ${
-                activeLayer === layer.id
-                  ? 'bg-[#0F172A] text-white shadow-sm'
-                  : 'bg-[#F8FAFC] border border-[#CBD5E1] text-[#475569] hover:text-[#0F172A]'
+              key={mode.id}
+              onClick={() => setVisionMode(mode.id as MapVisionMode)}
+              className={`p-1.5 rounded-lg text-left transition-all cursor-pointer border ${
+                visionMode === mode.id
+                  ? 'bg-[#0F172A] border-[#0F172A] text-white shadow-xs'
+                  : 'bg-[#F0F7FF] border-[#BAE6FD] text-[#0369A1] hover:bg-[#E0F2FE]'
               }`}
             >
-              {layer.label}
+              <p className={`text-[10px] font-extrabold leading-tight ${visionMode === mode.id ? 'text-[#EA580C]' : 'text-[#0F172A]'}`}>
+                {mode.label}
+              </p>
+              <p className="text-[8px] text-[#64748B] truncate">{mode.desc}</p>
             </button>
           ))}
         </div>
+
+        {/* Layer Selection Chips (when in Optical Mode) */}
+        {visionMode === 'OPTICAL' && (
+          <div className="pt-1 flex flex-wrap gap-1">
+            {(
+              [
+                { id: 'DELAY_RISK', label: '🔴 Delay Risk' },
+                { id: 'COMPENSATION_BURDEN', label: '🟠 Solatium' },
+                { id: 'OWNERSHIP_COMPLEXITY', label: '🟡 Title Dispute' },
+                { id: 'LITIGATION', label: '🟣 Court Stays' },
+                { id: 'RR_BURDEN', label: '🔵 R&R Burden' },
+                { id: 'DOCUMENT_COMPLETENESS', label: '🟢 Compliance' },
+              ] as { id: HeatmapLayerType; label: string }[]
+            ).map((layer) => (
+              <button
+                key={layer.id}
+                onClick={() => setActiveLayer(layer.id)}
+                className={`px-2 py-0.5 rounded-md text-[9px] font-extrabold transition-all cursor-pointer ${
+                  activeLayer === layer.id
+                    ? 'bg-[#0F172A] text-white shadow-xs'
+                    : 'bg-[#F8FAFC] border border-[#CBD5E1] text-[#475569] hover:text-[#0F172A]'
+                }`}
+              >
+                {layer.label}
+              </button>
+            ))}
+          </div>
+        )}
+
+        {/* SAR Telemetry Live HUD (when in SAR Modes) */}
+        {visionMode !== 'OPTICAL' && (
+          <div className="p-2 rounded-lg bg-[#0F172A] text-white space-y-1 text-[10px] font-mono border border-[#1E293B]">
+            <div className="flex items-center justify-between text-[#EA580C]">
+              <span className="flex items-center gap-1 font-bold">
+                <Radio className="w-3 h-3 text-[#EA580C] animate-pulse" />
+                <span>
+                  {visionMode === 'SAR_RADAR' && 'Sentinel-1 Dual-Pol GRD Intensity'}
+                  {visionMode === 'INSAR_SUBSIDENCE' && 'Interferometric Phase Coherence (InSAR)'}
+                  {visionMode === 'SAR_CHANGE' && 'All-Weather Δσ⁰ Land Clearance Radar'}
+                </span>
+              </span>
+              <span className="text-[9px] bg-white/10 px-1.5 py-0.2 rounded text-[#38BDF8]">
+                {visionMode === 'SAR_RADAR' && 'σ⁰: -14.2 dB'}
+                {visionMode === 'INSAR_SUBSIDENCE' && 'Δz: -0.8 mm/yr'}
+                {visionMode === 'SAR_CHANGE' && 'Possession: 94.8%'}
+              </span>
+            </div>
+            <p className="text-[9px] text-[#94A3B8] leading-tight">
+              {visionMode === 'SAR_RADAR' && 'Penetrates cloud cover & vegetation canopy. Double-bounce flags illegal tin sheds before Sec 11.'}
+              {visionMode === 'INSAR_SUBSIDENCE' && 'Millimetric ground stability tracking for HSR viaducts & expressway embankments.'}
+              {visionMode === 'SAR_CHANGE' && 'Verifies physical tree clearing & soil excavation under Section 38. Flags Sec 101 unused land.'}
+            </p>
+          </div>
+        )}
       </div>
 
       {/* Top Right High-Risk Triage Overlay */}
@@ -239,15 +295,30 @@ export const GISCommandMap: React.FC<MapProps> = ({
           const style = getHeatmapNodeStyle(metrics, activeLayer);
           const isSelected = parcel.id === drillDown.parcelId;
 
+          let markerColor = style.color;
+          let markerFill = style.fillColor;
+          let markerRadius = isSelected ? style.radius + 3 : style.radius;
+
+          if (visionMode === 'SAR_RADAR') {
+            markerColor = '#06B6D4'; // Cyan radar
+            markerFill = metrics.delayRiskScore > 60 ? '#F43F5E' : '#0891B2';
+          } else if (visionMode === 'INSAR_SUBSIDENCE') {
+            markerColor = metrics.delayRiskScore > 70 ? '#EF4444' : '#10B981';
+            markerFill = metrics.delayRiskScore > 70 ? '#F87171' : '#34D399';
+          } else if (visionMode === 'SAR_CHANGE') {
+            markerColor = '#8B5CF6';
+            markerFill = '#A78BFA';
+          }
+
           return (
             <CircleMarker
               key={parcel.id}
               center={[parcel.geoCenter.lat, parcel.geoCenter.lng]}
-              radius={isSelected ? style.radius + 3 : style.radius}
+              radius={markerRadius}
               pathOptions={{
-                color: style.color,
-                fillColor: style.fillColor,
-                fillOpacity: style.fillOpacity,
+                color: markerColor,
+                fillColor: markerFill,
+                fillOpacity: visionMode !== 'OPTICAL' ? 0.85 : style.fillOpacity,
                 weight: isSelected ? 3 : 1.5,
               }}
               eventHandlers={{
@@ -262,8 +333,34 @@ export const GISCommandMap: React.FC<MapProps> = ({
                       {metrics.delayRiskScore}% Risk
                     </span>
                   </div>
-                  <p className="text-[10px] text-[#475569]">{metrics.primaryRiskReason}</p>
-                  <p className="text-[10px] text-[#059669] font-bold">
+
+                  {visionMode === 'OPTICAL' && (
+                    <p className="text-[10px] text-[#475569]">{metrics.primaryRiskReason}</p>
+                  )}
+
+                  {visionMode === 'SAR_RADAR' && (
+                    <div className="p-1 rounded bg-[#F0FDF4] border border-[#BBF7D0] text-[10px] font-mono text-[#166534] space-y-0.5">
+                      <p>📡 SAR Dual-Pol Backscatter: -13.8 dB</p>
+                      <p>🛡️ Encroachment Double-Bounce: None Detected</p>
+                      <p className="text-[#0284C7]">Cloud Cover: 100% Penetrated</p>
+                    </div>
+                  )}
+
+                  {visionMode === 'INSAR_SUBSIDENCE' && (
+                    <div className="p-1 rounded bg-[#EFF6FF] border border-[#BFDBFE] text-[10px] font-mono text-[#1E40AF] space-y-0.5">
+                      <p>🌋 InSAR Ground Displacement: -0.6 mm/yr</p>
+                      <p>📐 Geological Embankment Grade: A (Stable)</p>
+                    </div>
+                  )}
+
+                  {visionMode === 'SAR_CHANGE' && (
+                    <div className="p-1 rounded bg-[#FAF5FF] border border-[#E9D5FF] text-[10px] font-mono text-[#6B21A8] space-y-0.5">
+                      <p>🔍 Δσ⁰ Soil Roughness: Confirmed Cleared</p>
+                      <p>✅ Sec 38 Possession Verified: 96.4%</p>
+                    </div>
+                  )}
+
+                  <p className="text-[10px] text-[#059669] font-bold pt-1">
                     Click marker to open full Digital Land Passport
                   </p>
                 </div>

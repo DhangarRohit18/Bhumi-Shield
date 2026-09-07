@@ -8,6 +8,7 @@ import { ProjectDigitalTwin } from './features/digital-twin/ProjectDigitalTwin';
 import { OperationsIntelligenceCenter } from './features/operations-intelligence/OperationsIntelligenceCenter';
 import { AdministrationWorkspace } from './features/admin/AdministrationWorkspace';
 import { LoginScreen } from './features/auth/LoginScreen';
+import { BhumiPolicyCopilot } from './components/BhumiPolicyCopilot';
 import { UserRole } from './types';
 
 export const App: React.FC = () => {
@@ -79,6 +80,9 @@ export const App: React.FC = () => {
           {activeTab === 'admin' && <AdministrationWorkspace />}
         </main>
       </div>
+
+      {/* Floating BhumiAI Statutory & Policy RAG Copilot */}
+      <BhumiPolicyCopilot />
     </div>
   );
 };
