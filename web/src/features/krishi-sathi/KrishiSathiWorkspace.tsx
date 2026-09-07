@@ -298,26 +298,14 @@ export const KrishiSathiWorkspace: React.FC = () => {
           </p>
         </div>
 
-        {/* Action Buttons */}
-        <div className="flex items-center gap-2">
-          <button
-            onClick={handleTriggerSeed}
-            disabled={isSeeding}
-            className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-[#F1F5F9] hover:bg-[#E2E8F0] text-[#0F172A] text-xs font-bold transition-all cursor-pointer disabled:opacity-50"
-            title="Seed / Reset 10 Official Cadastral Farmer Land Records"
-          >
-            <Sparkles className="w-3.5 h-3.5 text-[#EA580C]" />
-            <span>{isSeeding ? 'Seeding 10 Farmers...' : 'Seed 10 Farmers'}</span>
-          </button>
-
-          <button
-            onClick={() => setModalOpen(true)}
-            className="flex items-center gap-2 px-4 py-2 rounded-xl bg-[#EA580C] hover:bg-[#C2410C] text-white text-xs font-black shadow-sm transition-all cursor-pointer"
-          >
-            <PlusCircle className="w-4 h-4" />
-            <span>Register New Farmer & Land Record</span>
-          </button>
-        </div>
+        {/* Real-time Admin Onboarding Button */}
+        <button
+          onClick={() => setModalOpen(true)}
+          className="flex items-center gap-2 px-4 py-2 rounded-xl bg-[#EA580C] hover:bg-[#C2410C] text-white text-xs font-black shadow-sm transition-all cursor-pointer"
+        >
+          <PlusCircle className="w-4 h-4" />
+          <span>Register New Farmer & Land Record</span>
+        </button>
       </div>
 
       {/* Aggregate KPI Summary Cards */}
