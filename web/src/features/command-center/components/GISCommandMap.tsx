@@ -177,29 +177,47 @@ export const GISCommandMap: React.FC<MapProps> = ({
 
         {/* Layer Selection Chips (when in Optical Mode) */}
         {visionMode === 'OPTICAL' && (
-          <div className="pt-1 flex flex-wrap gap-1">
-            {(
-              [
-                { id: 'DELAY_RISK', label: '🔴 Delay Risk' },
-                { id: 'COMPENSATION_BURDEN', label: '🟠 Solatium' },
-                { id: 'OWNERSHIP_COMPLEXITY', label: '🟡 Title Dispute' },
-                { id: 'LITIGATION', label: '🟣 Court Stays' },
-                { id: 'RR_BURDEN', label: '🔵 R&R Burden' },
-                { id: 'DOCUMENT_COMPLETENESS', label: '🟢 Compliance' },
-              ] as { id: HeatmapLayerType; label: string }[]
-            ).map((layer) => (
-              <button
-                key={layer.id}
-                onClick={() => setActiveLayer(layer.id)}
-                className={`px-2 py-0.5 rounded-md text-[9px] font-extrabold transition-all cursor-pointer ${
-                  activeLayer === layer.id
-                    ? 'bg-[#0F172A] text-white shadow-xs'
-                    : 'bg-[#F8FAFC] border border-[#CBD5E1] text-[#475569] hover:text-[#0F172A]'
-                }`}
-              >
-                {layer.label}
-              </button>
-            ))}
+          <div className="space-y-1.5 pt-1">
+            <div className="flex flex-wrap gap-1">
+              {(
+                [
+                  { id: 'DELAY_RISK', label: '🔴 Delay Risk', desc: 'AI Delay Prediction Hotspots' },
+                  { id: 'COMPENSATION_BURDEN', label: '🟠 Solatium', desc: 'Pending Solatium & Award Valuations' },
+                  { id: 'OWNERSHIP_COMPLEXITY', label: '🟡 Title Dispute', desc: 'Co-ownership & Partition Disputes' },
+                  { id: 'LITIGATION', label: '🟣 Court Stays', desc: 'High Court Injunctions & Status Quo' },
+                  { id: 'RR_BURDEN', label: '🔵 R&R Burden', desc: 'PAF Resettlement Entitlements' },
+                  { id: 'DOCUMENT_COMPLETENESS', label: '🟢 Compliance', desc: '7/12 RoR & Survey Attestation' },
+                ] as { id: HeatmapLayerType; label: string; desc: string }[]
+              ).map((layer) => (
+                <button
+                  key={layer.id}
+                  onClick={() => setActiveLayer(layer.id)}
+                  className={`px-2.5 py-1 rounded-md text-[10px] font-extrabold transition-all cursor-pointer border ${
+                    activeLayer === layer.id
+                      ? 'bg-[#0F172A] border-[#EA580C] text-white shadow-sm ring-1 ring-[#EA580C]/60 scale-[1.02]'
+                      : 'bg-[#F8FAFC] border-[#CBD5E1] text-[#475569] hover:text-[#0F172A] hover:bg-[#F1F5F9]'
+                  }`}
+                >
+                  {layer.label}
+                </button>
+              ))}
+            </div>
+
+            {/* Dynamic Active Layer Legend Bar */}
+            <div className="p-1.5 rounded-lg bg-[#F0F7FF] border border-[#BAE6FD] text-[9.5px] text-[#0369A1] flex items-center justify-between font-sans">
+              <span className="font-bold flex items-center gap-1">
+                <Sparkles className="w-3 h-3 text-[#EA580C]" />
+                {activeLayer === 'DELAY_RISK' && 'Active Layer: Critical & High AI Delay Hotspots'}
+                {activeLayer === 'COMPENSATION_BURDEN' && 'Active Layer: Pending 100% Solatium & High Award Burdens (>₹40L)'}
+                {activeLayer === 'OWNERSHIP_COMPLEXITY' && 'Active Layer: Disputed Co-Ownership & Succession Partitions'}
+                {activeLayer === 'LITIGATION' && 'Active Layer: Active High Court Stays & Section 15 Injunctions'}
+                {activeLayer === 'RR_BURDEN' && 'Active Layer: Pending R&R Beneficiary Allocations'}
+                {activeLayer === 'DOCUMENT_COMPLETENESS' && 'Active Layer: Statutory 7/12 Document Verification Progress'}
+              </span>
+              <span className="font-mono font-extrabold bg-white px-1.5 py-0.2 rounded border border-[#BAE6FD] text-[#0F172A]">
+                {parcels.length} Parcels Mapped
+              </span>
+            </div>
           </div>
         )}
 
@@ -348,7 +366,7 @@ export const GISCommandMap: React.FC<MapProps> = ({
             );
           })}
 
-        {/* Intelligent Heatmap Parcel Circle Markers */}
+        {/* Intelligent Heatmap Parcel Circle Markers with Reactive Remount Keys */}
         {parcels.map((parcel) => {
           if (!parcel.geoCenter || !parcel.id) return null;
           const metrics = parcelMetricsMap.get(parcel.id);
@@ -363,7 +381,7 @@ export const GISCommandMap: React.FC<MapProps> = ({
 
           let markerColor = style.color;
           let markerFill = style.fillColor;
-          let markerRadius = isSelected ? style.radius + 3 : style.radius;
+          let markerRadius = isSelected ? style.radius + 4 : style.radius;
 
           if (visionMode === 'SAR_RADAR') {
             markerColor = '#06B6D4'; // Cyan radar
@@ -376,62 +394,120 @@ export const GISCommandMap: React.FC<MapProps> = ({
             markerFill = '#A78BFA';
           }
 
+          // Check if parcel is a high-priority focal node for the active layer
+          const isLayerFocal =
+            (activeLayer === 'DELAY_RISK' && (metrics.delayRiskLevel === 'CRITICAL' || metrics.delayRiskLevel === 'HIGH')) ||
+            (activeLayer === 'COMPENSATION_BURDEN' && metrics.pendingCompensationINR > 4000000) ||
+            (activeLayer === 'OWNERSHIP_COMPLEXITY' && metrics.ownershipConflict) ||
+            (activeLayer === 'LITIGATION' && metrics.hasActiveLitigation) ||
+            (activeLayer === 'RR_BURDEN' && metrics.pendingRRCount > 0) ||
+            (activeLayer === 'DOCUMENT_COMPLETENESS' && metrics.documentCompletenessPct < 80);
+
           return (
-            <CircleMarker
-              key={parcel.id}
-              center={[parcel.geoCenter.lat, parcel.geoCenter.lng]}
-              radius={markerRadius}
-              pathOptions={{
-                color: markerColor,
-                fillColor: markerFill,
-                fillOpacity: visionMode !== 'OPTICAL' ? 0.85 : style.fillOpacity,
-                weight: isSelected ? 3 : 1.5,
-              }}
-              eventHandlers={{
-                click: () => handleMarkerClick(parcel),
-              }}
-            >
-              <Popup>
-                <div className="p-1 text-[#0F172A] text-xs font-sans space-y-1">
-                  <div className="flex items-center justify-between gap-2">
-                    <strong className="text-xs">Khasra #{parcel.khasraSurveyNo}</strong>
-                    <span className="font-mono font-bold text-[10px] text-[#DC2626]">
-                      {metrics.delayRiskScore}% Risk
-                    </span>
+            <React.Fragment key={`${parcel.id}-group-${activeLayer}-${visionMode}-${isSelected}`}>
+              {/* Outer Pulsing Halo Ring for Focal Parcels */}
+              {isLayerFocal && visionMode === 'OPTICAL' && (
+                <CircleMarker
+                  key={`${parcel.id}-halo-${activeLayer}`}
+                  center={[parcel.geoCenter.lat, parcel.geoCenter.lng]}
+                  radius={markerRadius + 6}
+                  pathOptions={{
+                    color: markerFill,
+                    fillColor: markerFill,
+                    fillOpacity: 0.25,
+                    weight: 1.5,
+                    dashArray: '3, 3',
+                  }}
+                />
+              )}
+
+              <CircleMarker
+                key={`${parcel.id}-node-${activeLayer}-${visionMode}-${isSelected}`}
+                center={[parcel.geoCenter.lat, parcel.geoCenter.lng]}
+                radius={markerRadius}
+                pathOptions={{
+                  color: markerColor,
+                  fillColor: markerFill,
+                  fillOpacity: visionMode !== 'OPTICAL' ? 0.85 : style.fillOpacity,
+                  weight: isSelected ? 3.5 : 2,
+                }}
+                eventHandlers={{
+                  click: () => handleMarkerClick(parcel),
+                }}
+              >
+                <Popup>
+                  <div className="p-1.5 text-[#0F172A] text-xs font-sans space-y-1.5 min-w-[200px]">
+                    <div className="flex items-center justify-between gap-2 border-b border-[#E2E8F0] pb-1">
+                      <strong className="text-xs font-extrabold text-[#0F172A]">Khasra #{parcel.khasraSurveyNo}</strong>
+                      <span className="font-mono font-bold text-[10px] px-1.5 py-0.5 rounded bg-[#FFF1F2] text-[#DC2626]">
+                        {metrics.delayRiskScore}% Risk
+                      </span>
+                    </div>
+
+                    {/* Active Layer Specific Metric Insight */}
+                    {visionMode === 'OPTICAL' && (
+                      <div className="p-1.5 rounded-lg bg-[#F8FAFC] border border-[#E2E8F0] text-[10px] space-y-0.5 font-medium">
+                        {activeLayer === 'DELAY_RISK' && (
+                          <p className="text-[#DC2626] font-bold">🔴 Delay Cause: {metrics.primaryRiskReason}</p>
+                        )}
+                        {activeLayer === 'COMPENSATION_BURDEN' && (
+                          <p className="text-[#C2410C] font-bold">
+                            🟠 Solatium Total: ₹{(metrics.compensationBurdenINR / 100000).toFixed(1)} Lakhs
+                          </p>
+                        )}
+                        {activeLayer === 'OWNERSHIP_COMPLEXITY' && (
+                          <p className="text-[#B45309] font-bold">
+                            🟡 Title: {metrics.ownershipCount} Co-owners ({metrics.ownershipConflict ? 'Dispute Pending' : 'Clear Title'})
+                          </p>
+                        )}
+                        {activeLayer === 'LITIGATION' && (
+                          <p className="text-[#7E22CE] font-bold">
+                            🟣 Court Status: {metrics.hasActiveLitigation ? metrics.litigationCaseNo || 'High Court WP Active' : 'No Litigation'}
+                          </p>
+                        )}
+                        {activeLayer === 'RR_BURDEN' && (
+                          <p className="text-[#1D4ED8] font-bold">
+                            🔵 R&R Status: {metrics.pendingRRCount > 0 ? 'Resettlement Grants Pending' : 'All Entitlements Allocated'}
+                          </p>
+                        )}
+                        {activeLayer === 'DOCUMENT_COMPLETENESS' && (
+                          <p className="text-[#047857] font-bold">
+                            🟢 Compliance: {metrics.documentCompletenessPct}% 7/12 RoR Records Verified
+                          </p>
+                        )}
+                        <p className="text-[#64748B] text-[9px] pt-0.5">{metrics.recommendedAction}</p>
+                      </div>
+                    )}
+
+                    {visionMode === 'SAR_RADAR' && (
+                      <div className="p-1 rounded bg-[#F0FDF4] border border-[#BBF7D0] text-[10px] font-mono text-[#166534] space-y-0.5">
+                        <p>📡 SAR Dual-Pol Backscatter: -13.8 dB</p>
+                        <p>🛡️ Encroachment Double-Bounce: None Detected</p>
+                        <p className="text-[#0284C7]">Cloud Cover: 100% Penetrated</p>
+                      </div>
+                    )}
+
+                    {visionMode === 'INSAR_SUBSIDENCE' && (
+                      <div className="p-1 rounded bg-[#EFF6FF] border border-[#BFDBFE] text-[10px] font-mono text-[#1E40AF] space-y-0.5">
+                        <p>🌋 InSAR Ground Displacement: -0.6 mm/yr</p>
+                        <p>📐 Geological Embankment Grade: A (Stable)</p>
+                      </div>
+                    )}
+
+                    {visionMode === 'SAR_CHANGE' && (
+                      <div className="p-1.5 rounded bg-[#FAF5FF] border border-[#E9D5FF] text-[10.5px] font-sans text-[#6B21A8] space-y-0.5">
+                        <p className="font-semibold">🔍 Soil Clearance: Confirmed Cleared</p>
+                        <p className="font-semibold text-[#059669]">✅ Sec 38 Possession Verified: 96.4%</p>
+                      </div>
+                    )}
+
+                    <p className="text-[10px] text-[#059669] font-bold pt-1">
+                      Click marker to open full Digital Land Passport
+                    </p>
                   </div>
-
-                  {visionMode === 'OPTICAL' && (
-                    <p className="text-[10px] text-[#475569]">{metrics.primaryRiskReason}</p>
-                  )}
-
-                  {visionMode === 'SAR_RADAR' && (
-                    <div className="p-1 rounded bg-[#F0FDF4] border border-[#BBF7D0] text-[10px] font-mono text-[#166534] space-y-0.5">
-                      <p>📡 SAR Dual-Pol Backscatter: -13.8 dB</p>
-                      <p>🛡️ Encroachment Double-Bounce: None Detected</p>
-                      <p className="text-[#0284C7]">Cloud Cover: 100% Penetrated</p>
-                    </div>
-                  )}
-
-                  {visionMode === 'INSAR_SUBSIDENCE' && (
-                    <div className="p-1 rounded bg-[#EFF6FF] border border-[#BFDBFE] text-[10px] font-mono text-[#1E40AF] space-y-0.5">
-                      <p>🌋 InSAR Ground Displacement: -0.6 mm/yr</p>
-                      <p>📐 Geological Embankment Grade: A (Stable)</p>
-                    </div>
-                  )}
-
-                  {visionMode === 'SAR_CHANGE' && (
-                    <div className="p-1.5 rounded bg-[#FAF5FF] border border-[#E9D5FF] text-[10.5px] font-sans text-[#6B21A8] space-y-0.5">
-                      <p className="font-semibold">🔍 Soil Clearance: Confirmed Cleared</p>
-                      <p className="font-semibold text-[#059669]">✅ Sec 38 Possession Verified: 96.4%</p>
-                    </div>
-                  )}
-
-                  <p className="text-[10px] text-[#059669] font-bold pt-1">
-                    Click marker to open full Digital Land Passport
-                  </p>
-                </div>
-              </Popup>
-            </CircleMarker>
+                </Popup>
+              </CircleMarker>
+            </React.Fragment>
           );
         })}
 

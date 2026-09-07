@@ -182,38 +182,39 @@ export function getHeatmapNodeStyle(
 ): { color: string; fillColor: string; fillOpacity: number; radius: number } {
   switch (activeLayer) {
     case 'DELAY_RISK': {
-      if (metrics.delayRiskLevel === 'CRITICAL') return { color: '#DC2626', fillColor: '#EF4444', fillOpacity: 0.9, radius: 14 };
-      if (metrics.delayRiskLevel === 'HIGH') return { color: '#EA580C', fillColor: '#F97316', fillOpacity: 0.85, radius: 12 };
-      if (metrics.delayRiskLevel === 'MEDIUM') return { color: '#D97706', fillColor: '#FBBF24', fillOpacity: 0.8, radius: 10 };
-      return { color: '#059669', fillColor: '#10B981', fillOpacity: 0.7, radius: 8 };
+      if (metrics.delayRiskLevel === 'CRITICAL') return { color: '#B91C1C', fillColor: '#EF4444', fillOpacity: 0.95, radius: 16 };
+      if (metrics.delayRiskLevel === 'HIGH') return { color: '#C2410C', fillColor: '#F97316', fillOpacity: 0.9, radius: 13 };
+      if (metrics.delayRiskLevel === 'MEDIUM') return { color: '#B45309', fillColor: '#FBBF24', fillOpacity: 0.85, radius: 10 };
+      return { color: '#047857', fillColor: '#10B981', fillOpacity: 0.75, radius: 8 };
     }
 
     case 'COMPENSATION_BURDEN': {
-      if (metrics.pendingCompensationINR > 8000000) return { color: '#C2410C', fillColor: '#EA580C', fillOpacity: 0.9, radius: 14 };
-      if (metrics.pendingCompensationINR > 4000000) return { color: '#D97706', fillColor: '#F59E0B', fillOpacity: 0.85, radius: 11 };
+      if (metrics.pendingCompensationINR > 8000000) return { color: '#7C2D12', fillColor: '#EA580C', fillOpacity: 0.95, radius: 18 };
+      if (metrics.pendingCompensationINR > 4000000) return { color: '#C2410C', fillColor: '#F97316', fillOpacity: 0.9, radius: 14 };
+      if (metrics.compensationBurdenINR > 0) return { color: '#D97706', fillColor: '#FBBF24', fillOpacity: 0.8, radius: 10 };
       return { color: '#0284C7', fillColor: '#38BDF8', fillOpacity: 0.7, radius: 8 };
     }
 
     case 'OWNERSHIP_COMPLEXITY': {
-      if (metrics.ownershipConflict) return { color: '#B45309', fillColor: '#EAB308', fillOpacity: 0.9, radius: 13 };
-      if (metrics.ownershipCount > 2) return { color: '#D97706', fillColor: '#FDE047', fillOpacity: 0.8, radius: 11 };
-      return { color: '#64748B', fillColor: '#94A3B8', fillOpacity: 0.7, radius: 8 };
+      if (metrics.ownershipConflict) return { color: '#78350F', fillColor: '#EAB308', fillOpacity: 0.95, radius: 17 };
+      if (metrics.ownershipCount > 2) return { color: '#A16207', fillColor: '#FDE047', fillOpacity: 0.9, radius: 13 };
+      return { color: '#475569', fillColor: '#94A3B8', fillOpacity: 0.5, radius: 7 };
     }
 
     case 'LITIGATION': {
-      if (metrics.hasActiveLitigation) return { color: '#7E22CE', fillColor: '#A855F7', fillOpacity: 0.95, radius: 15 };
-      return { color: '#94A3B8', fillColor: '#CBD5E1', fillOpacity: 0.5, radius: 7 };
+      if (metrics.hasActiveLitigation) return { color: '#581C87', fillColor: '#9333EA', fillOpacity: 0.95, radius: 18 };
+      return { color: '#64748B', fillColor: '#CBD5E1', fillOpacity: 0.4, radius: 6 };
     }
 
     case 'RR_BURDEN': {
-      if (metrics.pendingRRCount > 0) return { color: '#1D4ED8', fillColor: '#3B82F6', fillOpacity: 0.9, radius: 13 };
-      return { color: '#64748B', fillColor: '#CBD5E1', fillOpacity: 0.5, radius: 7 };
+      if (metrics.pendingRRCount > 0) return { color: '#1E3A8A', fillColor: '#2563EB', fillOpacity: 0.95, radius: 17 };
+      return { color: '#64748B', fillColor: '#CBD5E1', fillOpacity: 0.4, radius: 6 };
     }
 
     case 'DOCUMENT_COMPLETENESS': {
-      if (metrics.documentCompletenessPct >= 80) return { color: '#047857', fillColor: '#10B981', fillOpacity: 0.9, radius: 9 };
-      if (metrics.documentCompletenessPct >= 50) return { color: '#D97706', fillColor: '#F59E0B', fillOpacity: 0.85, radius: 12 };
-      return { color: '#B91C1C', fillColor: '#EF4444', fillOpacity: 0.95, radius: 14 };
+      if (metrics.documentCompletenessPct >= 80) return { color: '#064E3B', fillColor: '#059669', fillOpacity: 0.95, radius: 10 };
+      if (metrics.documentCompletenessPct >= 50) return { color: '#9A3412', fillColor: '#EA580C', fillOpacity: 0.9, radius: 14 };
+      return { color: '#7F1D1D', fillColor: '#DC2626', fillOpacity: 0.95, radius: 17 };
     }
 
     default:
