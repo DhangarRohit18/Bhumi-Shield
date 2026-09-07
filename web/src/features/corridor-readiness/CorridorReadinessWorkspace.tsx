@@ -77,9 +77,6 @@ export const CorridorReadinessWorkspace: React.FC = () => {
                   Corridor Risk Engine
                 </span>
               </div>
-              <p className="text-xs text-[#64748B]">
-                Spatial intelligence tracking where infrastructure projects are socially, administratively, and legally clear vs. delayed.
-              </p>
             </div>
           </div>
 
