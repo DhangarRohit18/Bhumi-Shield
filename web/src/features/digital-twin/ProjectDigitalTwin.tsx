@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../../contexts/AuthContext';
 import { useFirestoreCollection } from '../../hooks/useFirestore';
+import { useBottleneckEngine } from '../../hooks/useBottleneckEngine';
 import {
   projectService,
   parcelService,
@@ -105,6 +106,13 @@ export const ProjectDigitalTwin: React.FC = () => {
   const awardedParcelsCount = projectParcels.filter((p) => p.status === 'AWARDED' || p.status === 'DISBURSED').length;
   const totalCompSum = projectCompensations.reduce((acc, c) => acc + (c.totalPayableINR || 0), 0);
 
+  // ── Feature 2: Run bhoomisetu bottleneck engine on live parcel data ──
+  const computedBottlenecks = useBottleneckEngine({
+    parcels: projectParcels,
+    workflowEvents: projectWorkflowEvents,
+    currentStageKey: activeProject.currentStage,
+  });
+
   const handleAdvanceStage = async (nextStage: string) => {
     if (!activeProject.id) return;
     await projectService.update(activeProject.id, {
@@ -155,9 +163,10 @@ export const ProjectDigitalTwin: React.FC = () => {
             parcelsCount={projectParcels.length}
             awardedCount={awardedParcelsCount}
             totalCompensationSum={totalCompSum}
-            bottlenecks={projectBottlenecks}
+            bottlenecks={[...projectBottlenecks, ...computedBottlenecks as any]}
             tasks={projectTasks}
             prediction={projectPrediction}
+            parcels={projectParcels}
           />
         )}
 
@@ -166,6 +175,7 @@ export const ProjectDigitalTwin: React.FC = () => {
             currentStage={activeProject.currentStage}
             workflowEvents={projectWorkflowEvents}
             onAdvanceStage={handleAdvanceStage}
+            parcels={projectParcels}
           />
         )}
 

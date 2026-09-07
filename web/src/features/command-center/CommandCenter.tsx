@@ -1,6 +1,7 @@
 import React, { useState, useMemo } from 'react';
 import { useAuth } from '../../contexts/AuthContext';
 import { useFirestoreCollection } from '../../hooks/useFirestore';
+import { useBottleneckEngine } from '../../hooks/useBottleneckEngine';
 import {
   projectService,
   parcelService,
@@ -72,6 +73,27 @@ export const CommandCenter: React.FC = () => {
     if (!drillDown.projectId) return allBottlenecks;
     return allBottlenecks.filter((b) => b.projectId === drillDown.projectId);
   }, [allBottlenecks, drillDown.projectId]);
+
+  // ── Compute live bottlenecks from parcel data (bhoomisetu engine) ──
+  // Use the first filtered project's stage as the context for computation.
+  const focusedProject = drillDown.projectId
+    ? allProjects.find((p) => p.id === drillDown.projectId)
+    : allProjects[0];
+
+  const focusedParcels = drillDown.projectId
+    ? filteredParcels
+    : allParcels.slice(0, 200); // limit for perf on pan-India view
+
+  const focusedWorkflowEvents = useMemo(() => {
+    if (!drillDown.projectId) return allWorkflowEvents.slice(0, 100);
+    return allWorkflowEvents.filter((e) => e.projectId === drillDown.projectId);
+  }, [allWorkflowEvents, drillDown.projectId]);
+
+  const computedBottlenecks = useBottleneckEngine({
+    parcels: focusedParcels,
+    workflowEvents: focusedWorkflowEvents,
+    currentStageKey: focusedProject?.currentStage || 'Sec_19_Declaration',
+  });
 
   const filteredInterventions = useMemo(() => {
     if (!drillDown.projectId) return allInterventions;
@@ -148,6 +170,7 @@ export const CommandCenter: React.FC = () => {
 
           <EmergingBottlenecksPanel
             bottlenecks={filteredBottlenecks}
+            computedBottlenecks={computedBottlenecks}
           />
         </div>
 

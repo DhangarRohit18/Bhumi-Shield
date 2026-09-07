@@ -1,6 +1,7 @@
 import React from 'react';
-import { Project, Bottleneck, PredictionRecord, TaskItem } from '../../../../types';
-import { TrendingUp, Clock, AlertTriangle, UserCheck, DollarSign } from 'lucide-react';
+import { Project, Bottleneck, PredictionRecord, TaskItem, Parcel } from '../../../../types';
+import { TrendingUp, Clock, AlertTriangle, UserCheck, DollarSign, Activity } from 'lucide-react';
+import { computeWeightedProgress, getStatusColor } from '../../../../utils/progressWeights';
 
 interface OverviewProps {
   project: Project;
@@ -10,6 +11,7 @@ interface OverviewProps {
   bottlenecks: Bottleneck[];
   tasks: TaskItem[];
   prediction?: PredictionRecord;
+  parcels?: Parcel[];
 }
 
 export const TwinOverviewTab: React.FC<OverviewProps> = ({
@@ -18,26 +20,46 @@ export const TwinOverviewTab: React.FC<OverviewProps> = ({
   awardedCount,
   totalCompensationSum,
   bottlenecks,
-  tasks,
+  tasks: _tasks,
   prediction,
+  parcels = [],
 }) => {
-  const percentComplete = parcelsCount > 0 ? Math.round((awardedCount / parcelsCount) * 100) : 0;
+  // ── Feature 1: Weighted progress (from bhoomisetu scoring formula) ──
+  const { weightedTotal, stageBreakdown } = computeWeightedProgress(
+    parcels,
+    project.currentStage
+  );
+
+  // Fallback for when parcels are not yet loaded: use simple awarded/total
+  const displayPct = parcels.length > 0 ? weightedTotal : (
+    parcelsCount > 0 ? Math.round((awardedCount / parcelsCount) * 100) : 0
+  );
+
+  const atRiskCount = stageBreakdown.filter(
+    (s) => s.status === 'AT_RISK' || s.status === 'BOTTLENECK'
+  ).length;
 
   return (
     <div className="space-y-6 font-sans">
-      {/* Top 4 Metric KPI Cards in Crisp White & Executive Slate */}
+      {/* Top 4 Metric KPI Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        {/* Acquisition Velocity — now weighted */}
         <div className="p-5 rounded-2xl bg-white border border-[#E2E8F0] shadow-sm space-y-1">
           <div className="flex items-center justify-between text-[11px] text-[#64748B] font-extrabold uppercase tracking-wider">
             <span>Acquisition Velocity</span>
             <TrendingUp className="w-4 h-4 text-[#0F172A]" />
           </div>
-          <p className="text-2xl font-extrabold text-[#0F172A] font-mono">{percentComplete}%</p>
+          <p className="text-2xl font-extrabold text-[#0F172A] font-mono">{displayPct}%</p>
           <p className="text-[10px] text-[#64748B] font-medium">
-            {awardedCount} of {parcelsCount} Cadastral Plots Awarded
+            {parcels.length > 0
+              ? 'Stage-weighted RFCTLARR score'
+              : `${awardedCount} of ${parcelsCount} Cadastral Plots Awarded`}
           </p>
           <div className="w-full bg-[#F1F5F9] border border-[#CBD5E1] h-2 rounded-full overflow-hidden mt-2">
-            <div className="bg-[#0F172A] h-full rounded-full" style={{ width: `${percentComplete}%` }} />
+            <div
+              className="bg-[#0F172A] h-full rounded-full transition-all duration-700"
+              style={{ width: `${displayPct}%` }}
+            />
           </div>
         </div>
 
@@ -60,7 +82,9 @@ export const TwinOverviewTab: React.FC<OverviewProps> = ({
           <p className="text-2xl font-extrabold text-[#0F172A] font-mono">
             +{prediction?.predictedDelayDays || 45} Days
           </p>
-          <p className="text-[10px] text-[#64748B] font-medium">Confidence: {((prediction?.confidenceScore || 0.94) * 100).toFixed(0)}% (Calibrated)</p>
+          <p className="text-[10px] text-[#64748B] font-medium">
+            Confidence: {((prediction?.confidenceScore || 0.94) * 100).toFixed(0)}% (Calibrated)
+          </p>
         </div>
 
         <div className="p-5 rounded-2xl bg-white border border-[#E2E8F0] shadow-sm space-y-1">
@@ -68,8 +92,12 @@ export const TwinOverviewTab: React.FC<OverviewProps> = ({
             <span>Active Critical Stalls</span>
             <AlertTriangle className="w-4 h-4 text-[#0F172A]" />
           </div>
-          <p className="text-2xl font-extrabold text-[#0F172A] font-mono">{bottlenecks.length}</p>
-          <p className="text-[10px] text-[#64748B] font-medium">Requires Revenue / High-Court Action</p>
+          <p className="text-2xl font-extrabold text-[#0F172A] font-mono">
+            {bottlenecks.length + atRiskCount}
+          </p>
+          <p className="text-[10px] text-[#64748B] font-medium">
+            {bottlenecks.length} Firestore + {atRiskCount} Computed live
+          </p>
         </div>
       </div>
 
@@ -129,6 +157,70 @@ export const TwinOverviewTab: React.FC<OverviewProps> = ({
           </div>
         </div>
       </div>
+
+      {/* ── Feature 5: Per-Stage Progress Ring Dashboard (from bhoomisetu) ── */}
+      {parcels.length > 0 && (
+        <div className="p-5 rounded-2xl bg-white border border-[#E2E8F0] shadow-sm space-y-4">
+          <div className="flex items-center justify-between border-b border-[#E2E8F0] pb-3">
+            <div className="flex items-center gap-2">
+              <div className="p-1.5 rounded-lg bg-[#F1F5F9] border border-[#CBD5E1]">
+                <Activity className="w-4 h-4 text-[#0F172A]" />
+              </div>
+              <div>
+                <h3 className="text-sm font-extrabold text-[#0F172A]">
+                  Live Stage-Weighted Progress Breakdown
+                </h3>
+                <p className="text-[11px] text-[#64748B]">
+                  Computed live from parcel data — bhoomisetu-style weighted scoring per RFCTLARR stage
+                </p>
+              </div>
+            </div>
+            <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-[#F1F5F9] border border-[#CBD5E1] text-[#0F172A] font-bold">
+              Total: {weightedTotal}%
+            </span>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+            {stageBreakdown.map((stage) => {
+              const colors = getStatusColor(stage.status);
+              return (
+                <div
+                  key={stage.key}
+                  className={`p-3.5 rounded-xl border ${colors.bg} ${colors.border} space-y-2`}
+                >
+                  <div className="flex items-center justify-between">
+                    <span
+                      className={`text-[9px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded border ${colors.bg} ${colors.text} ${colors.border}`}
+                    >
+                      {stage.status.replace('_', ' ')}
+                    </span>
+                    <span className={`text-[10px] font-mono font-bold ${colors.text}`}>
+                      {stage.weight}% wt
+                    </span>
+                  </div>
+
+                  <p className={`text-xs font-extrabold leading-tight ${colors.text}`}>
+                    {stage.label}
+                  </p>
+
+                  {/* Mini progress bar */}
+                  <div className="w-full bg-white/60 h-1.5 rounded-full overflow-hidden border border-white/80">
+                    <div
+                      className="h-full rounded-full transition-all duration-700 bg-current"
+                      style={{ width: `${stage.actualPct}%`, opacity: 0.8 }}
+                    />
+                  </div>
+
+                  <div className={`flex justify-between text-[10px] font-mono ${colors.text}`}>
+                    <span>{stage.actualPct}% actual</span>
+                    <span>+{stage.weightedContribution}pt</span>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      )}
     </div>
   );
 };

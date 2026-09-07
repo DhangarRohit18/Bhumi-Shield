@@ -1,6 +1,7 @@
 import React from 'react';
 import { Project, Bottleneck } from '../../../types';
-import { ChevronRight, Cpu, AlertOctagon, Layers } from 'lucide-react';
+import { Cpu } from 'lucide-react';
+import { LiveSyncStatusBar } from '../../../components/LiveSyncStatusBar';
 
 interface TwinHeaderProps {
   project: Project;
@@ -48,7 +49,7 @@ export const TwinHeader: React.FC<TwinHeaderProps> = ({
         </div>
 
         {/* Operational Indicators in Slate */}
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 flex-wrap">
           <div className="px-2.5 py-1 rounded-lg bg-[#F8FAFC] border border-[#E2E8F0] text-left shadow-sm">
             <span className="text-[9px] uppercase font-bold text-[#64748B] tracking-wider">Area Required</span>
             <p className="text-xs font-extrabold text-[#0F172A] font-mono">{project.totalAreaRequiredAcres} Ac</p>
@@ -63,6 +64,9 @@ export const TwinHeader: React.FC<TwinHeaderProps> = ({
             <span className="text-[10px] uppercase font-bold text-[#64748B] tracking-wider">Active Stalls</span>
             <p className="text-sm font-extrabold text-[#0F172A] font-mono mt-0.5">{bottlenecks.length}</p>
           </div>
+
+          {/* ── Real-Time Firestore Sync Status (from JK live-sync pattern) ── */}
+          <LiveSyncStatusBar />
         </div>
       </div>
     </div>
