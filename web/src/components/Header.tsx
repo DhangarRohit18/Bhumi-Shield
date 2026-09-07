@@ -11,15 +11,10 @@ interface HeaderProps {
 export const Header: React.FC<HeaderProps> = ({ onLogout }) => {
   const { activeRole, switchDemoRole, userProfile } = useAuth();
 
-  const roles: UserRole[] = [
-    'National Admin',
-    'State Admin',
-    'District Officer',
-    'Acquisition Officer',
-    'Field Supervisor',
-    'Field Officer',
-    'Auditor',
-    'Public User',
+  const roles: { id: UserRole; label: string }[] = [
+    { id: 'NATIONAL_EXECUTIVE', label: '🏛️ National Executive' },
+    { id: 'FIELD_ACQUISITION', label: '📐 Field Acquisition' },
+    { id: 'AUDIT_CITIZEN', label: '🛡️ Audit & Citizen' },
   ];
 
   return (
@@ -68,8 +63,8 @@ export const Header: React.FC<HeaderProps> = ({ onLogout }) => {
               className="bg-white border border-[#BAE6FD] rounded-lg px-2.5 py-0.5 text-xs font-extrabold text-[#0F172A] focus:outline-none focus:border-[#EA580C] cursor-pointer shadow-xs"
             >
               {roles.map((r) => (
-                <option key={r} value={r}>
-                  {r}
+                <option key={r.id} value={r.id}>
+                  {r.label}
                 </option>
               ))}
             </select>

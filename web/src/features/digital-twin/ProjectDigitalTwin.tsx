@@ -28,11 +28,6 @@ import { GISCommandMap } from '../command-center/components/GISCommandMap';
 import {
   TwinDocumentsTab,
   TwinCompensationTab,
-  TwinRrTab,
-  TwinLegalTab,
-  TwinFieldEvidenceTab,
-  TwinIntelligenceTab,
-  TwinActionsTab,
   TwinAuditTab,
 } from './components/tabs/RemainingTabs';
 
@@ -41,16 +36,15 @@ export const ProjectDigitalTwin: React.FC = () => {
   
   // Set default initial tab based on role clearance
   const [activeTab, setActiveTab] = useState<TwinTabId>(() => {
-    if (activeRole === 'Field Officer') return 'parcels';
-    if (activeRole === 'Auditor') return 'audit';
+    if (activeRole === 'FIELD_ACQUISITION') return 'parcels';
+    if (activeRole === 'AUDIT_CITIZEN') return 'audit';
     return 'overview';
   });
 
-  // Keep activeTab aligned when role switches
   useEffect(() => {
-    if (activeRole === 'Field Officer' && activeTab !== 'parcels' && activeTab !== 'field_evidence' && activeTab !== 'gis') {
+    if (activeRole === 'FIELD_ACQUISITION' && !['overview', 'lifecycle', 'gis', 'parcels', 'documents', 'compensation', 'audit'].includes(activeTab)) {
       setActiveTab('parcels');
-    } else if (activeRole === 'Auditor' && activeTab !== 'audit' && activeTab !== 'compensation' && activeTab !== 'documents') {
+    } else if (activeRole === 'AUDIT_CITIZEN' && !['overview', 'lifecycle', 'gis', 'documents', 'compensation', 'audit'].includes(activeTab)) {
       setActiveTab('audit');
     }
   }, [activeRole]);
@@ -219,12 +213,10 @@ export const ProjectDigitalTwin: React.FC = () => {
 
         {activeTab === 'documents' && <TwinDocumentsTab documents={projectDocuments} />}
         {activeTab === 'compensation' && <TwinCompensationTab compensations={projectCompensations} />}
-        {activeTab === 'rr' && <TwinRrTab rrCases={projectRRCases} />}
-        {activeTab === 'legal' && <TwinLegalTab projectId={activeProject.id || 'proj-bullet-train-sec-3'} legalCases={projectLegalCases} />}
-        {activeTab === 'field_evidence' && <TwinFieldEvidenceTab evidence={projectFieldEvidence} />}
-        {activeTab === 'intelligence' && <TwinIntelligenceTab prediction={projectPrediction} />}
-        {activeTab === 'actions' && <TwinActionsTab projectId={activeProject.id || ''} />}
-        {activeTab === 'audit' && <TwinAuditTab auditLogs={allAuditLogs as any} />}
+
+        {activeTab === 'audit' && (
+          <TwinAuditTab auditLogs={allAuditLogs as any} />
+        )}
       </div>
     </div>
   );

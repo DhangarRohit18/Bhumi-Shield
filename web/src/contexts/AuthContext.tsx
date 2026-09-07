@@ -1,4 +1,4 @@
-﻿import React, { createContext, useContext, useEffect, useState } from 'react';
+import React, { createContext, useContext, useEffect, useState } from 'react';
 import {
   User as FirebaseUser,
   signInWithEmailAndPassword,
@@ -25,7 +25,7 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [currentUser, setCurrentUser] = useState<FirebaseUser | null>(null);
   const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
-  const [activeRole, setActiveRole] = useState<UserRole>('National Admin');
+  const [activeRole, setActiveRole] = useState<UserRole>('NATIONAL_EXECUTIVE');
   const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
@@ -43,7 +43,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
               uid: user.uid,
               email: user.email || 'officer@bhumishield.gov.in',
               displayName: user.displayName || 'Government Officer',
-              role: 'National Admin',
+              role: 'NATIONAL_EXECUTIVE',
               isActive: true,
               createdAt: Date.now(),
               updatedAt: Date.now(),

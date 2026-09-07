@@ -1,14 +1,9 @@
 // BHUMI-SHIELD Domain & Firestore Schema Types (28+ Collections)
 
 export type UserRole =
-  | 'National Admin'
-  | 'State Admin'
-  | 'District Officer'
-  | 'Acquisition Officer'
-  | 'Field Supervisor'
-  | 'Field Officer'
-  | 'Auditor'
-  | 'Public User';
+  | 'NATIONAL_EXECUTIVE'
+  | 'FIELD_ACQUISITION'
+  | 'AUDIT_CITIZEN';
 
 export interface BaseEntity {
   id?: string;
@@ -457,4 +452,49 @@ export interface ParcelIntelligenceMetrics {
   documentCompletenessPct: number;
   primaryRiskReason: string;
   recommendedAction: string;
+}
+
+// 34. data_locks (Field/Record Protection Engine)
+export interface DataLock extends BaseEntity {
+  entityType: 'PROJECT' | 'PARCEL' | 'COMPENSATION_AWARD' | 'AFFECTED_FAMILY' | 'RR_CASE';
+  entityId: string;
+  lockedFieldPath: string; // e.g. "compensation", "areaAcres", or "*" for entire record
+  lockedByUid: string;
+  lockedByName: string;
+  lockedByRole: UserRole;
+  allowedRoles: UserRole[]; // Roles that can bypass the lock
+  lockReason?: string;
+  isUnlocked: boolean;
+  unlockedByUid?: string;
+  unlockedByName?: string;
+  unlockedAt?: number;
+}
+
+// 35. compensation_fairness
+export interface CompensationFairnessMetrics extends BaseEntity {
+  compensationAwardId: string;
+  parcelId: string;
+  fairnessScore: number; // 0-100
+  awardedValueINR: number;
+  circleRateINR: number;
+  surroundingAvgTransactionINR: number;
+  aiExplanation: string;
+  riskLevel: 'FAIR' | 'REVIEW_RECOMMENDED' | 'HIGH_RISK';
+}
+
+// 36. ocr_extractions
+export interface OCRExtractionJob extends BaseEntity {
+  documentId: string;
+  projectId: string;
+  status: 'PROCESSING' | 'COMPLETED' | 'FAILED' | 'HUMAN_VERIFICATION_REQUIRED';
+  extractedData: {
+    khasraNumber?: string;
+    ownerName?: string;
+    areaValue?: string;
+    compensationAmount?: string;
+    gazetteDate?: string;
+    [key: string]: any;
+  };
+  confidenceScores: Record<string, number>;
+  humanVerified: boolean;
 }

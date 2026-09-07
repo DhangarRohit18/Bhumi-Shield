@@ -31,6 +31,10 @@ import {
   AppNotification,
   ModelFeedback,
   OfficerWorkloadRecord,
+  DataLock,
+  CompensationFairnessMetrics,
+  OCRExtractionJob,
+  AuditLogEntry,
 } from '../types';
 
 export const userService = new FirestoreGenericService<UserProfile>('users');
@@ -61,6 +65,10 @@ export const dependencyService = new FirestoreGenericService<DependencyEdge>('de
 export const predictionService = new FirestoreGenericService<PredictionRecord>('predictions');
 export const interventionService = new FirestoreGenericService<InterventionStrategy>('interventions');
 export const simulationService = new FirestoreGenericService<SimulationRun>('simulations');
+export const auditLogService = new FirestoreGenericService<AuditLogEntry>('audit_logs');
 export const notificationService = new FirestoreGenericService<AppNotification>('notifications');
 export const modelFeedbackService = new FirestoreGenericService<ModelFeedback>('model_feedback');
 export const officerWorkloadService = new FirestoreGenericService<OfficerWorkloadRecord>('officer_workloads');
+export const dataLockService = new FirestoreGenericService<DataLock>('data_locks');
+export const compensationFairnessService = new FirestoreGenericService<CompensationFairnessMetrics>('compensation_fairness');
+export const ocrExtractionService = new FirestoreGenericService<OCRExtractionJob>('ocr_extractions');

@@ -9,19 +9,26 @@ interface LoginScreenProps {
 
 export const LoginScreen: React.FC<LoginScreenProps> = ({ onLoginSuccess }) => {
   const { switchDemoRole } = useAuth();
-  const [selectedRole, setSelectedRole] = useState<UserRole>('National Admin');
+  const [selectedRole, setSelectedRole] = useState<UserRole>('NATIONAL_EXECUTIVE');
   const [officialId, setOfficialId] = useState('GOV-MH-8921');
   const [accessKey, setAccessKey] = useState('••••••••••••');
 
-  const roles: UserRole[] = [
-    'National Admin',
-    'State Admin',
-    'District Officer',
-    'Acquisition Officer',
-    'Field Supervisor',
-    'Field Officer',
-    'Auditor',
-    'Public User',
+  const roleOptions: { value: UserRole; label: string; desc: string }[] = [
+    {
+      value: 'NATIONAL_EXECUTIVE',
+      label: '🏛️ National & District Executive Cockpit',
+      desc: 'Cabinet Secretariat • State Revenue • District Collector',
+    },
+    {
+      value: 'FIELD_ACQUISITION',
+      label: '📐 Ground Field & Statutory Acquisition Suite',
+      desc: 'CALA • Circle Officer • Field Surveyor (AR/DGPS)',
+    },
+    {
+      value: 'AUDIT_CITIZEN',
+      label: '🛡️ Audit, Compliance & Citizen Portal',
+      desc: 'CAG Vigilance • PFMS Ledger • Citizen / PAF Claims',
+    },
   ];
 
   const handleLogin = (e: React.FormEvent) => {
@@ -58,7 +65,7 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ onLoginSuccess }) => {
           <div className="text-center space-y-1.5 border-b border-[#E2E8F0] pb-5">
             <h1 className="text-xl font-black text-[#0F172A]">Official Portal Authentication</h1>
             <p className="text-xs text-[#64748B] font-semibold">
-              Select your designated statutory government role to access your authorized workspace
+              Select your consolidated statutory role to access your synchronized workspace
             </p>
           </div>
 
@@ -66,7 +73,7 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ onLoginSuccess }) => {
             {/* Role Selection */}
             <div>
               <label className="block text-[#0F172A] font-extrabold mb-1.5 uppercase text-[10px] tracking-wider">
-                Select Role
+                Select Unified Role Dashboard
               </label>
               <select
                 value={selectedRole}
@@ -74,9 +81,9 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ onLoginSuccess }) => {
                 aria-label="Statutory Role Clearance"
                 className="w-full bg-[#F0F7FF] border border-[#BAE6FD] rounded-xl px-3.5 py-2.5 text-xs font-extrabold text-[#0F172A] focus:outline-none focus:border-[#EA580C] cursor-pointer shadow-xs"
               >
-                {roles.map((role) => (
-                  <option key={role} value={role}>
-                    {role}
+                {roleOptions.map((opt) => (
+                  <option key={opt.value} value={opt.value}>
+                    {opt.label} — {opt.desc}
                   </option>
                 ))}
               </select>

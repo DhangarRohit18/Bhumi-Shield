@@ -27,14 +27,9 @@ interface SidebarProps {
 
 // Statutory RBAC Permission Matrix for Workspace Access
 const ROLE_WORKSPACE_PERMISSIONS: Record<UserRole, MainWorkspaceId[]> = {
-  'National Admin': ['command_center', 'digital_twin', 'ops_intelligence', 'admin'],
-  'State Admin': ['command_center', 'digital_twin', 'ops_intelligence'],
-  'District Officer': ['command_center', 'digital_twin', 'ops_intelligence'],
-  'Acquisition Officer': ['digital_twin', 'ops_intelligence'],
-  'Field Supervisor': ['ops_intelligence', 'digital_twin'],
-  'Field Officer': ['digital_twin'],
-  'Auditor': ['admin', 'command_center', 'digital_twin'],
-  'Public User': ['command_center', 'digital_twin'],
+  'NATIONAL_EXECUTIVE': ['command_center', 'digital_twin', 'ops_intelligence', 'admin'],
+  'FIELD_ACQUISITION': ['digital_twin', 'ops_intelligence'],
+  'AUDIT_CITIZEN': ['command_center', 'digital_twin', 'admin'],
 };
 
 export const Sidebar: React.FC<SidebarProps> = ({

@@ -1,5 +1,12 @@
-﻿import { FirestoreGenericService } from './firestoreGeneric.service';
+import { FirestoreGenericService } from './firestoreGeneric.service';
 import { AuditLogEntry, UserRole } from '../types';
+
+async function generateSHA256(message: string): Promise<string> {
+  const msgBuffer = new TextEncoder().encode(message);
+  const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
+  const hashArray = Array.from(new Uint8Array(hashBuffer));
+  return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+}
 
 class AuditService extends FirestoreGenericService<AuditLogEntry> {
   constructor() {
@@ -18,8 +25,19 @@ class AuditService extends FirestoreGenericService<AuditLogEntry> {
     ipAddress?: string;
   }): Promise<string> {
     const timestamp = Date.now();
-    // Cryptographic-like verification signature placeholder for immutable integrity
-    const verificationHash = `SIG_${params.targetCollection}_${params.targetDocId}_${timestamp}_${Math.random().toString(36).substring(2, 9)}`;
+    
+    // Create deterministic payload for hashing
+    const payloadStr = JSON.stringify({
+      targetCollection: params.targetCollection,
+      targetDocId: params.targetDocId,
+      action: params.action,
+      actorId: params.actorId,
+      timestamp,
+      diffPayload: params.diffPayload || {}
+    });
+    
+    // Tamper-Evident Hash Generation
+    const verificationHash = await generateSHA256(payloadStr);
 
     return await this.create({
       targetCollection: params.targetCollection,

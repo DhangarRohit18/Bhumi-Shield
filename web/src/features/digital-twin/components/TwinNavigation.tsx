@@ -22,11 +22,6 @@ export type TwinTabId =
   | 'parcels'
   | 'documents'
   | 'compensation'
-  | 'rr'
-  | 'legal'
-  | 'field_evidence'
-  | 'intelligence'
-  | 'actions'
   | 'audit';
 
 interface TwinNavProps {
@@ -46,14 +41,9 @@ interface TwinNavProps {
 
 // Role-Based Tab Permissions inside the Project Digital Twin
 const ROLE_TAB_PERMISSIONS: Record<UserRole, TwinTabId[]> = {
-  'National Admin': ['overview', 'lifecycle', 'gis', 'parcels', 'documents', 'compensation', 'rr', 'legal', 'field_evidence', 'intelligence', 'actions', 'audit'],
-  'State Admin': ['overview', 'lifecycle', 'gis', 'parcels', 'documents', 'compensation', 'rr', 'legal', 'field_evidence', 'intelligence', 'actions', 'audit'],
-  'District Officer': ['overview', 'lifecycle', 'gis', 'parcels', 'documents', 'compensation', 'rr', 'legal', 'field_evidence', 'intelligence', 'actions', 'audit'],
-  'Acquisition Officer': ['overview', 'lifecycle', 'gis', 'parcels', 'documents', 'compensation', 'legal', 'actions', 'audit'],
-  'Field Supervisor': ['overview', 'gis', 'parcels', 'field_evidence', 'actions', 'audit'],
-  'Field Officer': ['parcels', 'field_evidence', 'gis'],
-  'Auditor': ['overview', 'documents', 'compensation', 'rr', 'audit'],
-  'Public User': ['overview', 'lifecycle', 'gis', 'documents'],
+  'NATIONAL_EXECUTIVE': ['overview', 'lifecycle', 'gis', 'parcels', 'documents', 'compensation', 'audit'],
+  'FIELD_ACQUISITION': ['overview', 'lifecycle', 'gis', 'parcels', 'documents', 'compensation', 'audit'],
+  'AUDIT_CITIZEN': ['overview', 'lifecycle', 'gis', 'documents', 'compensation', 'audit'],
 };
 
 export const TwinNavigation: React.FC<TwinNavProps> = ({
@@ -71,11 +61,6 @@ export const TwinNavigation: React.FC<TwinNavProps> = ({
     { id: 'parcels', name: 'Parcels & Khasra', icon: FolderOpen, count: counts.parcels },
     { id: 'documents', name: 'Gazette & Documents', icon: FileText, count: counts.documents },
     { id: 'compensation', name: 'Compensation & PFMS', icon: DollarSign, count: counts.compensations },
-    { id: 'rr', name: 'R&R Entitlements', icon: Home, count: counts.rrCases },
-    { id: 'legal', name: 'Legal Writs', icon: Scale, count: counts.legalCases },
-    { id: 'field_evidence', name: 'Field Evidence', icon: Camera, count: counts.evidence },
-    { id: 'intelligence', name: 'AI Forecasts', icon: BrainCircuit },
-    { id: 'actions', name: 'Directives', icon: Zap },
     { id: 'audit', name: 'Audit Ledger', icon: History, count: counts.auditLogs },
   ];
 

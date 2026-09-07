@@ -19,12 +19,10 @@ export const App: React.FC = () => {
 
   const handleLoginSuccess = (role: UserRole) => {
     setIsAuthenticated(true);
-    // Redirect to the respective role-based dashboard
-    if (role === 'Acquisition Officer' || role === 'Field Officer') {
+    // Redirect to the respective consolidated role-based dashboard
+    if (role === 'FIELD_ACQUISITION') {
       setActiveTab('digital_twin');
-    } else if (role === 'Field Supervisor') {
-      setActiveTab('ops_intelligence');
-    } else if (role === 'Auditor') {
+    } else if (role === 'AUDIT_CITIZEN') {
       setActiveTab('admin');
     } else {
       setActiveTab('command_center');

@@ -220,3 +220,43 @@ export function getHeatmapNodeStyle(
       return { color: '#0F172A', fillColor: '#334155', fillOpacity: 0.8, radius: 9 };
   }
 }
+
+/**
+ * COMPENSATION FAIRNESS INDEX
+ * Generates an Explainable AI Fairness Score by comparing awarded values against Circle Rates and surrounding transactions.
+ */
+export function calculateFairnessIndex(
+  awardedValueINR: number,
+  circleRateINR: number,
+  surroundingAvgTransactionINR: number
+): { score: number; riskLevel: 'FAIR' | 'REVIEW_RECOMMENDED' | 'HIGH_RISK'; explanation: string } {
+  // A fair compensation is typically 2x to 4x the circle rate depending on rural/urban,
+  // but it should also align with market transactions.
+  const ratioToCircle = awardedValueINR / (circleRateINR || 1);
+  const ratioToMarket = awardedValueINR / (surroundingAvgTransactionINR || 1);
+  
+  let score = 100;
+  let explanation = '';
+  let riskLevel: 'FAIR' | 'REVIEW_RECOMMENDED' | 'HIGH_RISK' = 'FAIR';
+
+  if (ratioToMarket < 0.75) {
+    score -= 40;
+    explanation = `Award is ${(1 - ratioToMarket) * 100}% below the surrounding average market transactions. High risk of litigation.`;
+    riskLevel = 'HIGH_RISK';
+  } else if (ratioToMarket > 2.5) {
+    score -= 30;
+    explanation = `Award is highly inflated (${ratioToMarket.toFixed(1)}x market average). Risk of audit objection for exchequer loss.`;
+    riskLevel = 'HIGH_RISK';
+  } else if (ratioToCircle < 1.5) {
+    score -= 20;
+    explanation = `Award is close to baseline circle rate without adequate solatium or multiplication factor. Potential grievance risk.`;
+    riskLevel = 'REVIEW_RECOMMENDED';
+  } else {
+    score -= Math.abs(1 - ratioToMarket) * 10; // Slight penalty for deviation
+    explanation = `Award is consistent with statutory multiplication factors and aligns well with recent localized market registries.`;
+  }
+
+  score = Math.max(0, Math.min(100, Math.round(score)));
+
+  return { score, riskLevel, explanation };
+}

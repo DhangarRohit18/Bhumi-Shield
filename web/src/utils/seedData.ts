@@ -18,9 +18,11 @@ import {
   villageService,
   departmentService,
   officerWorkloadService,
+  compensationFairnessService,
+  ocrExtractionService,
 } from '../services/entities.service';
 import { auditService } from '../services/audit.service';
-import { calculateOfficerWorkloadScore } from './intelligenceCalculations';
+import { calculateOfficerWorkloadScore, calculateFairnessIndex } from './intelligenceCalculations';
 
 export async function seedBhumiShieldDemoData(logCallback?: (msg: string) => void) {
   const log = (msg: string) => {
@@ -258,7 +260,7 @@ export async function seedBhumiShieldDemoData(logCallback?: (msg: string) => voi
     actionTaken: 'Direct DBT / PFMS transmission completed for Parcel 142/A-1 award decree',
     actorId: 'officer-acq-01',
     actorName: 'Shri Vikram Joshi, SDO & CALA',
-    actorRole: 'Acquisition Officer',
+    actorRole: 'FIELD_ACQUISITION',
     comments: 'Full amount ₹2.75 Cr credited to Aadhaar-linked beneficiary account.',
     statusChangeFrom: 'AWARDED',
     statusChangeTo: 'DISBURSED',
@@ -271,7 +273,7 @@ export async function seedBhumiShieldDemoData(logCallback?: (msg: string) => voi
     actionTaken: 'Section 11(1) Preliminary Gazette Notification published across Varanasi',
     actorId: 'officer-dm-vns',
     actorName: 'District Magistrate (Varanasi)',
-    actorRole: 'District Officer',
+    actorRole: 'NATIONAL_EXECUTIVE',
     comments: '60-day statutory objection window opened under Section 15.',
     statusChangeTo: 'Sec_11_Gazette',
     gazetteOrderNo: 'UP-GAZ-2026-EDFC-0182',
@@ -323,7 +325,7 @@ export async function seedBhumiShieldDemoData(logCallback?: (msg: string) => voi
   await officerWorkloadService.create({
     officerUid: 'off-mh-palghar-01',
     officerName: 'Sanjay V. Patil (CALA Palghar)',
-    role: 'Acquisition Officer',
+    role: 'FIELD_ACQUISITION',
     districtId: 'dist-palghar',
     stateId: 'state-mh',
     assignedCases: 48,
@@ -340,7 +342,7 @@ export async function seedBhumiShieldDemoData(logCallback?: (msg: string) => voi
   await officerWorkloadService.create({
     officerUid: 'off-mh-palghar-02',
     officerName: 'Meera Deshmukh (SDO Palghar)',
-    role: 'Acquisition Officer',
+    role: 'FIELD_ACQUISITION',
     districtId: 'dist-palghar',
     stateId: 'state-mh',
     assignedCases: 42,
@@ -357,7 +359,7 @@ export async function seedBhumiShieldDemoData(logCallback?: (msg: string) => voi
   await officerWorkloadService.create({
     officerUid: 'off-mh-thane-01',
     officerName: 'Anand R. Shinde (CALA Thane)',
-    role: 'Acquisition Officer',
+    role: 'FIELD_ACQUISITION',
     districtId: 'dist-thane',
     stateId: 'state-mh',
     assignedCases: 18,
@@ -374,7 +376,7 @@ export async function seedBhumiShieldDemoData(logCallback?: (msg: string) => voi
   await officerWorkloadService.create({
     officerUid: 'off-mh-thane-02',
     officerName: 'Pooja Kulkarni (SDO Thane)',
-    role: 'Acquisition Officer',
+    role: 'FIELD_ACQUISITION',
     districtId: 'dist-thane',
     stateId: 'state-mh',
     assignedCases: 16,
@@ -388,7 +390,72 @@ export async function seedBhumiShieldDemoData(logCallback?: (msg: string) => voi
     isAvailable: true,
   }, 'off-mh-thane-02');
 
-  // 14. Audit Log Chronicle
+  // 14. Compensation Fairness Intelligence
+  log('Seeding Compensation Fairness Analysis...');
+  const fairness1 = calculateFairnessIndex(4500000, 1800000, 2100000);
+  await compensationFairnessService.create({
+    compensationAwardId: 'comp-palghar-01',
+    parcelId: 'parcel-palghar-01',
+    fairnessScore: fairness1.score,
+    awardedValueINR: 4500000,
+    circleRateINR: 1800000,
+    surroundingAvgTransactionINR: 2100000,
+    aiExplanation: fairness1.explanation,
+    riskLevel: fairness1.riskLevel,
+  }, 'fairness-palghar-01');
+
+  const fairness2 = calculateFairnessIndex(12000000, 1500000, 2000000); // Intentionally high risk
+  await compensationFairnessService.create({
+    compensationAwardId: 'comp-palghar-02',
+    parcelId: 'parcel-palghar-02',
+    fairnessScore: fairness2.score,
+    awardedValueINR: 12000000,
+    circleRateINR: 1500000,
+    surroundingAvgTransactionINR: 2000000,
+    aiExplanation: fairness2.explanation,
+    riskLevel: fairness2.riskLevel,
+  }, 'fairness-palghar-02');
+
+  // 15. OCR & NLP Document Extraction Pipeline
+  log('Seeding OCR/NLP Document Extractions...');
+  await ocrExtractionService.create({
+    documentId: 'doc-7x12-palghar-01',
+    projectId: proj1Id,
+    status: 'COMPLETED',
+    extractedData: {
+      khasraNumber: '142/A-1',
+      ownerName: 'Ramesh Patil',
+      areaValue: '0.85',
+      areaUnit: 'Hectares',
+      gazetteDate: '2025-02-14'
+    },
+    confidenceScores: {
+      khasraNumber: 0.98,
+      ownerName: 0.96,
+      areaValue: 0.92,
+      gazetteDate: 0.88
+    },
+    humanVerified: true
+  }, 'ocr-palghar-01');
+
+  await ocrExtractionService.create({
+    documentId: 'doc-sale-deed-02',
+    projectId: proj1Id,
+    status: 'HUMAN_VERIFICATION_REQUIRED',
+    extractedData: {
+      khasraNumber: '142/A-2',
+      ownerName: 'Sunita ?????',
+      compensationAmount: '45,???,000'
+    },
+    confidenceScores: {
+      khasraNumber: 0.85,
+      ownerName: 0.42,
+      compensationAmount: 0.38
+    },
+    humanVerified: false
+  }, 'ocr-palghar-02');
+
+  // 16. Audit Log Chronicle
   log('Recording Immutable Audit Trail for National Command Center...');
   await auditService.logAction({
     targetCollection: 'system',
@@ -396,7 +463,7 @@ export async function seedBhumiShieldDemoData(logCallback?: (msg: string) => voi
     action: 'CREATE',
     actorId: 'sys-national-controller',
     actorName: 'National Command Center Orchestrator',
-    actorRole: 'National Admin',
+    actorRole: 'NATIONAL_EXECUTIVE',
     diffPayload: { status: 'SYNCHRONIZED', totalStrategicCorridors: 3, statesActive: 5 },
   });
 

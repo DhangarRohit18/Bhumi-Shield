@@ -116,7 +116,7 @@ export const WorkloadBalancer: React.FC<WorkloadBalancerProps> = ({ officers }) 
         action: 'UPDATE',
         actorId: 'auth-user-current',
         actorName: 'District / National Collector',
-        actorRole: 'Acquisition Officer',
+        actorRole: 'NATIONAL_EXECUTIVE',
         diffPayload: {
           action: 'WORKLOAD_REASSIGNMENT_EXECUTED',
           sourceOfficer: activePlan.sourceOfficerName,

@@ -114,14 +114,16 @@ export const AdministrationWorkspace: React.FC = () => {
             </h3>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               {[
-                { name: 'Dr. Rajesh Verma, IAS', role: 'National Admin', email: 'admin.national@bhumishield.gov.in', phone: '98201XXXXX' },
-                { name: 'Shri Vikram Joshi, IAS', role: 'Acquisition Officer (CALA)', email: 'cala.palghar@gov.in', phone: '94220XXXXX' },
-                { name: 'Smt. Deepa Kulkarni', role: 'District Officer', email: 'collector.thane@gov.in', phone: '91580XXXXX' },
-                { name: 'Shri Ramesh Sawant', role: 'Field Officer', email: 'talathi.manikpur@gov.in', phone: '98211XXXXX' },
+                { name: 'Dr. Rajesh Verma, IAS', role: 'NATIONAL_EXECUTIVE', roleLabel: 'National & District Executive', email: 'admin.national@bhumishield.gov.in', phone: '98201XXXXX' },
+                { name: 'Shri Vikram Joshi, IAS', role: 'FIELD_ACQUISITION', roleLabel: 'Ground Field & Statutory Acquisition', email: 'cala.palghar@gov.in', phone: '94220XXXXX' },
+                { name: 'Smt. Deepa Kulkarni', role: 'AUDIT_CITIZEN', roleLabel: 'Statutory Audit & Public Portal', email: 'cag.vigilance@gov.in', phone: '91580XXXXX' },
               ].map((u, i) => (
                 <div key={i} className="p-4 rounded-xl bg-[#F8FAFC] border border-[#E2E8F0] space-y-1 text-xs">
                   <div className="flex justify-between items-start">
-                    <strong className="text-[#0F172A] font-extrabold text-xs">{u.name}</strong>
+                    <div>
+                      <strong className="text-[#0F172A] font-extrabold text-xs block">{u.name}</strong>
+                      <span className="text-[10px] text-[#EA580C] font-semibold">{u.roleLabel}</span>
+                    </div>
                     <span className="px-2 py-0.5 rounded text-[9px] font-bold bg-[#0F172A] text-white">
                       {u.role}
                     </span>
@@ -137,25 +139,49 @@ export const AdministrationWorkspace: React.FC = () => {
         {activeTab === 'roles' && (
           <div className="p-5 rounded-2xl bg-white border border-[#E2E8F0] shadow-sm space-y-4 font-sans">
             <h3 className="text-sm font-extrabold text-[#0F172A] border-b border-[#E2E8F0] pb-3">
-              Statutory Role-Based Access Control (RBAC) Matrix
+              Consolidated Statutory Role-Based Access Control (RBAC) Matrix
             </h3>
             <div className="overflow-x-auto">
               <table className="w-full text-left text-xs text-[#0F172A]">
                 <thead className="bg-[#F8FAFC] text-[10px] uppercase font-bold text-[#64748B] border-b border-[#E2E8F0]">
                   <tr>
-                    <th className="p-2.5">Role Designation</th>
+                    <th className="p-2.5">Unified Dashboard Role</th>
+                    <th className="p-2.5">Constituent Roles</th>
                     <th className="p-2.5">Scope</th>
-                    <th className="p-2.5">Sec 19 Declaration</th>
-                    <th className="p-2.5">100% Solatium Award</th>
-                    <th className="p-2.5">PFMS Credit</th>
-                    <th className="p-2.5">Audit Log Access</th>
+                    <th className="p-2.5">Sec 19 Gazette</th>
+                    <th className="p-2.5">Sec 30 100% Solatium</th>
+                    <th className="p-2.5">PFMS Direct Credit</th>
+                    <th className="p-2.5">SHA-256 Ledger</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-[#E2E8F0] text-[11px]">
-                  <tr><td className="p-2.5 font-bold">National Admin</td><td className="p-2.5 text-[#64748B]">Pan-India</td><td className="p-2.5 text-[#047857] font-bold">✓ Full</td><td className="p-2.5 text-[#047857] font-bold">✓ Approve</td><td className="p-2.5 text-[#047857] font-bold">✓ Authorize</td><td className="p-2.5 text-[#047857] font-bold">✓ Full</td></tr>
-                  <tr><td className="p-2.5 font-bold">Acquisition Officer (CALA)</td><td className="p-2.5 text-[#64748B]">District/Project</td><td className="p-2.5 text-[#047857] font-bold">✓ Draft/Submit</td><td className="p-2.5 text-[#047857] font-bold">✓ Compute</td><td className="p-2.5 text-[#B45309] font-bold">Initiate</td><td className="p-2.5 text-[#64748B]">Read Only</td></tr>
-                  <tr><td className="p-2.5 font-bold">Field Officer (Talathi)</td><td className="p-2.5 text-[#64748B]">Village Circle</td><td className="p-2.5 text-[#9F1239]">✗ Restricted</td><td className="p-2.5 text-[#9F1239]">✗ Restricted</td><td className="p-2.5 text-[#9F1239]">✗ Restricted</td><td className="p-2.5 text-[#64748B]">Own Uploads</td></tr>
-                  <tr><td className="p-2.5 font-bold">Auditor</td><td className="p-2.5 text-[#64748B]">National/Vigilance</td><td className="p-2.5 text-[#64748B]">Audit Inspection</td><td className="p-2.5 text-[#64748B]">Audit Inspection</td><td className="p-2.5 text-[#64748B]">Audit Inspection</td><td className="p-2.5 text-[#047857] font-bold">✓ Full Unrestricted</td></tr>
+                  <tr>
+                    <td className="p-2.5 font-bold text-[#0F172A]">🏛️ National & District Executive Cockpit</td>
+                    <td className="p-2.5 text-[#64748B]">Cabinet Sec. + State Revenue + DM Collector</td>
+                    <td className="p-2.5 text-[#64748B]">Pan-India & Multi-State</td>
+                    <td className="p-2.5 text-[#047857] font-bold">✓ Sovereign Approval</td>
+                    <td className="p-2.5 text-[#047857] font-bold">✓ Final Sanction</td>
+                    <td className="p-2.5 text-[#047857] font-bold">✓ Authorize Order</td>
+                    <td className="p-2.5 text-[#047857] font-bold">✓ Full Oversight</td>
+                  </tr>
+                  <tr>
+                    <td className="p-2.5 font-bold text-[#0F172A]">📐 Ground Field & Statutory Acquisition Suite</td>
+                    <td className="p-2.5 text-[#64748B]">CALA + Circle Officer + Ground Surveyor</td>
+                    <td className="p-2.5 text-[#64748B]">Corridor & Revenue Circle</td>
+                    <td className="p-2.5 text-[#047857] font-bold">✓ Draft & Submit</td>
+                    <td className="p-2.5 text-[#047857] font-bold">✓ Compute & Award</td>
+                    <td className="p-2.5 text-[#B45309] font-bold">⚡ Initiate Batch</td>
+                    <td className="p-2.5 text-[#047857] font-bold">✓ Direct Append</td>
+                  </tr>
+                  <tr>
+                    <td className="p-2.5 font-bold text-[#0F172A]">🛡️ Audit, Compliance & Public Transparency Portal</td>
+                    <td className="p-2.5 text-[#64748B]">Statutory Auditor / CAG + Citizen / PAF</td>
+                    <td className="p-2.5 text-[#64748B]">Vigilance & Public Portal</td>
+                    <td className="p-2.5 text-[#64748B]">Public Gazette View</td>
+                    <td className="p-2.5 text-[#64748B]">Solatium Audit / Claim</td>
+                    <td className="p-2.5 text-[#64748B]">Reconciliation View</td>
+                    <td className="p-2.5 text-[#047857] font-bold">✓ Cryptographic Audit</td>
+                  </tr>
                 </tbody>
               </table>
             </div>

@@ -26,8 +26,8 @@ import { RecentChangesFeed } from './components/RecentChangesFeed';
 export const CommandCenter: React.FC = () => {
   const { activeRole, userProfile } = useAuth();
 
-  const isLockedToState = activeRole === 'State Admin';
-  const isLockedToDistrict = activeRole === 'District Officer';
+  const isLockedToState = Boolean(userProfile?.stateId && activeRole !== 'NATIONAL_EXECUTIVE');
+  const isLockedToDistrict = Boolean(userProfile?.districtId && activeRole !== 'NATIONAL_EXECUTIVE');
 
   const { data: allStates } = useFirestoreCollection(stateService);
   const { data: allDistricts } = useFirestoreCollection(districtService);

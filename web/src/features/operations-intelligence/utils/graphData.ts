@@ -1,4 +1,4 @@
-﻿// Dependency Graph & Critical Path Nodes
+// Dependency Graph & Critical Path Nodes
 export interface DependencyNode {
   id: string;
   label: string;
@@ -90,7 +90,7 @@ export const SAMPLE_DEPENDENCY_NODES: DependencyNode[] = [
     stage: 'Award_Enquiry',
     status: 'IN_PROGRESS',
     isCriticalPath: true,
-    responsibleRole: 'Field Supervisor',
+    responsibleRole: 'FIELD_ACQUISITION',
     responsibleOfficer: 'Ramesh Sawant & Agricultural Officer',
     durationDaysEstimated: 25,
     slackDays: 0,
