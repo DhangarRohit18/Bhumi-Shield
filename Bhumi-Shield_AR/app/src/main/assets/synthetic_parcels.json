@@ -1,0 +1,50 @@
+{
+  "type": "FeatureCollection",
+  "disclaimer": "SYNTHETIC DEMO DATA - FOR PROTOTYPE VERIFICATION ONLY - NO REAL LANDOWNER DATA",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "parcelId": "P-1042",
+        "surveyNumber": "S-1042",
+        "village": "Demo Village",
+        "district": "Demo District",
+        "isSynthetic": true
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [73.856789, 19.123456],
+            [73.856989, 19.123456],
+            [73.856989, 19.123656],
+            [73.856789, 19.123656],
+            [73.856789, 19.123456]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "parcelId": "P-1043",
+        "surveyNumber": "S-1043",
+        "village": "Demo Village",
+        "district": "Demo District",
+        "isSynthetic": true
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [73.857000, 19.123456],
+            [73.857200, 19.123456],
+            [73.857200, 19.123656],
+            [73.857000, 19.123656],
+            [73.857000, 19.123456]
+          ]
+        ]
+      }
+    }
+  ]
+}
