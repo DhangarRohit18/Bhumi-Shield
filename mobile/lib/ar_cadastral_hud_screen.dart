@@ -377,6 +377,28 @@ class _ArCadastralHudScreenState extends State<ArCadastralHudScreen>
                             child: const Icon(Icons.delete_outline, color: Colors.white, size: 22),
                           ),
                         ),
+
+                        // Done / Save Button
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.pop(context, true);
+                          },
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                            decoration: BoxDecoration(
+                              color: const Color(0xFF10B981),
+                              borderRadius: BorderRadius.circular(20),
+                            ),
+                            child: const Text(
+                              'Done',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 13,
+                              ),
+                            ),
+                          ),
+                        ),
                       ],
                     ),
                   ),
@@ -418,52 +440,29 @@ class _ArCadastralHudScreenState extends State<ArCadastralHudScreen>
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  // Action Triggers (+ Pin Anchor & Shutter Capture)
+                  // Single Center Action Trigger (Drop Anchor / Measure)
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      // Large (+) Add Point Button
+                      // Large Solid Apple-style Measure Button
                       GestureDetector(
                         onTap: _addPointAtCenter,
                         child: Container(
-                          width: 68,
-                          height: 68,
-                          decoration: BoxDecoration(
-                            color: Colors.black.withValues(alpha: 0.65),
-                            shape: BoxShape.circle,
-                            border: Border.all(color: Colors.white, width: 2.5),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.black.withValues(alpha: 0.4),
-                                blurRadius: 10,
-                              )
-                            ],
-                          ),
-                          child: const Center(
-                            child: Icon(Icons.add, color: Colors.white, size: 36),
-                          ),
-                        ),
-                      ),
-
-                      const SizedBox(width: 24),
-
-                      // Solid Shutter / Save Button
-                      GestureDetector(
-                        onTap: () {
-                          Navigator.pop(context, true);
-                        },
-                        child: Container(
-                          width: 68,
-                          height: 68,
+                          width: 76,
+                          height: 76,
                           decoration: BoxDecoration(
                             shape: BoxShape.circle,
-                            border: Border.all(color: Colors.white, width: 4),
+                            color: Colors.white.withValues(alpha: 0.2),
+                            border: Border.all(color: Colors.white, width: 3),
                           ),
-                          padding: const EdgeInsets.all(4),
+                          padding: const EdgeInsets.all(6),
                           child: Container(
                             decoration: const BoxDecoration(
                               color: Colors.white,
                               shape: BoxShape.circle,
+                            ),
+                            child: const Center(
+                              child: Icon(Icons.add, color: Colors.black, size: 36),
                             ),
                           ),
                         ),

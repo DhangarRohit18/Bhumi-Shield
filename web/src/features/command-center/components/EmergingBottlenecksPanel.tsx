@@ -20,33 +20,33 @@ export const EmergingBottlenecksPanel: React.FC<BottlenecksProps> = ({
       case 'COURT_STAY':
         return <Scale className="w-3.5 h-3.5 text-[#0F172A]" />;
       case 'INTER_DEPARTMENTAL_NOC':
-        return <FileX className="w-3.5 h-3.5 text-[#475569]" />;
+        return <FileX className="w-3.5 h-3.5 text-[#EA580C]" />;
       case 'PROGRESS_LAG':
-        return <ArrowUpRight className="w-3.5 h-3.5 text-[#92400E]" />;
+        return <ArrowUpRight className="w-3.5 h-3.5 text-[#EA580C]" />;
       case 'PARCEL_VOLUME':
-        return <Cpu className="w-3.5 h-3.5 text-[#991B1B]" />;
+        return <Cpu className="w-3.5 h-3.5 text-[#DC2626]" />;
       case 'DEPENDENCY_RIPPLE':
-        return <Zap className="w-3.5 h-3.5 text-[#1E40AF]" />;
+        return <Zap className="w-3.5 h-3.5 text-[#0284C7]" />;
       default:
-        return <ShieldAlert className="w-3.5 h-3.5 text-[#475569]" />;
+        return <ShieldAlert className="w-3.5 h-3.5 text-[#EA580C]" />;
     }
   };
 
   const totalCount = bottlenecks.length + computedBottlenecks.length;
 
   return (
-    <div className="bg-white border border-[#E2E8F0] rounded-2xl p-5 shadow-sm font-sans space-y-4">
-      <div className="flex items-center justify-between border-b border-[#E2E8F0] pb-3">
+    <div className="bg-white border border-[#BAE6FD] rounded-2xl p-5 shadow-sm font-sans space-y-4">
+      <div className="flex items-center justify-between border-b border-[#BAE6FD]/60 pb-3">
         <div className="flex items-center gap-2">
-          <div className="p-1.5 rounded-lg bg-[#F1F5F9] text-[#0F172A] border border-[#CBD5E1]">
-            <AlertOctagon className="w-4 h-4 text-[#0F172A]" />
+          <div className="p-1.5 rounded-lg bg-[#FFF7ED] text-[#EA580C] border border-[#FFEDD5]">
+            <AlertOctagon className="w-4 h-4 text-[#EA580C]" />
           </div>
           <div>
             <h2 className="text-sm font-extrabold text-[#0F172A]">Emerging Bottlenecks & Litigation Stalls</h2>
-            <p className="text-[11px] text-[#64748B]">Root-cause breakdown + live engine-computed risks (bhoomisetu rules)</p>
+            <p className="text-[11px] text-[#0369A1]">Root-cause breakdown + live engine-computed risks (bhoomisetu rules)</p>
           </div>
         </div>
-        <span className="text-[10px] font-mono px-2.5 py-0.5 rounded-full bg-[#F1F5F9] text-[#0F172A] border border-[#CBD5E1] font-bold">
+        <span className="text-[10px] font-mono px-2.5 py-0.5 rounded-full bg-[#E0F2FE] text-[#0369A1] border border-[#BAE6FD] font-bold">
           {totalCount} Active Stalls
         </span>
       </div>

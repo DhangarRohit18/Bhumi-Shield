@@ -14,13 +14,13 @@ export const CriticalProjectsPanel: React.FC<CriticalProjectsProps> = ({
   onSelectProject,
 }) => {
   return (
-    <div className="bg-white border border-[#E2E8F0] rounded-2xl p-5 shadow-sm font-sans space-y-4">
-      <div className="flex items-center justify-between border-b border-[#E2E8F0] pb-3">
+    <div className="bg-white border border-[#BAE6FD] rounded-2xl p-5 shadow-sm font-sans space-y-4">
+      <div className="flex items-center justify-between border-b border-[#BAE6FD]/60 pb-3">
         <div className="flex items-center gap-2">
-          <Building2 className="w-5 h-5 text-[#0F172A]" />
+          <Building2 className="w-5 h-5 text-[#EA580C]" />
           <h3 className="text-sm font-extrabold text-[#0F172A]">Critical Projects & Acquisition Velocity</h3>
         </div>
-        <span className="px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold bg-[#F1F5F9] text-[#0F172A] border border-[#CBD5E1]">
+        <span className="px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold bg-[#E0F2FE] text-[#0369A1] border border-[#BAE6FD]">
           {projects.length} CORRIDORS
         </span>
       </div>
@@ -33,16 +33,16 @@ export const CriticalProjectsPanel: React.FC<CriticalProjectsProps> = ({
             <div
               key={proj.id}
               onClick={() => onSelectProject(proj.id!)}
-              className={`p-3.5 rounded-xl border transition-all cursor-pointer shadow-sm ${
+              className={`p-3.5 rounded-xl border transition-all cursor-pointer shadow-xs ${
                 isSelected
-                  ? 'bg-[#F8FAFC] border-[#0F172A] ring-1 ring-[#0F172A]/40'
-                  : 'bg-[#F8FAFC] border-[#E2E8F0] hover:border-[#0F172A]'
+                  ? 'bg-[#F0F7FF] border-[#0F172A] ring-2 ring-[#0F172A]/20'
+                  : 'bg-[#F0F7FF]/50 border-[#BAE6FD]/70 hover:border-[#EA580C]'
               }`}
             >
               <div className="flex items-start justify-between gap-2">
                 <div>
                   <div className="flex items-center gap-2">
-                    <span className="font-mono text-[10px] text-[#0F172A] font-bold bg-[#E2E8F0] px-1.5 py-0.5 rounded border border-[#CBD5E1]">
+                    <span className="font-mono text-[10px] text-[#0369A1] font-bold bg-[#E0F2FE] px-1.5 py-0.5 rounded border border-[#BAE6FD]">
                       {proj.code}
                     </span>
                     <h3 className="text-xs font-bold text-[#0F172A] line-clamp-1">{proj.name}</h3>
@@ -54,7 +54,7 @@ export const CriticalProjectsPanel: React.FC<CriticalProjectsProps> = ({
                 </span>
               </div>
 
-              <div className="grid grid-cols-3 gap-2 mt-3 pt-2.5 border-t border-[#E2E8F0] text-[10px]">
+              <div className="grid grid-cols-3 gap-2 mt-3 pt-2.5 border-t border-[#BAE6FD]/60 text-[10px]">
                 <div>
                   <span className="text-[#64748B]">Statutory Stage:</span>
                   <p className="font-bold text-[#0F172A] truncate">{proj.currentStage}</p>

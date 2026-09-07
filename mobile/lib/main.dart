@@ -26,12 +26,12 @@ class BhumiShieldMobileApp extends StatelessWidget {
       title: 'BHUMI-SHIELD Sentinel',
       debugShowCheckedModeBanner: false,
       theme: ThemeData.light().copyWith(
-        scaffoldBackgroundColor: const Color(0xFFFAF8F5),
-        primaryColor: const Color(0xFF8C7355),
+        scaffoldBackgroundColor: const Color(0xFFF0F7FF),
+        primaryColor: const Color(0xFFEA580C),
         appBarTheme: const AppBarTheme(
-          backgroundColor: Color(0xFFFDFBF7),
+          backgroundColor: Colors.white,
           elevation: 0,
-          iconTheme: IconThemeData(color: Color(0xFF4A3B2C)),
+          iconTheme: IconThemeData(color: Color(0xFFEA580C)),
           titleTextStyle: TextStyle(
             color: Color(0xFF0F172A),
             fontSize: 14,
@@ -39,8 +39,8 @@ class BhumiShieldMobileApp extends StatelessWidget {
           ),
         ),
         colorScheme: const ColorScheme.light(
-          primary: Color(0xFF8C7355),
-          secondary: Color(0xFF047857),
+          primary: Color(0xFFEA580C),
+          secondary: Color(0xFF0284C7),
           surface: Colors.white,
         ),
       ),
@@ -80,16 +80,15 @@ class _MobileDashboardRootState extends State<MobileDashboardRoot> {
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 2),
                   decoration: BoxDecoration(
-                    color: const Color(0xFFE2D9CC),
+                    color: const Color(0xFFEA580C),
                     borderRadius: BorderRadius.circular(4),
-                    border: Border.all(color: const Color(0xFFC5B49E)),
                   ),
                   child: const Text(
                     'BHUMI-SHIELD',
                     style: TextStyle(
                       fontSize: 10,
                       fontWeight: FontWeight.w900,
-                      color: Color(0xFF4A3B2C),
+                      color: Colors.white,
                       letterSpacing: 0.5,
                     ),
                   ),
@@ -103,17 +102,17 @@ class _MobileDashboardRootState extends State<MobileDashboardRoot> {
             ),
             const Text(
               'Essential Statutory Operations & Ground Verification',
-              style: TextStyle(fontSize: 10, color: Color(0xFF786C5E)),
+              style: TextStyle(fontSize: 10, color: Color(0xFF0369A1)),
             ),
           ],
         ),
         actions: [
           DropdownButton<String>(
             value: _activeRole,
-            dropdownColor: const Color(0xFFFDFBF7),
+            dropdownColor: Colors.white,
             underline: const SizedBox(),
-            icon: const Icon(Icons.person_pin, color: Color(0xFF8C7355), size: 18),
-            style: const TextStyle(fontSize: 11, color: Color(0xFF4A3B2C), fontWeight: FontWeight.bold),
+            icon: const Icon(Icons.person_pin, color: Color(0xFFEA580C), size: 18),
+            style: const TextStyle(fontSize: 11, color: Color(0xFF0F172A), fontWeight: FontWeight.bold),
             items: _roles.map((r) => DropdownMenuItem(value: r, child: Text(r))).toList(),
             onChanged: (val) {
               if (val != null) setState(() => _activeRole = val);
@@ -132,8 +131,8 @@ class _MobileDashboardRootState extends State<MobileDashboardRoot> {
       bottomNavigationBar: BottomNavigationBar(
         backgroundColor: Colors.white,
         currentIndex: _navIndex,
-        selectedItemColor: const Color(0xFF4A3B2C),
-        unselectedItemColor: const Color(0xFF786C5E),
+        selectedItemColor: const Color(0xFFEA580C),
+        unselectedItemColor: const Color(0xFF0369A1),
         type: BottomNavigationBarType.fixed,
         selectedLabelStyle: const TextStyle(fontWeight: FontWeight.bold, fontSize: 10),
         unselectedLabelStyle: const TextStyle(fontSize: 10),
@@ -155,6 +154,7 @@ class _MobileDashboardRootState extends State<MobileDashboardRoot> {
             icon: Badge(
               label: Text('${_fieldService.offlineQueue.length}'),
               isLabelVisible: _fieldService.offlineQueue.isNotEmpty,
+              backgroundColor: const Color(0xFFEA580C),
               child: const Icon(Icons.cloud_sync),
             ),
             label: 'Sync Queue',
@@ -178,16 +178,16 @@ class _MobileDashboardRootState extends State<MobileDashboardRoot> {
               decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(10),
-                border: Border.all(color: const Color(0xFFE2D9CC)),
+                border: Border.all(color: const Color(0xFFBAE6FD)),
               ),
               child: Row(
                 children: [
-                  const Icon(Icons.gps_fixed, color: Color(0xFF8C7355), size: 16),
+                  const Icon(Icons.gps_fixed, color: Color(0xFFEA580C), size: 16),
                   const SizedBox(width: 8),
                   Expanded(
                     child: Text(
                       'Clearance: $_activeRole • DGPS Sentinel Active',
-                      style: const TextStyle(fontSize: 11, color: Color(0xFF4A3B2C), fontWeight: FontWeight.bold),
+                      style: const TextStyle(fontSize: 11, color: Color(0xFF0369A1), fontWeight: FontWeight.bold),
                     ),
                   ),
                 ],
@@ -203,7 +203,7 @@ class _MobileDashboardRootState extends State<MobileDashboardRoot> {
               const Center(
                 child: Padding(
                   padding: EdgeInsets.all(24),
-                  child: Text('No ground inspections pending', style: TextStyle(color: Color(0xFF786C5E), fontSize: 12)),
+                  child: Text('No ground inspections pending', style: TextStyle(color: Color(0xFF64748B), fontSize: 12)),
                 ),
               )
             else
@@ -217,9 +217,10 @@ class _MobileDashboardRootState extends State<MobileDashboardRoot> {
   Widget _buildTaskCard(TaskModel task) {
     return Card(
       color: Colors.white,
+      elevation: 0,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(12),
-        side: const BorderSide(color: Color(0xFFE2D9CC)),
+        side: const BorderSide(color: Color(0xFFBAE6FD)),
       ),
       margin: const EdgeInsets.only(bottom: 10),
       child: Padding(
@@ -233,36 +234,36 @@ class _MobileDashboardRootState extends State<MobileDashboardRoot> {
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                   decoration: BoxDecoration(
-                    color: const Color(0xFFE2D9CC),
+                    color: const Color(0xFFFFF7ED),
                     borderRadius: BorderRadius.circular(4),
-                    border: Border.all(color: const Color(0xFFC5B49E)),
+                    border: Border.all(color: const Color(0xFFFFEDD5)),
                   ),
                   child: Text(
                     task.priority,
-                    style: const TextStyle(color: Color(0xFF4A3B2C), fontSize: 9, fontWeight: FontWeight.bold),
+                    style: const TextStyle(color: Color(0xFFEA580C), fontSize: 9, fontWeight: FontWeight.bold),
                   ),
                 ),
-                Text('Due: ${task.dueDate}', style: const TextStyle(fontSize: 10, color: Color(0xFF786C5E))),
+                Text('Due: ${task.dueDate}', style: const TextStyle(fontSize: 10, color: Color(0xFF64748B))),
               ],
             ),
             const SizedBox(height: 6),
             Text(task.title, style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: Color(0xFF0F172A))),
             const SizedBox(height: 2),
-            Text(task.description, style: const TextStyle(fontSize: 10, color: Color(0xFF786C5E))),
+            Text(task.description, style: const TextStyle(fontSize: 10, color: Color(0xFF64748B))),
             const SizedBox(height: 10),
             SizedBox(
               width: double.infinity,
               child: ElevatedButton.icon(
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFFE2D9CC),
-                  foregroundColor: const Color(0xFF4A3B2C),
+                  backgroundColor: const Color(0xFFF0F7FF),
+                  foregroundColor: const Color(0xFF0369A1),
                   elevation: 0,
-                  side: const BorderSide(color: Color(0xFFC5B49E)),
+                  side: const BorderSide(color: Color(0xFFBAE6FD)),
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
                   padding: const EdgeInsets.symmetric(vertical: 8),
                 ),
                 onPressed: () => _launchFieldMission(task),
-                icon: const Icon(Icons.qr_code_scanner, color: Color(0xFF4A3B2C), size: 16),
+                icon: const Icon(Icons.qr_code_scanner, color: Color(0xFFEA580C), size: 16),
                 label: const Text('Scan QR & Verify Ground Boundary', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 11)),
               ),
             ),
@@ -314,9 +315,10 @@ class _MobileDashboardRootState extends State<MobileDashboardRoot> {
         const SizedBox(height: 8),
         ...mockParcels.map((p) => Card(
               color: Colors.white,
+              elevation: 0,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(12),
-                side: const BorderSide(color: Color(0xFFE2D9CC)),
+                side: const BorderSide(color: Color(0xFFBAE6FD)),
               ),
               margin: const EdgeInsets.only(bottom: 10),
               child: Padding(
@@ -331,23 +333,23 @@ class _MobileDashboardRootState extends State<MobileDashboardRoot> {
                         Container(
                           padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                           decoration: BoxDecoration(
-                            color: const Color(0xFFECFDF5),
-                            border: Border.all(color: const Color(0xFFA7F3D0)),
+                            color: const Color(0xFFE0F2FE),
+                            border: Border.all(color: const Color(0xFFBAE6FD)),
                             borderRadius: BorderRadius.circular(4),
                           ),
-                          child: Text(p['stage']!, style: const TextStyle(color: Color(0xFF047857), fontSize: 9, fontWeight: FontWeight.bold)),
+                          child: Text(p['stage']!, style: const TextStyle(color: Color(0xFF0369A1), fontSize: 9, fontWeight: FontWeight.bold)),
                         ),
                       ],
                     ),
                     const SizedBox(height: 4),
-                    Text('${p['village']} • ${p['area']}', style: const TextStyle(fontSize: 11, color: Color(0xFF786C5E))),
-                    Text('Landowner: ${p['owner']}', style: const TextStyle(fontSize: 11, color: Color(0xFF4A3B2C), fontWeight: FontWeight.w600)),
+                    Text('${p['village']} • ${p['area']}', style: const TextStyle(fontSize: 11, color: Color(0xFF64748B))),
+                    Text('Landowner: ${p['owner']}', style: const TextStyle(fontSize: 11, color: Color(0xFF0F172A), fontWeight: FontWeight.w600)),
                     const SizedBox(height: 4),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text('Statutory Award: ${p['award']}', style: const TextStyle(fontSize: 11, color: Color(0xFF047857), fontWeight: FontWeight.bold)),
-                        Text('Pillar: ${p['qr']}', style: const TextStyle(fontSize: 10, fontFamily: 'monospace', color: Color(0xFF8C7355))),
+                        Text('Statutory Award: ${p['award']}', style: const TextStyle(fontSize: 11, color: Color(0xFFEA580C), fontWeight: FontWeight.bold)),
+                        Text('Pillar: ${p['qr']}', style: const TextStyle(fontSize: 10, fontFamily: 'monospace', color: Color(0xFF0284C7))),
                       ],
                     ),
                   ],
@@ -371,16 +373,17 @@ class _MobileDashboardRootState extends State<MobileDashboardRoot> {
             const SizedBox(height: 8),
             ...devices.map((d) => Card(
                   color: Colors.white,
+                  elevation: 0,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10),
-                    side: const BorderSide(color: Color(0xFFE2D9CC)),
+                    side: const BorderSide(color: Color(0xFFBAE6FD)),
                   ),
                   margin: const EdgeInsets.only(bottom: 8),
                   child: ListTile(
                     contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
-                    leading: const Icon(Icons.router, color: Color(0xFF8C7355), size: 22),
+                    leading: const Icon(Icons.router, color: Color(0xFFEA580C), size: 22),
                     title: Text(d.deviceId, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 11, color: Color(0xFF0F172A))),
-                    subtitle: Text('Battery: ${d.batteryPercentage}% • ${d.deviceType}', style: const TextStyle(fontSize: 10, color: Color(0xFF786C5E))),
+                    subtitle: Text('Battery: ${d.batteryPercentage}% • ${d.deviceType}', style: const TextStyle(fontSize: 10, color: Color(0xFF64748B))),
                     trailing: Container(
                       padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                       decoration: BoxDecoration(
@@ -391,7 +394,7 @@ class _MobileDashboardRootState extends State<MobileDashboardRoot> {
                       child: Text(
                         d.status,
                         style: TextStyle(
-                          color: d.status == 'ONLINE' ? const Color(0xFF047857) : const Color(0xFF9F1239),
+                          color: d.status == 'ONLINE' ? const Color(0xFF047857) : const Color(0xFFDC2626),
                           fontSize: 9,
                           fontWeight: FontWeight.bold,
                         ),
@@ -420,11 +423,11 @@ class _MobileDashboardRootState extends State<MobileDashboardRoot> {
               Text('Pending Sync Queue (${queue.length})', style: const TextStyle(fontSize: 13, fontWeight: FontWeight.bold, color: Color(0xFF0F172A))),
               ElevatedButton.icon(
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFFE2D9CC),
-                  foregroundColor: const Color(0xFF4A3B2C),
+                  backgroundColor: const Color(0xFFEA580C),
+                  foregroundColor: Colors.white,
                   elevation: 0,
-                  side: const BorderSide(color: Color(0xFFC5B49E)),
-                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
                 ),
                 onPressed: queue.isEmpty
                     ? null
@@ -433,11 +436,11 @@ class _MobileDashboardRootState extends State<MobileDashboardRoot> {
                         if (!mounted) return;
                         setState(() {});
                         ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(backgroundColor: Color(0xFF047857), content: Text('All evidence synced to Cloud Firestore & Digital Twin!')),
+                          const SnackBar(backgroundColor: Color(0xFF059669), content: Text('All evidence synced to Cloud Firestore & Digital Twin!')),
                         );
                       },
-                icon: const Icon(Icons.cloud_upload, size: 14),
-                label: const Text('1-Tap Cloud Sync', style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold)),
+                icon: const Icon(Icons.cloud_upload, size: 14, color: Colors.white),
+                label: const Text('1-Tap Cloud Sync', style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold)),
               ),
             ],
           ),
@@ -448,9 +451,9 @@ class _MobileDashboardRootState extends State<MobileDashboardRoot> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: const [
-                    Icon(Icons.check_circle_outline, size: 40, color: Color(0xFF047857)),
+                    Icon(Icons.check_circle_outline, size: 40, color: Color(0xFF059669)),
                     SizedBox(height: 8),
-                    Text('All field inspection logs are synced with Cloud Firestore', style: TextStyle(color: Color(0xFF786C5E), fontSize: 11)),
+                    Text('All field inspection logs are synced with Cloud Firestore', style: TextStyle(color: Color(0xFF64748B), fontSize: 11)),
                   ],
                 ),
               ),
@@ -463,9 +466,10 @@ class _MobileDashboardRootState extends State<MobileDashboardRoot> {
                   final item = queue[i];
                   return Card(
                     color: Colors.white,
+                    elevation: 0,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10),
-                      side: const BorderSide(color: Color(0xFFE2D9CC)),
+                      side: const BorderSide(color: Color(0xFFBAE6FD)),
                     ),
                     margin: const EdgeInsets.only(bottom: 8),
                     child: Padding(
@@ -477,12 +481,12 @@ class _MobileDashboardRootState extends State<MobileDashboardRoot> {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Text('Parcel ID: ${item.parcelId}', style: const TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: Color(0xFF0F172A))),
-                              const Text('QUEUED', style: TextStyle(color: Color(0xFFB45309), fontSize: 9, fontWeight: FontWeight.bold)),
+                              const Text('QUEUED', style: TextStyle(color: Color(0xFFEA580C), fontSize: 9, fontWeight: FontWeight.bold)),
                             ],
                           ),
                           const SizedBox(height: 2),
-                          Text('GPS: ${item.lat.toStringAsFixed(4)}°, ${item.lng.toStringAsFixed(4)}° • Accuracy: ±${item.accuracyMeters}m', style: const TextStyle(fontSize: 10, color: Color(0xFF786C5E))),
-                          Text('SHA-256: ${item.tamperProofHash.substring(0, 24)}...', style: const TextStyle(fontSize: 9, fontFamily: 'monospace', color: Color(0xFF8C7355))),
+                          Text('GPS: ${item.lat.toStringAsFixed(4)}°, ${item.lng.toStringAsFixed(4)}° • Accuracy: ±${item.accuracyMeters}m', style: const TextStyle(fontSize: 10, color: Color(0xFF64748B))),
+                          Text('SHA-256: ${item.tamperProofHash.substring(0, 24)}...', style: const TextStyle(fontSize: 9, fontFamily: 'monospace', color: Color(0xFF0284C7))),
                         ],
                       ),
                     ),
@@ -528,7 +532,7 @@ class _MobileDashboardRootState extends State<MobileDashboardRoot> {
                   height: 4,
                   margin: const EdgeInsets.only(bottom: 14),
                   decoration: BoxDecoration(
-                    color: const Color(0xFFE2D9CC),
+                    color: const Color(0xFFBAE6FD),
                     borderRadius: BorderRadius.circular(2),
                   ),
                 ),
@@ -539,18 +543,18 @@ class _MobileDashboardRootState extends State<MobileDashboardRoot> {
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text('CADASTRAL PARCEL PASSPORT', style: TextStyle(fontSize: 9, color: Color(0xFF8C7355), fontWeight: FontWeight.bold)),
+                      const Text('CADASTRAL PARCEL PASSPORT', style: TextStyle(fontSize: 9, color: Color(0xFFEA580C), fontWeight: FontWeight.bold)),
                       Text('Khasra #${passport.khasraSurveyNo}', style: const TextStyle(fontSize: 15, fontWeight: FontWeight.bold, color: Color(0xFF0F172A))),
                     ],
                   ),
                   Container(
                     padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 3),
                     decoration: BoxDecoration(
-                      color: const Color(0xFFECFDF5),
-                      border: Border.all(color: const Color(0xFFA7F3D0)),
+                      color: const Color(0xFFE0F2FE),
+                      border: Border.all(color: const Color(0xFFBAE6FD)),
                       borderRadius: BorderRadius.circular(6),
                     ),
-                    child: const Text('Sec 19 Verified', style: TextStyle(color: Color(0xFF047857), fontSize: 10, fontWeight: FontWeight.bold)),
+                    child: const Text('Sec 19 Verified', style: TextStyle(color: Color(0xFF0369A1), fontSize: 10, fontWeight: FontWeight.bold)),
                   ),
                 ],
               ),
@@ -558,9 +562,9 @@ class _MobileDashboardRootState extends State<MobileDashboardRoot> {
               Container(
                 padding: const EdgeInsets.all(10),
                 decoration: BoxDecoration(
-                  color: const Color(0xFFFAF8F5),
+                  color: const Color(0xFFF0F7FF),
                   borderRadius: BorderRadius.circular(10),
-                  border: Border.all(color: const Color(0xFFE2D9CC)),
+                  border: Border.all(color: const Color(0xFFBAE6FD)),
                 ),
                 child: Column(
                   children: [
@@ -578,9 +582,9 @@ class _MobileDashboardRootState extends State<MobileDashboardRoot> {
               Container(
                 padding: const EdgeInsets.all(10),
                 decoration: BoxDecoration(
-                  color: const Color(0xFFFAF8F5),
+                  color: const Color(0xFFF0F7FF),
                   borderRadius: BorderRadius.circular(10),
-                  border: Border.all(color: const Color(0xFFE2D9CC)),
+                  border: Border.all(color: const Color(0xFFBAE6FD)),
                 ),
                 child: Column(
                   children: [
@@ -596,28 +600,28 @@ class _MobileDashboardRootState extends State<MobileDashboardRoot> {
               Container(
                 padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
-                  border: Border.all(color: const Color(0xFFC5B49E)),
+                  border: Border.all(color: const Color(0xFFBAE6FD)),
                   borderRadius: BorderRadius.circular(10),
-                  color: const Color(0xFFFDFBF7),
+                  color: const Color(0xFFF0F7FF),
                 ),
                 child: Column(
                   children: [
                     const Row(
                       children: [
-                        Icon(Icons.view_in_ar, color: Color(0xFF8C7355), size: 18),
+                        Icon(Icons.view_in_ar, color: Color(0xFFEA580C), size: 18),
                         SizedBox(width: 6),
-                        Text('AR Boundary Overlay Ready', style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: Color(0xFF4A3B2C))),
+                        Text('AR Boundary Overlay Ready', style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: Color(0xFF0F172A))),
                       ],
                     ),
                     const SizedBox(height: 4),
-                    const Text('Overlays Section 19 gazette CAD coordinates over live camera viewport to verify boundary alignment.', style: TextStyle(fontSize: 10, color: Color(0xFF786C5E))),
+                    const Text('Overlays Section 19 gazette CAD coordinates over live camera viewport to verify boundary alignment.', style: TextStyle(fontSize: 10, color: Color(0xFF64748B))),
                     const SizedBox(height: 8),
                     ElevatedButton.icon(
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xFFE2D9CC),
-                        foregroundColor: const Color(0xFF4A3B2C),
+                        backgroundColor: Colors.white,
+                        foregroundColor: const Color(0xFF0369A1),
                         elevation: 0,
-                        side: const BorderSide(color: Color(0xFFC5B49E)),
+                        side: const BorderSide(color: Color(0xFFBAE6FD)),
                         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
                       ),
                       onPressed: () async {
@@ -637,7 +641,7 @@ class _MobileDashboardRootState extends State<MobileDashboardRoot> {
                           _captureAndSubmitEvidence(passport, task);
                         }
                       },
-                      icon: const Icon(Icons.visibility, color: Color(0xFF4A3B2C), size: 14),
+                      icon: const Icon(Icons.visibility, color: Color(0xFFEA580C), size: 14),
                       label: const Text('Open AR Boundary Camera Viewport', style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold)),
                     ),
                   ],
@@ -646,7 +650,7 @@ class _MobileDashboardRootState extends State<MobileDashboardRoot> {
               const SizedBox(height: 14),
               ElevatedButton.icon(
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFF4A3B2C),
+                  backgroundColor: const Color(0xFFEA580C),
                   foregroundColor: Colors.white,
                   padding: const EdgeInsets.symmetric(vertical: 12),
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),

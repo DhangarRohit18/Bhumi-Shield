@@ -10,7 +10,7 @@
 // ============================================================
 
 import React from 'react';
-import { useLiveSync, SyncStatus } from '../../hooks/useLiveSync';
+import { useLiveSync, SyncStatus } from '../hooks/useLiveSync';
 import { Wifi, WifiOff, RefreshCw } from 'lucide-react';
 
 interface LiveSyncStatusBarProps {

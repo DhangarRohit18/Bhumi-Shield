@@ -56,22 +56,22 @@ export const GeographicDrillDownBar: React.FC<DrillDownProps> = ({
     : parcels;
 
   return (
-    <div className="bg-white border-b border-[#E2E8F0] px-6 py-3 flex flex-wrap items-center justify-between gap-3 text-xs font-sans shadow-sm">
+    <div className="bg-white/95 backdrop-blur-md border-b border-[#BAE6FD]/60 px-6 py-3 flex flex-wrap items-center justify-between gap-3 text-xs font-sans shadow-sm">
       <div className="flex items-center flex-wrap gap-1.5 font-medium text-[#0F172A]">
         <button
           onClick={() => onDrillDownChange({})}
           disabled={isLockedToState || isLockedToDistrict}
-          className={`flex items-center gap-1 px-3 py-1.5 rounded-xl transition-all ${
+          className={`flex items-center gap-1 px-3 py-1.5 rounded-xl transition-all cursor-pointer ${
             !drillDown.stateId
               ? 'bg-[#0F172A] text-white font-bold border border-[#0F172A] shadow-sm'
-              : 'hover:bg-[#F1F5F9] text-[#475569]'
+              : 'hover:bg-[#E0F2FE] text-[#0369A1] bg-[#F0F7FF]'
           }`}
         >
-          <Globe className="w-3.5 h-3.5" />
+          <Globe className="w-3.5 h-3.5 text-[#EA580C]" />
           <span>India (National)</span>
         </button>
 
-        <ChevronRight className="w-3.5 h-3.5 text-[#CBD5E1] shrink-0" />
+        <ChevronRight className="w-3.5 h-3.5 text-[#BAE6FD] shrink-0" />
 
         <select
           value={drillDown.stateId || ''}
@@ -82,7 +82,7 @@ export const GeographicDrillDownBar: React.FC<DrillDownProps> = ({
           }
           disabled={isLockedToState || isLockedToDistrict}
           aria-label="State Selection"
-          className="bg-[#F8FAFC] border border-[#CBD5E1] rounded-xl px-2.5 py-1.5 text-[#0F172A] font-bold focus:outline-none focus:border-[#0F172A] cursor-pointer shadow-sm"
+          className="bg-[#F0F7FF] border border-[#BAE6FD] rounded-xl px-2.5 py-1.5 text-[#0F172A] font-bold focus:outline-none focus:border-[#EA580C] cursor-pointer shadow-xs"
         >
           <option value="">All States ({states.length})</option>
           {states.map((s) => (

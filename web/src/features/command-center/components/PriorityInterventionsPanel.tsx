@@ -85,28 +85,20 @@ export const PriorityInterventionsPanel: React.FC<InterventionsProps> = ({ inter
   });
 
   return (
-    <div className="bg-white border border-[#E2E8F0] rounded-2xl p-5 shadow-sm font-sans space-y-4">
-      <div className="flex items-center justify-between border-b border-[#E2E8F0] pb-3">
+    <div className="bg-white border border-[#BAE6FD] rounded-2xl p-5 shadow-sm font-sans space-y-4">
+      <div className="flex items-center justify-between border-b border-[#BAE6FD]/60 pb-3">
         <div className="flex items-center gap-2">
-          <div className="p-1.5 rounded-lg bg-[#F1F5F9] text-[#0F172A] border border-[#CBD5E1]">
-            <Zap className="w-4 h-4 text-[#0F172A]" />
+          <div className="p-1.5 rounded-lg bg-[#FFF7ED] text-[#EA580C] border border-[#FFEDD5]">
+            <Zap className="w-4 h-4 text-[#EA580C]" />
           </div>
           <div>
-            <h2 className="text-sm font-extrabold text-[#0F172A]">Priority Operational Interventions</h2>
-            <p className="text-[11px] text-[#64748B]">Direct statutory escalations — updates in real time</p>
+            <h2 className="text-sm font-extrabold text-[#0F172A]">Priority Directives & Statutory Overrides</h2>
+            <p className="text-[11px] text-[#0369A1]">Real-time synchronized recommendations & escalation matrix</p>
           </div>
         </div>
-
-        <div className="flex items-center gap-1.5">
-          {/* Live sync dot */}
-          <span className="relative flex h-2 w-2">
-            <span className="absolute inline-flex h-full w-full rounded-full bg-[#10B981] opacity-75 animate-ping" />
-            <span className="relative inline-flex rounded-full h-2 w-2 bg-[#10B981]" />
-          </span>
-          <span className="text-[10px] font-mono px-2.5 py-0.5 rounded-full bg-[#F1F5F9] text-[#0F172A] border border-[#CBD5E1] font-bold">
-            {interventions.filter((i) => i.status === 'RECOMMENDED').length} Pending Orders
-          </span>
-        </div>
+        <span className="text-[10px] font-mono px-2.5 py-0.5 rounded-full bg-[#E0F2FE] text-[#0369A1] border border-[#BAE6FD] font-bold">
+          {interventions.length} Strategies
+        </span>
       </div>
 
       <div className="space-y-3 max-h-[380px] overflow-y-auto pr-1">
@@ -118,12 +110,12 @@ export const PriorityInterventionsPanel: React.FC<InterventionsProps> = ({ inter
           return (
             <div
               key={intv.id}
-              className={`p-4 rounded-xl border transition-all shadow-sm ${
+              className={`p-4 rounded-xl border transition-all shadow-xs ${
                 isNew
-                  ? 'bg-[#EFF6FF] border-[#93C5FD]'
+                  ? 'bg-[#E0F2FE] border-[#38BDF8]'
                   : isApplied
-                  ? 'bg-[#F8FAFC] border-[#E2E8F0] opacity-75'
-                  : 'bg-[#F8FAFC] border-[#E2E8F0] hover:border-[#0F172A]'
+                  ? 'bg-[#F0F7FF]/50 border-[#BAE6FD]/60 opacity-75'
+                  : 'bg-[#F0F7FF]/40 border-[#BAE6FD]/70 hover:border-[#EA580C]'
               }`}
               style={isNew ? { animation: 'slideIn 0.3s ease-out' } : undefined}
             >

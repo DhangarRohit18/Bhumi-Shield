@@ -57,7 +57,7 @@ export const App: React.FC = () => {
 
   // 2. Once authenticated, render Authorized Workspace
   return (
-    <div className="flex h-screen bg-[#F8FAFC] text-[#0F172A] overflow-hidden font-sans">
+    <div className="flex h-screen bg-[#F0F7FF] text-[#0F172A] overflow-hidden font-sans">
       <Sidebar
         activeTab={activeTab}
         setActiveTab={setActiveTab}
@@ -65,16 +65,16 @@ export const App: React.FC = () => {
         handleSeed={handleSeed}
       />
 
-      <div className="flex-1 flex flex-col min-w-0 overflow-hidden bg-[#F8FAFC]">
+      <div className="flex-1 flex flex-col min-w-0 overflow-hidden bg-[#F0F7FF]">
         <Header onLogout={handleLogout} />
 
         {seedNotification && (
-          <div className="bg-white border-b border-[#E2E8F0] px-6 py-2 text-xs font-bold text-[#0F172A] flex items-center justify-between shadow-sm">
+          <div className="bg-[#E0F2FE] border-b border-[#BAE6FD] px-6 py-2 text-xs font-bold text-[#0369A1] flex items-center justify-between shadow-sm">
             <span>{seedNotification}</span>
           </div>
         )}
 
-        <main className="flex-1 overflow-y-auto bg-[#F8FAFC] p-4">
+        <main className="flex-1 overflow-y-auto bg-[#F0F7FF] p-4">
           {activeTab === 'command_center' && <CommandCenter />}
           {activeTab === 'digital_twin' && <ProjectDigitalTwin />}
           {activeTab === 'ops_intelligence' && <OperationsIntelligenceCenter />}

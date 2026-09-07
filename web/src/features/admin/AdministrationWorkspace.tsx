@@ -38,18 +38,18 @@ export const AdministrationWorkspace: React.FC = () => {
   const { data: allAuditLogs } = useFirestoreCollection(auditService);
 
   return (
-    <div className="flex flex-col min-h-screen bg-[#F8FAFC] text-[#0F172A] font-sans">
+    <div className="flex flex-col min-h-screen bg-[#F0F7FF] text-[#0F172A] font-sans">
       {/* Top Admin Header in Pure White & Executive Slate */}
-      <div className="bg-white border-b border-[#E2E8F0] px-6 py-4 space-y-3 shadow-sm">
+      <div className="bg-white/95 backdrop-blur-md border-b border-[#BAE6FD]/60 px-6 py-4 space-y-3 shadow-sm">
         <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
           <div className="flex items-center gap-3">
-            <div className="p-3 rounded-xl bg-[#0F172A] text-white border border-[#0F172A]">
+            <div className="p-3 rounded-xl bg-[#EA580C] text-white shadow-sm">
               <Shield className="w-6 h-6 text-white" />
             </div>
             <div>
               <div className="flex items-center gap-2">
                 <h1 className="text-base font-extrabold text-[#0F172A]">Administration & Security Control Hub</h1>
-                <span className="px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold bg-[#F1F5F9] text-[#0F172A] border border-[#CBD5E1]">
+                <span className="px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold bg-[#E0F2FE] text-[#0369A1] border border-[#BAE6FD]">
                   MASTER CONFIG
                 </span>
               </div>
@@ -59,46 +59,46 @@ export const AdministrationWorkspace: React.FC = () => {
             </div>
           </div>
 
-          {/* PII Toggle */}
-          <div className="flex items-center gap-2 bg-[#F8FAFC] border border-[#CBD5E1] rounded-xl px-3 py-1.5 shadow-sm">
-            {maskPII ? <EyeOff className="w-4 h-4 text-[#0F172A]" /> : <Eye className="w-4 h-4 text-[#0F172A]" />}
-            <span className="text-xs font-bold text-[#0F172A]">
-              PII Minimization: {maskPII ? 'Active (Masked)' : 'Disabled'}
-            </span>
+          <div className="flex items-center gap-3">
             <button
               onClick={() => setMaskPII(!maskPII)}
-              className="ml-2 px-2.5 py-0.5 text-[10px] font-bold rounded-lg bg-[#0F172A] text-white cursor-pointer"
+              className={`flex items-center gap-2 px-3 py-1.5 rounded-xl border text-xs font-bold transition-all cursor-pointer ${
+                maskPII
+                  ? 'bg-[#E0F2FE] border-[#BAE6FD] text-[#0369A1]'
+                  : 'bg-[#FFF7ED] border-[#FFEDD5] text-[#EA580C]'
+              }`}
             >
-              {maskPII ? 'Unmask' : 'Mask'}
+              {maskPII ? <EyeOff className="w-4 h-4 text-[#0284C7]" /> : <Eye className="w-4 h-4 text-[#EA580C]" />}
+              <span>{maskPII ? 'PII Masking Active' : 'Unmasked Audit Mode'}</span>
             </button>
           </div>
         </div>
 
-        {/* Tab Navigation in Slate */}
-        <div className="flex space-x-2 pt-2 border-t border-[#E2E8F0] overflow-x-auto">
+        {/* Admin Navigation Tabs */}
+        <div className="flex space-x-2 pt-2 border-t border-[#BAE6FD]/60 overflow-x-auto">
           {[
-            { id: 'users', label: 'Users & Identity', icon: Users },
-            { id: 'roles', label: 'Roles & RBAC Matrix', icon: KeyRound },
-            { id: 'depts', label: 'Departments & Agencies', icon: Building2 },
-            { id: 'sla', label: 'Statutory SLA Rules', icon: Clock },
-            { id: 'assets', label: 'QR & IoT Registries', icon: Radio },
-            { id: 'audit', label: 'Security Audit Ledger', icon: History },
-            { id: 'health', label: 'System Health & App Check', icon: Activity },
-          ].map((t) => {
-            const Icon = t.icon;
-            const isActive = activeTab === t.id;
+            { id: 'users', name: 'Authorized Officers', icon: Users },
+            { id: 'roles', name: 'Statutory RBAC Matrix', icon: KeyRound },
+            { id: 'depts', name: 'Acquisition Authorities', icon: Building2 },
+            { id: 'sla', name: 'RFCTLARR Timelines', icon: Clock },
+            { id: 'assets', name: 'DGPS & IoT Pillars', icon: Radio },
+            { id: 'audit', name: 'SHA-256 Ledger', icon: History },
+            { id: 'health', name: 'System Resilience', icon: Activity },
+          ].map((tab) => {
+            const Icon = tab.icon;
+            const isActive = activeTab === tab.id;
             return (
               <button
-                key={t.id}
-                onClick={() => setActiveTab(t.id as any)}
-                className={`flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs transition-all cursor-pointer whitespace-nowrap ${
+                key={tab.id}
+                onClick={() => setActiveTab(tab.id as any)}
+                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold whitespace-nowrap transition-all cursor-pointer ${
                   isActive
-                    ? 'bg-[#0F172A] text-white font-extrabold shadow-sm'
-                    : 'text-[#64748B] hover:text-[#0F172A] hover:bg-[#F8FAFC] font-semibold'
+                    ? 'bg-[#0F172A] text-white shadow-sm'
+                    : 'text-[#0369A1] hover:text-[#0F172A] hover:bg-[#E0F2FE]'
                 }`}
               >
-                <Icon className="w-3.5 h-3.5" />
-                <span>{t.label}</span>
+                <Icon className={`w-3.5 h-3.5 ${isActive ? 'text-[#EA580C]' : 'text-[#0284C7]'}`} />
+                <span>{tab.name}</span>
               </button>
             );
           })}

@@ -22,11 +22,11 @@ export const Header: React.FC<HeaderProps> = ({ onLogout }) => {
   ];
 
   return (
-    <header className="flex flex-col sticky top-0 z-50 shadow-sm font-sans bg-white border-b border-[#E2E8F0]">
+    <header className="flex flex-col sticky top-0 z-50 shadow-sm font-sans bg-white/95 backdrop-blur-md border-b border-[#BAE6FD]/60">
       {/* Main Clean Government Navbar */}
       <div className="px-6 py-3 flex flex-col md:flex-row md:items-center justify-between gap-3">
         <div className="flex items-center gap-3">
-          <div className="p-2 rounded-xl bg-[#BF7834] text-white shadow-sm flex items-center justify-center">
+          <div className="p-2 rounded-xl bg-[#EA580C] text-white shadow-md flex items-center justify-center">
             <Shield className="w-5 h-5 text-white" />
           </div>
           <div>
@@ -34,7 +34,7 @@ export const Header: React.FC<HeaderProps> = ({ onLogout }) => {
               <h1 className="font-black text-lg tracking-tight text-[#0F172A]">
                 BHUMI-SHIELD
               </h1>
-              <span className="text-[10px] uppercase font-extrabold tracking-wider px-2.5 py-0.5 rounded-full bg-[#FFFBEB] text-[#BF7834] border border-[#FDE68A]">
+              <span className="text-[10px] uppercase font-extrabold tracking-wider px-2.5 py-0.5 rounded-full bg-[#E0F2FE] text-[#0369A1] border border-[#BAE6FD]">
                 MoRTH Govt. of India
               </span>
             </div>
@@ -43,14 +43,14 @@ export const Header: React.FC<HeaderProps> = ({ onLogout }) => {
 
         <div className="flex items-center gap-3">
           {/* Role Selector */}
-          <div className="flex items-center gap-2 bg-[#FFFBEB] border border-[#FDE68A] rounded-xl px-3 py-1.5 shadow-sm">
-            <Lock className="w-3.5 h-3.5 text-[#BF7834]" />
-            <span className="text-xs text-[#BF7834] font-extrabold">Clearance:</span>
+          <div className="flex items-center gap-2 bg-[#F0F7FF] border border-[#BAE6FD] rounded-xl px-3 py-1.5 shadow-sm">
+            <Lock className="w-3.5 h-3.5 text-[#EA580C]" />
+            <span className="text-xs text-[#0369A1] font-extrabold">Clearance:</span>
             <select
               value={activeRole}
               onChange={(e) => switchDemoRole(e.target.value as UserRole)}
               aria-label="Switch Active Government Role"
-              className="bg-white border border-[#CBD5E1] rounded-lg px-2.5 py-0.5 text-xs font-extrabold text-[#0F172A] focus:outline-none focus:border-[#BF7834] cursor-pointer"
+              className="bg-white border border-[#BAE6FD] rounded-lg px-2.5 py-0.5 text-xs font-extrabold text-[#0F172A] focus:outline-none focus:border-[#EA580C] cursor-pointer shadow-xs"
             >
               {roles.map((r) => (
                 <option key={r} value={r}>
@@ -61,8 +61,8 @@ export const Header: React.FC<HeaderProps> = ({ onLogout }) => {
           </div>
 
           {/* Profile Card */}
-          <div className="flex items-center gap-2.5 pl-3 border-l border-[#E2E8F0]">
-            <div className="w-8 h-8 rounded-full bg-[#1E293B] border border-[#334155] flex items-center justify-center text-xs font-bold text-white shadow-sm">
+          <div className="flex items-center gap-2.5 pl-3 border-l border-[#BAE6FD]/60">
+            <div className="w-8 h-8 rounded-full bg-[#0F172A] border border-[#1E293B] flex items-center justify-center text-xs font-bold text-white shadow-sm">
               {userProfile?.displayName ? userProfile.displayName.charAt(0) : 'G'}
             </div>
             <div className="hidden sm:block text-left">
@@ -79,10 +79,10 @@ export const Header: React.FC<HeaderProps> = ({ onLogout }) => {
           {onLogout && (
             <button
               onClick={onLogout}
-              className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl border border-[#CBD5E1] bg-[#F8FAFC] hover:bg-[#F1F5F9] text-xs font-extrabold text-[#0F172A] transition-all cursor-pointer shadow-sm"
+              className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl border border-[#BAE6FD] bg-[#F0F7FF] hover:bg-[#E0F2FE] text-xs font-extrabold text-[#0F172A] transition-all cursor-pointer shadow-xs"
               title="Log Out & Return to Login Screen"
             >
-              <LogOut className="w-3.5 h-3.5 text-[#BF7834]" />
+              <LogOut className="w-3.5 h-3.5 text-[#EA580C]" />
               <span className="hidden md:inline">Log Out</span>
             </button>
           )}
