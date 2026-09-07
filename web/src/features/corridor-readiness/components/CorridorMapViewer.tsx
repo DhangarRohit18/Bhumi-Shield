@@ -1,15 +1,17 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { MapContainer, TileLayer, Polyline, CircleMarker, Popup, useMap, Tooltip } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import { CorridorReadinessProject, CorridorSegment } from '../../../types';
 import { CORRIDOR_STATUS_CONFIG } from '../../../data/corridorReadinessData';
-import { Layers, MapPin, Sparkles, AlertCircle } from 'lucide-react';
+import { Layers, MapPin, Sparkles, AlertCircle, Globe } from 'lucide-react';
 
 interface CorridorMapViewerProps {
   project: CorridorReadinessProject;
+  allProjects?: CorridorReadinessProject[];
   segments: CorridorSegment[];
   selectedSegmentId: string | null;
   onSelectSegment: (segment: CorridorSegment) => void;
+  onSelectProject?: (projectId: string) => void;
   onOpenARVerification?: (waypointCode: string) => void;
 }
 
@@ -17,43 +19,59 @@ const MapRecenterController: React.FC<{
   center: [number, number];
   zoom: number;
   selectedSegment: CorridorSegment | null;
-}> = ({ center, zoom, selectedSegment }) => {
+  isPanIndiaView: boolean;
+}> = ({ center, zoom, selectedSegment, isPanIndiaView }) => {
   const map = useMap();
 
   useEffect(() => {
-    if (selectedSegment && selectedSegment.center) {
+    if (isPanIndiaView) {
+      map.flyTo([22.5937, 78.9629], 5, { duration: 1.2 });
+    } else if (selectedSegment && selectedSegment.center) {
       map.flyTo(selectedSegment.center, 12, { duration: 1.2 });
     } else if (center) {
       map.flyTo(center, zoom, { duration: 1.2 });
     }
-  }, [center, zoom, selectedSegment, map]);
+  }, [center, zoom, selectedSegment, isPanIndiaView, map]);
 
   return null;
 };
 
 export const CorridorMapViewer: React.FC<CorridorMapViewerProps> = ({
   project,
+  allProjects = [],
   segments,
   selectedSegmentId,
   onSelectSegment,
+  onSelectProject,
   onOpenARVerification,
 }) => {
+  const [isPanIndiaView, setIsPanIndiaView] = useState<boolean>(false);
   const selectedSegment = segments.find((s) => s.id === selectedSegmentId) || null;
 
   return (
-    <div className="relative w-full h-[520px] rounded-2xl overflow-hidden border border-[#BAE6FD]/80 shadow-md bg-white font-sans">
-      {/* Top Left Floating Legend & Quick Stats */}
-      <div className="absolute top-3 left-3 z-[1000] bg-white/95 backdrop-blur-md border border-[#BAE6FD] rounded-xl p-3 shadow-lg space-y-2 max-w-[320px]">
-        <div className="flex items-center justify-between border-b border-[#BAE6FD]/50 pb-1.5">
+    <div className="relative w-full h-[540px] rounded-2xl overflow-hidden border border-[#BAE6FD]/80 shadow-md bg-white font-sans">
+      {/* Top Left Floating Legend & Pan-India View Switcher */}
+      <div className="absolute top-3 left-3 z-[1000] bg-white/95 backdrop-blur-md border border-[#BAE6FD] rounded-xl p-3 shadow-lg space-y-2 max-w-[340px]">
+        <div className="flex items-center justify-between border-b border-[#BAE6FD]/50 pb-1.5 gap-2">
           <div className="flex items-center gap-1.5">
             <span className="w-2 h-2 rounded-full bg-[#EA580C] animate-pulse"></span>
             <span className="text-xs font-black text-[#0F172A] uppercase tracking-wider">
               Corridor Readiness GIS
             </span>
           </div>
-          <span className="text-[10px] font-mono font-bold bg-[#F0F7FF] text-[#0284C7] px-1.5 py-0.5 rounded border border-[#BAE6FD]">
-            {segments.length} Segments
-          </span>
+
+          <button
+            onClick={() => setIsPanIndiaView(!isPanIndiaView)}
+            className={`px-2 py-1 rounded-lg text-[10px] font-extrabold flex items-center gap-1 transition-all cursor-pointer border ${
+              isPanIndiaView
+                ? 'bg-[#0F172A] text-white border-[#0F172A]'
+                : 'bg-[#F0F7FF] text-[#0284C7] border-[#BAE6FD] hover:bg-[#E0F2FE]'
+            }`}
+            title="Toggle Pan-India Network Overview"
+          >
+            <Globe className="w-3 h-3" />
+            <span>{isPanIndiaView ? 'Focus Corridor' : 'Pan-India'}</span>
+          </button>
         </div>
 
         {/* Legend Grid */}
@@ -117,9 +135,64 @@ export const CorridorMapViewer: React.FC<CorridorMapViewerProps> = ({
           center={project.center}
           zoom={project.zoom}
           selectedSegment={selectedSegment}
+          isPanIndiaView={isPanIndiaView}
         />
 
-        {/* Render Segment Polylines */}
+        {/* Background Strategic Routes across India */}
+        {allProjects.map((otherProj) => {
+          if (otherProj.id === project.id) return null;
+
+          // Collect all coordinates for this corridor
+          const points = otherProj.segments.flatMap((s) => s.coordinates);
+          if (!points.length) return null;
+
+          return (
+            <React.Fragment key={`bg-proj-${otherProj.id}`}>
+              <Polyline
+                positions={points}
+                pathOptions={{
+                  color: '#64748B',
+                  weight: 3.5,
+                  opacity: 0.6,
+                  dashArray: '4, 4',
+                }}
+                eventHandlers={{
+                  click: () => {
+                    setIsPanIndiaView(false);
+                    onSelectProject?.(otherProj.id);
+                  },
+                }}
+              >
+                <Tooltip sticky>
+                  <div className="p-1 text-xs font-sans">
+                    <strong className="font-extrabold text-[#0F172A] block">{otherProj.name}</strong>
+                    <span className="text-[10px] text-[#0284C7] font-bold">{otherProj.totalLengthKm} km • Click to Switch</span>
+                  </div>
+                </Tooltip>
+              </Polyline>
+
+              {/* Waypoint Marker at Corridor Origin */}
+              <CircleMarker
+                center={otherProj.center}
+                radius={5}
+                pathOptions={{
+                  color: '#0F172A',
+                  fillColor: '#38BDF8',
+                  fillOpacity: 0.9,
+                  weight: 1.5,
+                }}
+                eventHandlers={{
+                  click: () => {
+                    setIsPanIndiaView(false);
+                    onSelectProject?.(otherProj.id);
+                  },
+                }}
+              />
+            </React.Fragment>
+          );
+        })}
+
+        {/* Render Active Project Segment Polylines */}
         {segments.map((seg) => {
           const config = CORRIDOR_STATUS_CONFIG[seg.status] || CORRIDOR_STATUS_CONFIG.GREY_NO_DATA;
           const isSelected = seg.id === selectedSegmentId;
@@ -199,3 +272,4 @@ export const CorridorMapViewer: React.FC<CorridorMapViewerProps> = ({
     </div>
   );
 };
+

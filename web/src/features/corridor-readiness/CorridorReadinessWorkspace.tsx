@@ -217,9 +217,16 @@ export const CorridorReadinessWorkspace: React.FC = () => {
       {/* Interactive GIS Corridor Map */}
       <CorridorMapViewer
         project={currentProject}
+        allProjects={CORRIDOR_READINESS_PROJECTS}
         segments={filteredSegments}
         selectedSegmentId={inspectedSegment?.id || null}
         onSelectSegment={(seg) => setInspectingSegment(seg)}
+        onSelectProject={(projId) => {
+          setSelectedCorridorId(projId);
+          setInspectingSegment(null);
+          setActiveFactorFilter('ALL');
+          setStatusFilter('ALL');
+        }}
         onOpenARVerification={(code) => setArModalWaypoint(code)}
       />
 
