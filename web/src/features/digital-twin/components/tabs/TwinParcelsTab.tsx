@@ -377,6 +377,30 @@ export const TwinParcelsTab: React.FC<ParcelsTabProps> = ({
               <p>Bank: {activePAF?.bankAccountNumberMasked || 'XXXXXX4092'}</p>
             </div>
           </div>
+
+          {/* 3. Native AR Field Sentinel Inspection Card */}
+          <div className="p-4 rounded-xl bg-gradient-to-br from-[#0F172A] to-[#1E293B] text-white border border-[#334155] space-y-3 text-xs shadow-sm">
+            <div className="flex items-center justify-between">
+              <span className="flex items-center gap-1.5 font-extrabold text-white">
+                <span className="text-sm">📱</span>
+                <span>AR Ground Demarcation</span>
+              </span>
+              <span className="text-[9px] font-mono font-black px-1.5 py-0.5 rounded bg-[#EA580C] text-white">
+                ARCore DGPS
+              </span>
+            </div>
+            <p className="text-[11px] text-[#94A3B8] leading-relaxed">
+              Verify Khasra #{activeParcel?.khasraSurveyNo || '142/A-1'} physical boundary pillars on-site with real-time 3D camera overlays and sub-meter DGPS lock.
+            </p>
+            <a
+              href="/bhumi-shield-ar-sentinel-v1.0.apk"
+              download="bhumi-shield-ar-sentinel-v1.0.apk"
+              className="w-full flex items-center justify-center gap-2 py-2 px-3 rounded-lg bg-[#EA580C] hover:bg-[#C2410C] text-white font-extrabold text-xs transition-all shadow-xs"
+            >
+              <span>Download AR Sentinel APK</span>
+              <span className="text-[10px] font-mono opacity-80">(35.6 MB)</span>
+            </a>
+          </div>
         </div>
       </div>
 

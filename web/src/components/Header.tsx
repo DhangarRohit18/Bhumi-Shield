@@ -43,6 +43,20 @@ export const Header: React.FC<HeaderProps> = ({ onLogout }) => {
         </div>
 
         <div className="flex items-center gap-3">
+          {/* Native AR Sentinel APK Feature Button */}
+          <a
+            href="/bhumi-shield-ar-sentinel-v1.0.apk"
+            download="bhumi-shield-ar-sentinel-v1.0.apk"
+            className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-gradient-to-r from-[#EA580C] to-[#C2410C] hover:from-[#C2410C] hover:to-[#9A3412] text-white text-xs font-black shadow-md transition-all cursor-pointer border border-[#EA580C]"
+            title="Download Native AR Sentinel Field APK (v1.0 - 35.6 MB Universal Android)"
+          >
+            <span className="text-sm">📱</span>
+            <span className="hidden sm:inline">Native AR Sentinel APK</span>
+            <span className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-black/20 text-white font-bold">
+              35.6MB
+            </span>
+          </a>
+
           {/* Role Selector */}
           <div className="flex items-center gap-2 bg-[#F0F7FF] border border-[#BAE6FD] rounded-xl px-3 py-1.5 shadow-sm">
             <Lock className="w-3.5 h-3.5 text-[#EA580C]" />

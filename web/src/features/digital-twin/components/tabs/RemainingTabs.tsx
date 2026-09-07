@@ -503,9 +503,41 @@ export function TwinLegalTab({ projectId, legalCases }: { projectId: string; leg
 };
 
 export const TwinFieldEvidenceTab: React.FC<{ evidence: FieldEvidence[]; projectId?: string }> = ({ evidence }) => (
-  <div className="space-y-4 font-sans">
+  <div className="space-y-6 font-sans">
+    {/* Top Header & Native AR Sentinel Feature Banner */}
+    <div className="p-6 rounded-2xl bg-gradient-to-br from-[#0F172A] via-[#1E293B] to-[#0F172A] text-white border border-[#334155] shadow-lg flex flex-col lg:flex-row lg:items-center justify-between gap-6">
+      <div className="space-y-2">
+        <div className="flex items-center gap-2">
+          <span className="px-2.5 py-0.5 rounded-full bg-[#EA580C] text-white text-[10px] font-black tracking-wider uppercase">
+            NATIVE AR SENTINEL ENGINE v1.0
+          </span>
+          <span className="text-xs text-[#94A3B8] font-mono">Google ARCore • Jetpack Compose • OpenGL ES 2.0</span>
+        </div>
+        <h2 className="text-lg font-black tracking-tight text-white flex items-center gap-2">
+          <span>Real-Time AR Boundary Demarcation & Geotagged Field Evidence</span>
+        </h2>
+        <p className="text-xs text-[#94A3B8] max-w-2xl leading-relaxed">
+          Field officers can use the native Android AR Sentinel app to overlay 3D Khasra boundary pillars onto physical camera feeds in real-time, measure vertex discrepancies with DGPS sub-meter accuracy, and cryptographically chain evidence with SHA-256 hashes.
+        </p>
+      </div>
+
+      <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 shrink-0">
+        <a
+          href="/bhumi-shield-ar-sentinel-v1.0.apk"
+          download="bhumi-shield-ar-sentinel-v1.0.apk"
+          className="flex items-center justify-center gap-2 px-5 py-3 rounded-xl bg-[#EA580C] hover:bg-[#C2410C] text-white font-black text-xs shadow-md transition-all cursor-pointer border border-[#EA580C]"
+        >
+          <span className="text-base">⬇️</span>
+          <span>Download AR Sentinel APK</span>
+          <span className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-black/20 text-white font-bold">
+            35.6 MB
+          </span>
+        </a>
+      </div>
+    </div>
+
     <div>
-      <h2 className="text-base font-extrabold text-[#0F172A]">DGPS & Tamper-Evident Ground Field Evidence</h2>
+      <h3 className="text-sm font-extrabold text-[#0F172A]">DGPS & Tamper-Evident Ground Field Evidence Logs</h3>
       <p className="text-xs text-[#64748B] font-medium">Real-time mobile uploads synchronized with cryptographic hash verification</p>
     </div>
 

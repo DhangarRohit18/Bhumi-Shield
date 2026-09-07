@@ -333,6 +333,16 @@ class _ArCadastralHudScreenState extends State<ArCadastralHudScreen>
   }
 
   void _addAnchorAtCenter() {
+    if (_useNativeArCore) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Please tap directly on the physical ground on your screen to drop a stable AR anchor!'),
+          duration: Duration(seconds: 2),
+          backgroundColor: Color(0xFF10B981),
+        ),
+      );
+      return;
+    }
     final screenSize = MediaQuery.of(context).size;
     _addAnchorAt(Offset(screenSize.width / 2, screenSize.height / 2));
   }
@@ -456,57 +466,6 @@ class _ArCadastralHudScreenState extends State<ArCadastralHudScreen>
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  // AR Engine Mode Indicator
-                  GestureDetector(
-                    onTap: () {
-                      setState(() {
-                        _useNativeArCore = !_useNativeArCore;
-                        if (!_useNativeArCore && !_isCameraReady) {
-                          _initCamera();
-                        }
-                      });
-                    },
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
-                      decoration: BoxDecoration(
-                        color: Colors.black.withValues(alpha: 0.85),
-                        borderRadius: BorderRadius.circular(16),
-                        border: Border.all(color: const Color(0xFF10B981).withValues(alpha: 0.7), width: 1),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withValues(alpha: 0.6),
-                            blurRadius: 12,
-                          )
-                        ],
-                      ),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Container(
-                            width: 8,
-                            height: 8,
-                            decoration: BoxDecoration(
-                              color: _useNativeArCore ? const Color(0xFF3B82F6) : const Color(0xFF22C55E),
-                              shape: BoxShape.circle,
-                            ),
-                          ),
-                          const SizedBox(width: 8),
-                          Text(
-                            _useNativeArCore ? 'ARCORE 6-DOF SLAM' : 'FILTERED SPATIAL AR • ${_yaw.toStringAsFixed(0)}°',
-                            style: const TextStyle(
-                              color: Colors.white,
-                              fontSize: 10,
-                              fontWeight: FontWeight.bold,
-                              letterSpacing: 0.8,
-                            ),
-                          ),
-                          const SizedBox(width: 6),
-                          const Icon(Icons.swap_horiz, color: Colors.white70, size: 14),
-                        ],
-                      ),
-                    ),
-                  ),
-
                   const SizedBox(height: 10),
 
                   // Header Controls (Undo, Title Badge, Clear, Done)
