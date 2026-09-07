@@ -657,3 +657,109 @@ export interface FarmerRecord extends BaseEntity {
   arVerificationStatus: 'VERIFIED' | 'PENDING_VISIT' | 'FLAGGED_MISMATCH';
 }
 
+// 38. corridor_readiness (Social Consent & Project Readiness Corridor Intelligence)
+export type CorridorStatusCategory =
+  | 'GREEN_CLEAR'
+  | 'AMBER_PROCESS'
+  | 'RED_DISPUTE'
+  | 'PURPLE_LEGAL'
+  | 'BLACK_BLOCKING'
+  | 'GREY_NO_DATA';
+
+export type CorridorDelayFactor =
+  | 'LAND_ACQUISITION'
+  | 'COMPENSATION_DISPUTES'
+  | 'ENVIRONMENTAL_FOREST'
+  | 'LEGAL_PROCEEDINGS'
+  | 'UTILITY_RELOCATION'
+  | 'NONE';
+
+export interface CorridorDelayChainStep {
+  stepNumber: number;
+  name: string;
+  stageKey: string;
+  status: 'COMPLETED' | 'IN_PROGRESS' | 'BLOCKED' | 'PENDING';
+  actor: string;
+  details?: string;
+  statutoryDeadline?: string;
+  impedimentDetails?: string;
+  actionRequired?: string;
+  evidenceRef?: string;
+}
+
+export interface CorridorTimelineMilestone {
+  date: string;
+  title: string;
+  type: 'SURVEY' | 'GAZETTE' | 'OBJECTION' | 'HEARING' | 'COURT_ORDER' | 'COMPENSATION_REVISION' | 'CLEARANCE';
+  status: 'COMPLETED' | 'CONTESTED' | 'DELAYED' | 'ACTIVE';
+  description: string;
+  authority: string;
+  documentRef?: string;
+}
+
+export interface CorridorSegment {
+  id: string;
+  corridorId: string;
+  segmentName: string;
+  startChainageKm: number;
+  endChainageKm: number;
+  lengthKm: number;
+  status: CorridorStatusCategory;
+  statusLabel: string;
+  villageName: string;
+  talukaTehsil: string;
+  district: string;
+  state: string;
+  affectedParcelsCount: number;
+  affectedLandholdersCount: number;
+  readinessScore: number; // 0 to 100
+  totalCompensationINR: number;
+  disbursedCompensationINR: number;
+  recordedObjectionsCount: number;
+  compensationDisputesCount: number;
+  pendingLitigationCount: number;
+  delayFactor: CorridorDelayFactor;
+  delayFactorPercent?: number;
+  keyImpediment: string;
+  primaryLitigant?: string;
+  courtCaseNo?: string;
+  stayOrderActive?: boolean;
+  coordinates: [number, number][]; // polyline coordinates
+  center: [number, number]; // lat, lng
+  delayChain: CorridorDelayChainStep[];
+  timeline: CorridorTimelineMilestone[];
+  evidenceDocuments?: Array<{
+    title: string;
+    type: 'OBJECTION_PETITION' | 'COURT_ORDER' | 'VALUATION_REPORT' | 'SITE_PHOTO' | 'DRONE_ORTHOPHOTO' | 'CLEARANCE';
+    date: string;
+    fileSize: string;
+    status: string;
+  }>;
+  arWaypointCode?: string;
+}
+
+export interface CorridorReadinessProject {
+  id: string;
+  name: string;
+  code: string;
+  description: string;
+  state: string;
+  totalLengthKm: number;
+  clearedKm: number;
+  underProcessKm: number;
+  disputedKm: number;
+  litigationKm: number;
+  criticalBlockedKm: number;
+  overallReadinessScore: number; // 0 to 100
+  targetCommissionDate: string;
+  delayFactorsBreakdown: {
+    landAcquisitionPct: number;
+    compensationDisputesPct: number;
+    environmentalForestPct: number;
+    legalProceedingsPct: number;
+    utilityRelocationPct: number;
+  };
+  center: [number, number];
+  zoom: number;
+  segments: CorridorSegment[];
+}

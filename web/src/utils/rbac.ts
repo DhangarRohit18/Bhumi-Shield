@@ -9,6 +9,7 @@ import { UserRole } from '../types';
 export type Permission =
   // Workspace Level Access
   | 'VIEW_COMMAND_CENTER'
+  | 'VIEW_CORRIDOR_READINESS'
   | 'VIEW_DIGITAL_TWIN'
   | 'VIEW_OPS_INTELLIGENCE'
   | 'VIEW_ADMIN_WORKSPACE'
@@ -68,6 +69,7 @@ export const ROLE_CAPABILITIES: Record<UserRole, RoleCapability> = {
     description: 'Unified command consolidating Cabinet Secretariat, State Revenue, and District Collector. Sovereign oversight, Section 11/19 declarations, policy directives, What-If simulation, and officer workload balancing.',
     permissions: [
       'VIEW_COMMAND_CENTER',
+      'VIEW_CORRIDOR_READINESS',
       'VIEW_DIGITAL_TWIN',
       'VIEW_OPS_INTELLIGENCE',
       'VIEW_ADMIN_WORKSPACE',
@@ -111,6 +113,7 @@ export const ROLE_CAPABILITIES: Record<UserRole, RoleCapability> = {
     scope: 'Corridor-Specific',
     description: 'Operational suite consolidating Competent Authority Land Acquisition (CALA), Circle Officer, and Field Surveyor. Section 23 inquiry, 100% solatium computation, DGPS drone mapping, and AR boundary verification.',
     permissions: [
+      'VIEW_CORRIDOR_READINESS',
       'VIEW_DIGITAL_TWIN',
       'VIEW_OPS_INTELLIGENCE',
       'VIEW_KRISHI_SATHI',
@@ -146,6 +149,7 @@ export const ROLE_CAPABILITIES: Record<UserRole, RoleCapability> = {
     description: 'Transparency & verification suite consolidating CAG / Statutory Auditor and Project Affected Families (PAF). Immutable SHA-256 ledger, PFMS disbursement reconciliation, public gazette tracking, and grievance SLA arbitration.',
     permissions: [
       'VIEW_COMMAND_CENTER',
+      'VIEW_CORRIDOR_READINESS',
       'VIEW_DIGITAL_TWIN',
       'VIEW_ADMIN_WORKSPACE',
       'TAB_OVERVIEW',

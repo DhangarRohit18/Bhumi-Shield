@@ -1,6 +1,7 @@
 import React from 'react';
 import {
   Globe,
+  Route,
   Cpu,
   Brain,
   Shield,
@@ -11,6 +12,7 @@ import { UserRole } from '../types';
 
 export type MainWorkspaceId =
   | 'command_center'
+  | 'corridor_readiness'
   | 'digital_twin'
   | 'ops_intelligence'
   | 'admin'
@@ -26,9 +28,9 @@ interface SidebarProps {
 // Statutory RBAC Permission Matrix for Workspace Access
 // Krishi Sathi is restricted exclusively to Admin (NATIONAL_EXECUTIVE) and Data Acquisition (FIELD_ACQUISITION)
 const ROLE_WORKSPACE_PERMISSIONS: Record<UserRole, MainWorkspaceId[]> = {
-  'NATIONAL_EXECUTIVE': ['command_center', 'digital_twin', 'ops_intelligence', 'admin', 'krishi_sathi'],
-  'FIELD_ACQUISITION': ['digital_twin', 'ops_intelligence', 'krishi_sathi'],
-  'AUDIT_CITIZEN': ['command_center', 'digital_twin', 'admin'],
+  'NATIONAL_EXECUTIVE': ['command_center', 'corridor_readiness', 'digital_twin', 'ops_intelligence', 'admin', 'krishi_sathi'],
+  'FIELD_ACQUISITION': ['corridor_readiness', 'digital_twin', 'ops_intelligence', 'krishi_sathi'],
+  'AUDIT_CITIZEN': ['command_center', 'corridor_readiness', 'digital_twin', 'admin'],
 };
 
 
@@ -51,6 +53,12 @@ export const Sidebar: React.FC<SidebarProps> = ({
       name: 'Command Center',
       description: 'Corridor GIS & Macro Overview',
       icon: Globe,
+    },
+    {
+      id: 'corridor_readiness',
+      name: 'Corridor Readiness',
+      description: 'Social Consent & Risk Corridor',
+      icon: Route,
     },
     {
       id: 'digital_twin',

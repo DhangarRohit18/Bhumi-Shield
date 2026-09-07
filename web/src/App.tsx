@@ -4,6 +4,7 @@ import { seedBhumiShieldDemoData } from './utils/seedData';
 import { Header } from './components/Header';
 import { Sidebar, MainWorkspaceId } from './components/Sidebar';
 import { CommandCenter } from './features/command-center/CommandCenter';
+import { CorridorReadinessWorkspace } from './features/corridor-readiness/CorridorReadinessWorkspace';
 import { ProjectDigitalTwin } from './features/digital-twin/ProjectDigitalTwin';
 import { OperationsIntelligenceCenter } from './features/operations-intelligence/OperationsIntelligenceCenter';
 import { AdministrationWorkspace } from './features/admin/AdministrationWorkspace';
@@ -76,6 +77,7 @@ export const App: React.FC = () => {
 
         <main className="flex-1 overflow-y-auto bg-[#F0F7FF] p-4">
           {activeTab === 'command_center' && <CommandCenter />}
+          {activeTab === 'corridor_readiness' && <CorridorReadinessWorkspace />}
           {activeTab === 'digital_twin' && <ProjectDigitalTwin />}
           {activeTab === 'ops_intelligence' && <OperationsIntelligenceCenter />}
           {activeTab === 'admin' && <AdministrationWorkspace />}
