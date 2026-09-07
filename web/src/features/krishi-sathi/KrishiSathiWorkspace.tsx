@@ -31,6 +31,35 @@ import {
   Trash2,
 } from 'lucide-react';
 
+// Geodesic spherical polygon area calculation (in Square Meters & Acres)
+function calculateGeodesicArea(coordinates: Array<[number, number]>): { sqMeters: number; acres: number; hectares: number } {
+  if (coordinates.length < 3) {
+    return { sqMeters: 0, acres: 0, hectares: 0 };
+  }
+
+  const radius = 6378137; // Earth's mean radius in meters (WGS84)
+  let area = 0;
+
+  const len = coordinates.length;
+  for (let i = 0; i < len; i++) {
+    const p1 = coordinates[i];
+    const p2 = coordinates[(i + 1) % len];
+
+    const lat1Rad = (p1[0] * Math.PI) / 180;
+    const lat2Rad = (p2[0] * Math.PI) / 180;
+    const dLngRad = ((p2[1] - p1[1]) * Math.PI) / 180;
+
+    area += dLngRad * (2 + Math.sin(lat1Rad) + Math.sin(lat2Rad));
+  }
+
+  area = Math.abs((area * radius * radius) / 2.0);
+  const sqMeters = Math.round(area * 100) / 100;
+  const acres = Math.round((sqMeters / 4046.8564224) * 100) / 100; // 1 acre = 4046.8564224 sq m
+  const hectares = Math.round((sqMeters / 10000) * 100) / 100;
+
+  return { sqMeters, acres, hectares };
+}
+
 // Sub-component for interactive polygon drawing on modal map
 const MapAreaSelector: React.FC<{
   polygonPoints: Array<[number, number]>;
@@ -72,6 +101,7 @@ const MapAreaSelector: React.FC<{
     </>
   );
 };
+
 
 export const KrishiSathiWorkspace: React.FC = () => {
   const { userProfile, activeRole } = useAuth();
@@ -125,11 +155,21 @@ export const KrishiSathiWorkspace: React.FC = () => {
     const avgLng = updated.reduce((s, p) => s + p[1], 0) / updated.length;
     setFormLat(avgLat.toFixed(5));
     setFormLng(avgLng.toFixed(5));
+
+    // Auto calculate area when 3 or more points are placed
+    if (updated.length >= 3) {
+      const { acres } = calculateGeodesicArea(updated);
+      if (acres > 0) {
+        setFormTotalAcres(acres.toFixed(2));
+        setFormAcquiredAcres(acres.toFixed(2));
+      }
+    }
   };
 
   const handleClearMapPoints = () => {
     setDrawnPolygon([]);
   };
+
 
   const [isSeeding, setIsSeeding] = useState<boolean>(false);
 
@@ -634,10 +674,24 @@ export const KrishiSathiWorkspace: React.FC = () => {
                     />
                   </MapContainer>
 
-                  <div className="absolute bottom-2 left-2 z-[1000] bg-[#0F172A]/80 backdrop-blur-xs px-2.5 py-1 rounded-lg text-[10px] text-white font-medium border border-[#334155] pointer-events-none">
-                    💡 Click on the map to place boundary corner markers
+                  <div className="absolute bottom-2 left-2 z-[1000] bg-[#0F172A]/90 backdrop-blur-xs px-2.5 py-1.5 rounded-lg text-[10px] text-white font-medium border border-[#334155] shadow-lg flex items-center gap-3">
+                    <span className="flex items-center gap-1 text-[#94A3B8]">
+                      💡 Click on map to drop corners
+                    </span>
+                    {drawnPolygon.length >= 3 && (
+                      <div className="flex items-center gap-2 pl-2 border-l border-[#475569]">
+                        <span className="text-[#38BDF8] font-bold">⚡ Auto-Calculated Area:</span>
+                        <span className="bg-[#059669] px-2 py-0.5 rounded font-mono font-black text-[#ECFDF5]">
+                          {calculateGeodesicArea(drawnPolygon).acres} Acres
+                        </span>
+                        <span className="text-[#94A3B8] font-mono text-[9px]">
+                          ({calculateGeodesicArea(drawnPolygon).sqMeters.toLocaleString('en-IN')} m² / {calculateGeodesicArea(drawnPolygon).hectares} Ha)
+                        </span>
+                      </div>
+                    )}
                   </div>
                 </div>
+
               </div>
 
               <div className="grid grid-cols-2 gap-3">
@@ -737,28 +791,43 @@ export const KrishiSathiWorkspace: React.FC = () => {
                 </div>
 
                 <div>
-                  <label className="block text-[#64748B] font-bold mb-1">Total Holding (Acres) *</label>
+                  <div className="flex items-center justify-between mb-1">
+                    <label className="text-[#64748B] font-bold">Total Holding (Acres) *</label>
+                    {drawnPolygon.length >= 3 && (
+                      <span className="text-[9px] font-extrabold text-[#059669] bg-[#ECFDF5] px-1.5 py-0.2 rounded border border-[#A7F3D0]">
+                        ⚡ Auto-Calculated
+                      </span>
+                    )}
+                  </div>
                   <input
                     required
                     type="number"
                     step="0.01"
                     value={formTotalAcres}
                     onChange={(e) => setFormTotalAcres(e.target.value)}
-                    className="w-full bg-[#F8FAFC] border border-[#CBD5E1] rounded-xl px-3 py-2 text-xs text-[#0F172A] focus:outline-none focus:border-[#EA580C]"
+                    className="w-full bg-[#F8FAFC] border border-[#CBD5E1] rounded-xl px-3 py-2 text-xs text-[#0F172A] focus:outline-none focus:border-[#EA580C] font-mono font-bold"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-[#64748B] font-bold mb-1">Acquired Area (Acres) *</label>
+                  <div className="flex items-center justify-between mb-1">
+                    <label className="text-[#64748B] font-bold">Acquired Area (Acres) *</label>
+                    {drawnPolygon.length >= 3 && (
+                      <span className="text-[9px] font-extrabold text-[#059669] bg-[#ECFDF5] px-1.5 py-0.2 rounded border border-[#A7F3D0]">
+                        ⚡ Auto-Calculated
+                      </span>
+                    )}
+                  </div>
                   <input
                     required
                     type="number"
                     step="0.01"
                     value={formAcquiredAcres}
                     onChange={(e) => setFormAcquiredAcres(e.target.value)}
-                    className="w-full bg-[#F8FAFC] border border-[#CBD5E1] rounded-xl px-3 py-2 text-xs text-[#0F172A] focus:outline-none focus:border-[#EA580C]"
+                    className="w-full bg-[#F8FAFC] border border-[#CBD5E1] rounded-xl px-3 py-2 text-xs text-[#0F172A] focus:outline-none focus:border-[#EA580C] font-mono font-bold"
                   />
                 </div>
+
 
                 <div>
                   <label className="block text-[#64748B] font-bold mb-1">Land Classification</label>
