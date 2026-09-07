@@ -620,7 +620,7 @@ export interface FarmerRecord extends BaseEntity {
     lng: number;
     rtkAccuracyCm: number;
   }>;
-  boundaryPolygon: Array<[number, number]>; // Array of [lat, lng]
+  boundaryPolygon: Array<{ lat: number; lng: number }>;
   qrPasscode: string;
   arVerificationStatus: 'VERIFIED' | 'PENDING_VISIT' | 'FLAGGED_MISMATCH';
 }

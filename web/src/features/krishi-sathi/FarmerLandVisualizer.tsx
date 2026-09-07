@@ -1,4 +1,4 @@
-﻿import React, { useState } from 'react';
+import React, { useState } from 'react';
 import { MapContainer, TileLayer, Polygon, CircleMarker, Popup, useMap } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import { FarmerRecord } from '../../types';
@@ -22,12 +22,22 @@ interface FarmerLandVisualizerProps {
   onOpenDetails: (farmer: FarmerRecord) => void;
 }
 
-const CenterMapOnPolygon: React.FC<{ polygon: Array<[number, number]> }> = ({ polygon }) => {
+const parsePositions = (boundary: any[]): Array<[number, number]> => {
+  if (!Array.isArray(boundary)) return [];
+  return boundary.map((p) => {
+    if (Array.isArray(p)) return [p[0], p[1]] as [number, number];
+    if (p && typeof p === 'object') return [p.lat, p.lng] as [number, number];
+    return [0, 0] as [number, number];
+  });
+};
+
+const CenterMapOnPolygon: React.FC<{ polygon: any[] }> = ({ polygon }) => {
   const map = useMap();
   React.useEffect(() => {
-    if (polygon && polygon.length > 0) {
-      const avgLat = polygon.reduce((sum, p) => sum + p[0], 0) / polygon.length;
-      const avgLng = polygon.reduce((sum, p) => sum + p[1], 0) / polygon.length;
+    const coords = parsePositions(polygon);
+    if (coords.length > 0) {
+      const avgLat = coords.reduce((sum, p) => sum + p[0], 0) / coords.length;
+      const avgLng = coords.reduce((sum, p) => sum + p[1], 0) / coords.length;
       map.flyTo([avgLat, avgLng], 17, { duration: 1.2 });
     }
   }, [polygon, map]);
@@ -43,8 +53,13 @@ export const FarmerLandVisualizer: React.FC<FarmerLandVisualizerProps> = ({
   const [showArHud, setShowArHud] = useState<boolean>(true);
   const [selectedPillarId, setSelectedPillarId] = useState<string | null>(null);
 
-  const centerLat = farmer.boundaryPolygon.reduce((s, p) => s + p[0], 0) / (farmer.boundaryPolygon.length || 1);
-  const centerLng = farmer.boundaryPolygon.reduce((s, p) => s + p[1], 0) / (farmer.boundaryPolygon.length || 1);
+  const polygonPositions = parsePositions(farmer.boundaryPolygon);
+  const centerLat = polygonPositions.length > 0
+    ? polygonPositions.reduce((s, p) => s + p[0], 0) / polygonPositions.length
+    : 19.6967;
+  const centerLng = polygonPositions.length > 0
+    ? polygonPositions.reduce((s, p) => s + p[1], 0) / polygonPositions.length
+    : 72.7699;
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-xs p-3 md:p-6 font-sans animate-in fade-in duration-200">
@@ -154,11 +169,11 @@ export const FarmerLandVisualizer: React.FC<FarmerLandVisualizerProps> = ({
               />
             )}
 
-            <CenterMapOnPolygon polygon={farmer.boundaryPolygon} />
+            <CenterMapOnPolygon polygon={polygonPositions} />
 
             {/* Cadastral Polygon Layer */}
             <Polygon
-              positions={farmer.boundaryPolygon}
+              positions={polygonPositions}
               pathOptions={{
                 color: farmer.arVerificationStatus === 'FLAGGED_MISMATCH' ? '#EF4444' : '#EA580C',
                 fillColor: farmer.arVerificationStatus === 'FLAGGED_MISMATCH' ? '#EF4444' : '#F97316',

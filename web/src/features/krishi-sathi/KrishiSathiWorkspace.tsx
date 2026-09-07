@@ -222,6 +222,8 @@ export const KrishiSathiWorkspace: React.FC = () => {
         rtkAccuracyCm: 1.2,
       }));
 
+      const boundaryObjects = finalPolygon.map((pt) => ({ lat: pt[0], lng: pt[1] }));
+
       await farmerService.create({
         farmerName: formName,
         contactNumber: formContact,
@@ -253,7 +255,7 @@ export const KrishiSathiWorkspace: React.FC = () => {
           ifsc: formIfsc,
         },
         dgpsPillars,
-        boundaryPolygon: finalPolygon,
+        boundaryPolygon: boundaryObjects,
         qrPasscode: `QR-KS-${stateCode}-${cleanSurvey}`,
         arVerificationStatus: 'VERIFIED',
       }, generatedId);
