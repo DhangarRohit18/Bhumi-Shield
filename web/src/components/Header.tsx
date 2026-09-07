@@ -37,21 +37,6 @@ export const Header: React.FC<HeaderProps> = ({ onLogout }) => {
             </select>
           </div>
 
-          {/* Profile Card */}
-          <div className="flex items-center gap-2.5 pl-2 border-l border-[#BAE6FD]/60">
-            <div className="w-8 h-8 rounded-full bg-[#0F172A] border border-[#1E293B] flex items-center justify-center text-xs font-bold text-white shadow-sm">
-              {userProfile?.displayName ? userProfile.displayName.charAt(0) : 'G'}
-            </div>
-            <div className="hidden sm:block text-left">
-              <p className="text-xs font-extrabold text-[#0F172A] leading-tight">
-                {userProfile?.displayName || 'National Authority'}
-              </p>
-              <p className="text-[10px] text-[#64748B] font-mono leading-tight">
-                {userProfile?.email || 'admin@gov.in'}
-              </p>
-            </div>
-          </div>
-
           {/* Logout Button */}
           {onLogout && (
             <button
