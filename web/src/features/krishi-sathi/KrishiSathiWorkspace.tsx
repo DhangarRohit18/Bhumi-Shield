@@ -356,8 +356,31 @@ export const KrishiSathiWorkspace: React.FC = () => {
     }
   };
 
+  // Check Role Access Authorization: Visible only to Admin (NATIONAL_EXECUTIVE) and Data Acquisition (FIELD_ACQUISITION)
+  const isAuthorized = activeRole === 'NATIONAL_EXECUTIVE' || activeRole === 'FIELD_ACQUISITION';
+
+  if (!isAuthorized) {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-[60vh] p-8 text-center bg-white rounded-2xl border border-[#BAE6FD] shadow-sm font-sans space-y-4">
+        <div className="w-16 h-16 rounded-2xl bg-[#FEF2F2] border border-[#FECACA] flex items-center justify-center text-[#DC2626]">
+          <ShieldCheck className="w-8 h-8 text-[#DC2626]" />
+        </div>
+        <div className="space-y-1 max-w-md">
+          <h2 className="text-base font-extrabold text-[#0F172A]">
+            Restricted Clearance: Admin & Data Acquisition Only
+          </h2>
+          <p className="text-xs text-[#64748B]">
+            Krishi Sathi Cadastral intelligence, direct 7/12 land registration, and AR demarcation are restricted exclusively to National & District Administrators and Ground Data Acquisition Officers under the RFCTLARR statutory clearance framework.
+          </p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="space-y-4 font-sans">
+
+
       {/* Header Bar */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-3 bg-white p-4 rounded-2xl border border-[#BAE6FD] shadow-sm">
         <div>

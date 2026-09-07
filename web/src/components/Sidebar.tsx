@@ -24,11 +24,13 @@ interface SidebarProps {
 }
 
 // Statutory RBAC Permission Matrix for Workspace Access
+// Krishi Sathi is restricted exclusively to Admin (NATIONAL_EXECUTIVE) and Data Acquisition (FIELD_ACQUISITION)
 const ROLE_WORKSPACE_PERMISSIONS: Record<UserRole, MainWorkspaceId[]> = {
   'NATIONAL_EXECUTIVE': ['command_center', 'digital_twin', 'ops_intelligence', 'admin', 'krishi_sathi'],
   'FIELD_ACQUISITION': ['digital_twin', 'ops_intelligence', 'krishi_sathi'],
-  'AUDIT_CITIZEN': ['command_center', 'digital_twin', 'admin', 'krishi_sathi'],
+  'AUDIT_CITIZEN': ['command_center', 'digital_twin', 'admin'],
 };
+
 
 export const Sidebar: React.FC<SidebarProps> = ({
   activeTab,

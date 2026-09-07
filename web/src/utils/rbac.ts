@@ -148,7 +148,6 @@ export const ROLE_CAPABILITIES: Record<UserRole, RoleCapability> = {
       'VIEW_COMMAND_CENTER',
       'VIEW_DIGITAL_TWIN',
       'VIEW_ADMIN_WORKSPACE',
-      'VIEW_KRISHI_SATHI',
       'TAB_OVERVIEW',
       'TAB_LIFECYCLE',
       'TAB_GIS',
@@ -160,6 +159,7 @@ export const ROLE_CAPABILITIES: Record<UserRole, RoleCapability> = {
     ],
   },
 };
+
 
 /**
  * Checks if a specific role is authorized to perform a permission action.
