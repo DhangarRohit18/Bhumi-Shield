@@ -1,7 +1,6 @@
 import React from 'react';
 import { Project, Bottleneck } from '../../../types';
 import { Cpu } from 'lucide-react';
-import { LiveSyncStatusBar } from '../../../components/LiveSyncStatusBar';
 
 interface TwinHeaderProps {
   project: Project;
@@ -64,9 +63,6 @@ export const TwinHeader: React.FC<TwinHeaderProps> = ({
             <span className="text-[10px] uppercase font-bold text-[#EA580C] tracking-wider">Active Stalls</span>
             <p className="text-sm font-extrabold text-[#C2410C] font-mono mt-0.5">{bottlenecks.length}</p>
           </div>
-
-          {/* ── Real-Time Firestore Sync Status (from JK live-sync pattern) ── */}
-          <LiveSyncStatusBar />
         </div>
       </div>
     </div>

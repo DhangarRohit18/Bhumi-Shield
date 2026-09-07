@@ -1,6 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { UserRole } from '../../../types';
-import { LiveSyncStatusBar } from '../../../components/LiveSyncStatusBar';
 
 interface HeaderProps {
   activeRole: UserRole;
@@ -66,14 +65,6 @@ export const NationalOperationalHeader: React.FC<HeaderProps> = ({
           <div className="px-3 py-1 rounded-lg bg-[#F0F7FF] border border-[#BAE6FD] text-[10px] font-mono font-bold text-[#0F172A]">
             🕐 {nowStr}
           </div>
-
-          <div className="px-3.5 py-1.5 rounded-lg bg-[#FFF7ED] border border-[#FFEDD5] text-xs font-bold text-[#EA580C] flex items-center gap-2 shadow-xs">
-            <span className="w-2 h-2 rounded-full bg-[#10B981] animate-ping" />
-            <span>Scope: <strong className="text-[#0F172A] font-extrabold">{scopeLabel}</strong></span>
-          </div>
-
-          {/* Real-time Firestore sync indicator */}
-          <LiveSyncStatusBar />
         </div>
       </div>
 
