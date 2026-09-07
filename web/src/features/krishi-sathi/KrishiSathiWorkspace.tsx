@@ -2,6 +2,7 @@ import React, { useEffect, useState, useMemo } from 'react';
 import { FarmerRecord } from '../../types';
 import { farmerService } from '../../services/entities.service';
 import { auditService } from '../../services/audit.service';
+import { seedBhumiShieldDemoData } from '../../utils/seedData';
 import { useAuth } from '../../contexts/AuthContext';
 import { hasPermission, getPermissionReason } from '../../utils/rbac';
 import { FarmerDetailsDrawer } from './FarmerDetailsDrawer';
@@ -67,12 +68,29 @@ export const KrishiSathiWorkspace: React.FC = () => {
   const [formLat, setFormLat] = useState('19.6967');
   const [formLng, setFormLng] = useState('72.7699');
 
-  // Real-time Live Firestore Subscription
+  const [isSeeding, setIsSeeding] = useState<boolean>(false);
+
+  const handleTriggerSeed = async () => {
+    setIsSeeding(true);
+    try {
+      await seedBhumiShieldDemoData();
+    } catch (e) {
+      console.error('Error seeding demo data:', e);
+    } finally {
+      setIsSeeding(false);
+    }
+  };
+
+  // Real-time Live Firestore Subscription + Auto-seed on first open if empty
   useEffect(() => {
     setLoading(true);
     const unsubscribe = farmerService.subscribe((data) => {
       setFarmers(data);
       setLoading(false);
+      // Auto seed if completely empty
+      if (data.length === 0) {
+        seedBhumiShieldDemoData().catch(console.error);
+      }
     });
     return () => unsubscribe();
   }, []);
@@ -213,14 +231,26 @@ export const KrishiSathiWorkspace: React.FC = () => {
           </p>
         </div>
 
-        {/* Real-time Admin Onboarding Button */}
-        <button
-          onClick={() => setModalOpen(true)}
-          className="flex items-center gap-2 px-4 py-2 rounded-xl bg-[#EA580C] hover:bg-[#C2410C] text-white text-xs font-black shadow-sm transition-all cursor-pointer"
-        >
-          <PlusCircle className="w-4 h-4" />
-          <span>Register New Farmer & Land Record</span>
-        </button>
+        {/* Action Buttons */}
+        <div className="flex items-center gap-2">
+          <button
+            onClick={handleTriggerSeed}
+            disabled={isSeeding}
+            className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-[#F1F5F9] hover:bg-[#E2E8F0] text-[#0F172A] text-xs font-bold transition-all cursor-pointer disabled:opacity-50"
+            title="Seed / Reset 10 Official Cadastral Farmer Land Records"
+          >
+            <Sparkles className="w-3.5 h-3.5 text-[#EA580C]" />
+            <span>{isSeeding ? 'Seeding 10 Farmers...' : 'Seed 10 Farmers'}</span>
+          </button>
+
+          <button
+            onClick={() => setModalOpen(true)}
+            className="flex items-center gap-2 px-4 py-2 rounded-xl bg-[#EA580C] hover:bg-[#C2410C] text-white text-xs font-black shadow-sm transition-all cursor-pointer"
+          >
+            <PlusCircle className="w-4 h-4" />
+            <span>Register New Farmer & Land Record</span>
+          </button>
+        </div>
       </div>
 
       {/* Aggregate KPI Summary Cards */}
