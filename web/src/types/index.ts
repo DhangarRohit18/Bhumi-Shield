@@ -92,6 +92,7 @@ export interface Parcel extends BaseEntity {
   projectId: string;
   villageId: string;
   khasraSurveyNo: string;
+  ulpin?: string; // 14-digit Unique Land Parcel Identification Number
   areaAcres: number;
   landClassification: 'Agricultural' | 'Commercial' | 'Residential' | 'Barren' | 'Forest';
   estimatedMarketValueINR: number;
@@ -100,6 +101,19 @@ export interface Parcel extends BaseEntity {
   status: 'IDENTIFIED' | 'SURVEYED' | 'NOTIFIED' | 'VALUED' | 'AWARDED' | 'DISBURSED' | 'POSSESSED';
   qrAssetId?: string;
   geoCenter?: { lat: number; lng: number };
+  environmentalConflict?: {
+    conflictType: 'RESERVED_FOREST' | 'CRZ_WETLAND' | 'TRIBAL_SCHEDULE_V' | 'NONE';
+    severity: 'LOW' | 'MEDIUM' | 'HIGH' | 'BLOCKING';
+    overlapAreaAcres: number;
+    clearanceStatus: 'PENDING' | 'IN_PROGRESS' | 'CLEARED' | 'REJECTED';
+  };
+  satelliteObservation?: {
+    lastPassDate: string;
+    radarBackscatterDb: number;
+    insarDisplacementMmPerYr: number;
+    possessionVerified: boolean;
+    encroachmentDetected: boolean;
+  };
 }
 
 // 9. affected_families (PAFs)

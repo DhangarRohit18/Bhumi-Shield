@@ -148,9 +148,13 @@ export const ParcelPassportDrawer: React.FC<ParcelPassportDrawerProps> = ({
         {/* Ownership & Physical Survey Breakdown */}
         <div className="p-3.5 rounded-xl bg-[#F8FAFC] border border-[#E2E8F0] space-y-2">
           <h4 className="font-extrabold text-[11px] uppercase tracking-wider text-[#64748B]">
-            Cadastral Properties
+            Cadastral Properties & Spatial Identity
           </h4>
           <div className="space-y-1 text-xs">
+            <div className="flex justify-between py-1 border-b border-[#E2E8F0]">
+              <span className="text-[#64748B]">Canonical ULPIN:</span>
+              <strong className="text-[#EA580C] font-mono text-[11px]">{parcel.ulpin || `ULPIN-MH-${parcel.khasraSurveyNo?.replace(/[^a-zA-Z0-9]/g, '')}-2026`}</strong>
+            </div>
             <div className="flex justify-between py-1 border-b border-[#E2E8F0]">
               <span className="text-[#64748B]">Area:</span>
               <strong className="text-[#0F172A]">{parcel.areaAcres} Acres</strong>
@@ -161,12 +165,18 @@ export const ParcelPassportDrawer: React.FC<ParcelPassportDrawerProps> = ({
             </div>
             <div className="flex justify-between py-1 border-b border-[#E2E8F0]">
               <span className="text-[#64748B]">Statutory Stage:</span>
-              <span className="font-mono font-bold text-[#BF7834]">{parcel.status}</span>
+              <span className="font-mono font-bold text-[#EA580C]">{parcel.status}</span>
             </div>
-            <div className="flex justify-between py-1">
+            <div className="flex justify-between py-1 border-b border-[#E2E8F0]">
               <span className="text-[#64748B]">DGPS Pillar QR:</span>
               <span className="font-mono text-[11px] text-[#0F172A]">{parcel.qrAssetId || 'QR-PIL-MH-0921'}</span>
             </div>
+            {parcel.environmentalConflict && parcel.environmentalConflict.conflictType !== 'NONE' && (
+              <div className="flex justify-between py-1 border-b border-[#FECACA] bg-[#FEF2F2] px-1.5 rounded">
+                <span className="text-[#DC2626] font-bold">Forest/CRZ Conflict:</span>
+                <span className="font-mono font-extrabold text-[#DC2626]">{parcel.environmentalConflict.conflictType} ({parcel.environmentalConflict.clearanceStatus})</span>
+              </div>
+            )}
           </div>
         </div>
       </div>

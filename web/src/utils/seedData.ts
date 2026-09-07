@@ -195,6 +195,7 @@ export async function seedBhumiShieldDemoData(logCallback?: (msg: string) => voi
     projectId: proj1Id,
     villageId: 'vil-manikpur',
     khasraSurveyNo: '12/A-BKC',
+    ulpin: 'ULPIN-MH-12ABKC-2026',
     areaAcres: 3.80,
     landClassification: 'Commercial',
     estimatedMarketValueINR: 48000000,
@@ -203,12 +204,15 @@ export async function seedBhumiShieldDemoData(logCallback?: (msg: string) => voi
     status: 'AWARDED',
     qrAssetId: 'QR-PIL-MH-0012',
     geoCenter: { lat: 19.0760, lng: 72.8777 },
+    environmentalConflict: { conflictType: 'NONE', severity: 'LOW', overlapAreaAcres: 0, clearanceStatus: 'CLEARED' },
+    satelliteObservation: { lastPassDate: '2026-09-05', radarBackscatterDb: -12.4, insarDisplacementMmPerYr: -0.2, possessionVerified: true, encroachmentDetected: false },
   }, 'pcl-mum-0012');
 
   await parcelService.create({
     projectId: proj1Id,
     villageId: 'vil-manikpur',
     khasraSurveyNo: '512/3-THN',
+    ulpin: 'ULPIN-MH-5123THN-2026',
     areaAcres: 2.10,
     landClassification: 'Residential',
     estimatedMarketValueINR: 22000000,
@@ -217,12 +221,15 @@ export async function seedBhumiShieldDemoData(logCallback?: (msg: string) => voi
     status: 'NOTIFIED',
     qrAssetId: 'QR-PIL-MH-0512',
     geoCenter: { lat: 19.2183, lng: 72.9781 },
+    environmentalConflict: { conflictType: 'CRZ_WETLAND', severity: 'MEDIUM', overlapAreaAcres: 0.4, clearanceStatus: 'IN_PROGRESS' },
+    satelliteObservation: { lastPassDate: '2026-09-04', radarBackscatterDb: -15.1, insarDisplacementMmPerYr: -0.6, possessionVerified: false, encroachmentDetected: false },
   }, 'pcl-thn-0512');
 
   await parcelService.create({
     projectId: proj1Id,
     villageId: 'vil-manikpur',
     khasraSurveyNo: '142/A-1',
+    ulpin: 'ULPIN-MH-142A1-2026',
     areaAcres: 2.45,
     landClassification: 'Agricultural',
     estimatedMarketValueINR: 12500000,
@@ -231,12 +238,15 @@ export async function seedBhumiShieldDemoData(logCallback?: (msg: string) => voi
     status: 'AWARDED',
     qrAssetId: 'QR-PIL-MH-0921',
     geoCenter: { lat: 19.6967, lng: 72.7699 },
+    environmentalConflict: { conflictType: 'NONE', severity: 'LOW', overlapAreaAcres: 0, clearanceStatus: 'CLEARED' },
+    satelliteObservation: { lastPassDate: '2026-09-06', radarBackscatterDb: -14.2, insarDisplacementMmPerYr: -0.8, possessionVerified: true, encroachmentDetected: false },
   }, 'pcl-pal-0142');
 
   await parcelService.create({
     projectId: proj1Id,
     villageId: 'vil-kelve',
     khasraSurveyNo: '143/2-B',
+    ulpin: 'ULPIN-MH-1432B-2026',
     areaAcres: 1.15,
     landClassification: 'Residential',
     estimatedMarketValueINR: 8900000,
@@ -245,6 +255,8 @@ export async function seedBhumiShieldDemoData(logCallback?: (msg: string) => voi
     status: 'NOTIFIED',
     qrAssetId: 'QR-PIL-MH-0922',
     geoCenter: { lat: 19.6200, lng: 72.7400 },
+    environmentalConflict: { conflictType: 'RESERVED_FOREST', severity: 'BLOCKING', overlapAreaAcres: 0.8, clearanceStatus: 'PENDING' },
+    satelliteObservation: { lastPassDate: '2026-09-02', radarBackscatterDb: -18.2, insarDisplacementMmPerYr: -1.2, possessionVerified: false, encroachmentDetected: true },
   }, 'pcl-pal-0143');
 
   await parcelService.create({
