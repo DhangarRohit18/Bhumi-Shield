@@ -7,6 +7,8 @@ import { useAuth } from '../../contexts/AuthContext';
 import { hasPermission, getPermissionReason } from '../../utils/rbac';
 import { FarmerDetailsDrawer } from './FarmerDetailsDrawer';
 import { FarmerLandVisualizer } from './FarmerLandVisualizer';
+import { MapContainer, TileLayer, Polygon, CircleMarker, useMapEvents } from 'react-leaflet';
+import 'leaflet/dist/leaflet.css';
 import {
   Sprout,
   PlusCircle,
@@ -25,7 +27,51 @@ import {
   Clock,
   Sparkles,
   Users,
+  Crosshair,
+  Trash2,
 } from 'lucide-react';
+
+// Sub-component for interactive polygon drawing on modal map
+const MapAreaSelector: React.FC<{
+  polygonPoints: Array<[number, number]>;
+  onAddPoint: (lat: number, lng: number) => void;
+}> = ({ polygonPoints, onAddPoint }) => {
+  useMapEvents({
+    click(e) {
+      onAddPoint(e.latlng.lat, e.latlng.lng);
+    },
+  });
+
+  return (
+    <>
+      {polygonPoints.length > 0 && (
+        <Polygon
+          positions={polygonPoints}
+          pathOptions={{
+            color: '#EA580C',
+            fillColor: '#F97316',
+            fillOpacity: 0.4,
+            weight: 2,
+            dashArray: '3, 3',
+          }}
+        />
+      )}
+      {polygonPoints.map((pt, idx) => (
+        <CircleMarker
+          key={idx}
+          center={pt}
+          radius={6}
+          pathOptions={{
+            color: '#FFFFFF',
+            fillColor: '#059669',
+            fillOpacity: 1,
+            weight: 2,
+          }}
+        />
+      ))}
+    </>
+  );
+};
 
 export const KrishiSathiWorkspace: React.FC = () => {
   const { userProfile, activeRole } = useAuth();
@@ -67,6 +113,23 @@ export const KrishiSathiWorkspace: React.FC = () => {
   const [formIfsc, setFormIfsc] = useState('SBIN0001244');
   const [formLat, setFormLat] = useState('19.6967');
   const [formLng, setFormLng] = useState('72.7699');
+
+  // Interactive Map Area Selection State
+  const [drawnPolygon, setDrawnPolygon] = useState<Array<[number, number]>>([]);
+  const [modalMapMode, setModalMapMode] = useState<'SATELLITE' | 'STREET'>('SATELLITE');
+
+  const handleAddMapPoint = (lat: number, lng: number) => {
+    const updated = [...drawnPolygon, [lat, lng] as [number, number]];
+    setDrawnPolygon(updated);
+    const avgLat = updated.reduce((s, p) => s + p[0], 0) / updated.length;
+    const avgLng = updated.reduce((s, p) => s + p[1], 0) / updated.length;
+    setFormLat(avgLat.toFixed(5));
+    setFormLng(avgLng.toFixed(5));
+  };
+
+  const handleClearMapPoints = () => {
+    setDrawnPolygon([]);
+  };
 
   const [isSeeding, setIsSeeding] = useState<boolean>(false);
 
@@ -139,22 +202,25 @@ export const KrishiSathiWorkspace: React.FC = () => {
       const generatedUlpin = `ULPIN-${stateCode}-${cleanSurvey || '999'}-2026`;
       const generatedId = `farmer-${Date.now()}`;
 
-      // 4 Corner boundary polygon based on lat/lng center
-      const deltaLat = 0.0010;
-      const deltaLng = 0.0015;
-      const boundaryPolygon: Array<[number, number]> = [
-        [lat + deltaLat, lng - deltaLng],
-        [lat + deltaLat, lng + deltaLng],
-        [lat - deltaLat, lng + deltaLng],
-        [lat - deltaLat, lng - deltaLng],
-      ];
+      // Use user-drawn polygon if available, else standard 4-corner offset
+      let finalPolygon: Array<[number, number]> = drawnPolygon;
+      if (finalPolygon.length < 3) {
+        const deltaLat = 0.0010;
+        const deltaLng = 0.0015;
+        finalPolygon = [
+          [lat + deltaLat, lng - deltaLng],
+          [lat + deltaLat, lng + deltaLng],
+          [lat - deltaLat, lng + deltaLng],
+          [lat - deltaLat, lng - deltaLng],
+        ];
+      }
 
-      const dgpsPillars = [
-        { pillarId: `PIL-${cleanSurvey}-NW`, lat: lat + deltaLat, lng: lng - deltaLng, rtkAccuracyCm: 1.2 },
-        { pillarId: `PIL-${cleanSurvey}-NE`, lat: lat + deltaLat, lng: lng + deltaLng, rtkAccuracyCm: 1.1 },
-        { pillarId: `PIL-${cleanSurvey}-SE`, lat: lat - deltaLat, lng: lng + deltaLng, rtkAccuracyCm: 1.4 },
-        { pillarId: `PIL-${cleanSurvey}-SW`, lat: lat - deltaLat, lng: lng - deltaLng, rtkAccuracyCm: 1.3 },
-      ];
+      const dgpsPillars = finalPolygon.map((pt, idx) => ({
+        pillarId: `PIL-${cleanSurvey}-P${idx + 1}`,
+        lat: pt[0],
+        lng: pt[1],
+        rtkAccuracyCm: 1.2,
+      }));
 
       await farmerService.create({
         farmerName: formName,
@@ -187,7 +253,7 @@ export const KrishiSathiWorkspace: React.FC = () => {
           ifsc: formIfsc,
         },
         dgpsPillars,
-        boundaryPolygon,
+        boundaryPolygon: finalPolygon,
         qrPasscode: `QR-KS-${stateCode}-${cleanSurvey}`,
         arVerificationStatus: 'VERIFIED',
       }, generatedId);
@@ -205,6 +271,7 @@ export const KrishiSathiWorkspace: React.FC = () => {
       setModalOpen(false);
       setFormName('');
       setFormSurvey('');
+      setDrawnPolygon([]);
     } catch (err) {
       console.error('Error creating farmer record:', err);
     } finally {
@@ -487,7 +554,67 @@ export const KrishiSathiWorkspace: React.FC = () => {
               </button>
             </div>
 
-            <form onSubmit={handleCreateFarmer} className="p-4 overflow-y-auto space-y-3 text-xs">
+            <form onSubmit={handleCreateFarmer} className="p-4 overflow-y-auto space-y-4 text-xs">
+              {/* Interactive Map Area Selector Component */}
+              <div className="space-y-1.5">
+                <div className="flex items-center justify-between">
+                  <span className="font-extrabold text-xs text-[#0F172A] flex items-center gap-1.5">
+                    <Crosshair className="w-3.5 h-3.5 text-[#EA580C]" />
+                    <span>Select Boundary Points on Map ({drawnPolygon.length} Corners Placed)</span>
+                  </span>
+                  <div className="flex items-center gap-2">
+                    <button
+                      type="button"
+                      onClick={() => setModalMapMode(modalMapMode === 'SATELLITE' ? 'STREET' : 'SATELLITE')}
+                      className="px-2 py-1 rounded-lg bg-[#F1F5F9] text-[10px] font-bold text-[#0F172A] border border-[#CBD5E1] cursor-pointer"
+                    >
+                      {modalMapMode === 'SATELLITE' ? '🗺️ Street Map' : '🛰️ Satellite'}
+                    </button>
+                    {drawnPolygon.length > 0 && (
+                      <button
+                        type="button"
+                        onClick={handleClearMapPoints}
+                        className="px-2 py-1 rounded-lg bg-[#FEF2F2] text-[10px] font-bold text-[#DC2626] border border-[#FECACA] flex items-center gap-1 cursor-pointer"
+                      >
+                        <Trash2 className="w-3 h-3" />
+                        <span>Clear</span>
+                      </button>
+                    )}
+                  </div>
+                </div>
+
+                <div className="w-full h-56 rounded-xl overflow-hidden border border-[#CBD5E1] relative shadow-inner">
+                  <MapContainer
+                    center={[parseFloat(formLat) || 19.6967, parseFloat(formLng) || 72.7699]}
+                    zoom={15}
+                    style={{ width: '100%', height: '100%' }}
+                    zoomControl={false}
+                  >
+                    {modalMapMode === 'SATELLITE' ? (
+                      <TileLayer
+                        attribution='&copy; ESRI Satellite'
+                        url="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"
+                        maxZoom={19}
+                      />
+                    ) : (
+                      <TileLayer
+                        attribution='&copy; OpenStreetMap'
+                        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                        maxZoom={19}
+                      />
+                    )}
+                    <MapAreaSelector
+                      polygonPoints={drawnPolygon}
+                      onAddPoint={handleAddMapPoint}
+                    />
+                  </MapContainer>
+
+                  <div className="absolute bottom-2 left-2 z-[1000] bg-[#0F172A]/80 backdrop-blur-xs px-2.5 py-1 rounded-lg text-[10px] text-white font-medium border border-[#334155] pointer-events-none">
+                    💡 Click on the map to place boundary corner markers
+                  </div>
+                </div>
+              </div>
+
               <div className="grid grid-cols-2 gap-3">
                 <div>
                   <label className="block text-[#64748B] font-bold mb-1">Farmer / Landowner Name *</label>
