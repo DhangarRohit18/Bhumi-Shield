@@ -6,6 +6,50 @@ import 'package:geolocator/geolocator.dart';
 import 'dart:math' as math;
 import 'dart:async';
 
+/// 3D Spatial AR Anchor locked to world orientation (Yaw, Pitch)
+class ArAnchor {
+  final double worldYaw;   // Heading angle in degrees (0-360 relative to Magnetic North)
+  final double worldPitch; // Elevation angle in degrees (-90 to +90)
+  final DateTime createdAt;
+
+  ArAnchor({
+    required this.worldYaw,
+    required this.worldPitch,
+    DateTime? createdAt,
+  }) : createdAt = createdAt ?? DateTime.now();
+
+  /// Project this 3D world anchor into current 2D screen coordinates based on device orientation
+  Offset toScreenOffset({
+    required Size screenSize,
+    required double currentYaw,
+    required double currentPitch,
+    required double currentRoll,
+    double fovX = 60.0,
+    double fovY = 80.0,
+  }) {
+    // Difference in yaw (-180 to 180)
+    double dYaw = (worldYaw - currentYaw + 540) % 360 - 180;
+    // Difference in pitch
+    double dPitch = worldPitch - currentPitch;
+
+    double centerX = screenSize.width / 2;
+    double centerY = screenSize.height / 2;
+
+    double x = centerX + (dYaw / fovX) * screenSize.width;
+    double y = centerY - (dPitch / fovY) * screenSize.height;
+
+    // Rotate point based on phone roll angle
+    double rollRad = currentRoll * math.pi / 180;
+    double dx = x - centerX;
+    double dy = y - centerY;
+
+    double rotatedX = centerX + (dx * math.cos(rollRad) - dy * math.sin(rollRad));
+    double rotatedY = centerY + (dx * math.sin(rollRad) + dy * math.cos(rollRad));
+
+    return Offset(rotatedX, rotatedY);
+  }
+}
+
 class ArCadastralHudScreen extends StatefulWidget {
   final String khasraNo;
   final String villageName;
@@ -29,16 +73,19 @@ class _ArCadastralHudScreenState extends State<ArCadastralHudScreen>
   CameraController? _cameraController;
   List<CameraDescription>? _cameras;
   bool _isCameraReady = false;
+  String? _cameraError;
   int _activeTab = 0; // 0 = Measure (AR), 1 = Level
 
-  // AR Points on screen (Real-time Tap to Place or Auto Cadastral Polygon)
-  final List<Offset> _points = [];
-  Offset _centerCrosshair = Offset.zero;
+  // Real 3D World-Anchored Points
+  final List<ArAnchor> _anchors = [];
 
-  // Real-time Sensor States (Pitch, Roll, Compass)
+  // Real-time Device Sensor States (Yaw/Compass, Pitch, Roll)
+  double _yaw = 0.0;
   double _pitch = 0.0;
   double _roll = 0.0;
+
   StreamSubscription<AccelerometerEvent>? _accelSubscription;
+  StreamSubscription<MagnetometerEvent>? _magSubscription;
 
   // Real-time GPS Telemetry
   Position? _currentPosition;
@@ -81,7 +128,6 @@ class _ArCadastralHudScreenState extends State<ArCadastralHudScreen>
       if (status.isGranted || status.isLimited) {
         _cameras = await availableCameras();
         if (_cameras != null && _cameras!.isNotEmpty) {
-          // Select back camera
           final backCamera = _cameras!.firstWhere(
             (c) => c.lensDirection == CameraLensDirection.back,
             orElse: () => _cameras![0],
@@ -98,21 +144,43 @@ class _ArCadastralHudScreenState extends State<ArCadastralHudScreen>
           if (mounted) {
             setState(() {
               _isCameraReady = true;
+              _cameraError = null;
             });
           }
         }
+      } else {
+        setState(() {
+          _cameraError = 'Camera permission required for AR Viewfinder';
+        });
       }
     } catch (e) {
       debugPrint('Real camera init note: $e');
+      if (mounted) {
+        setState(() {
+          _cameraError = 'Camera initialization: $e';
+        });
+      }
     }
   }
 
   void _initSensors() {
+    // Accelerometer for Pitch & Roll
     _accelSubscription = accelerometerEventStream().listen((AccelerometerEvent event) {
       if (mounted) {
         setState(() {
           _pitch = math.atan2(event.y, math.sqrt(event.x * event.x + event.z * event.z)) * 180 / math.pi;
           _roll = math.atan2(-event.x, event.z) * 180 / math.pi;
+        });
+      }
+    });
+
+    // Magnetometer for Compass Heading (Yaw)
+    _magSubscription = magnetometerEventStream().listen((MagnetometerEvent event) {
+      if (mounted) {
+        double heading = math.atan2(event.y, event.x) * 180 / math.pi;
+        if (heading < 0) heading += 360;
+        setState(() {
+          _yaw = heading;
         });
       }
     });
@@ -123,7 +191,7 @@ class _ArCadastralHudScreenState extends State<ArCadastralHudScreen>
       final status = await Permission.locationWhenInUse.request();
       if (status.isGranted) {
         final pos = await Geolocator.getCurrentPosition(
-          desiredAccuracy: LocationAccuracy.best,
+          locationSettings: const LocationSettings(),
         );
         if (mounted) {
           setState(() {
@@ -155,31 +223,48 @@ class _ArCadastralHudScreenState extends State<ArCadastralHudScreen>
     _cameraController?.dispose();
     _pulseController.dispose();
     _accelSubscription?.cancel();
+    _magSubscription?.cancel();
     _positionSubscription?.cancel();
     super.dispose();
   }
 
-  void _addPointAt(Offset position) {
+  void _addAnchorAt(Offset screenPosition) {
+    final size = MediaQuery.of(context).size;
+    double centerX = size.width / 2;
+    double centerY = size.height / 2;
+
+    double dx = screenPosition.dx - centerX;
+    double dy = screenPosition.dy - centerY;
+
+    double fovX = 60.0;
+    double fovY = 80.0;
+
+    double angleX = (dx / size.width) * fovX;
+    double angleY = (dy / size.height) * fovY;
+
+    double anchorYaw = (_yaw + angleX + 360) % 360;
+    double anchorPitch = _pitch - angleY;
+
     setState(() {
-      _points.add(position);
+      _anchors.add(ArAnchor(worldYaw: anchorYaw, worldPitch: anchorPitch));
     });
   }
 
-  void _addPointAtCenter() {
+  void _addAnchorAtCenter() {
     final screenSize = MediaQuery.of(context).size;
-    _addPointAt(Offset(screenSize.width / 2, screenSize.height / 2));
+    _addAnchorAt(Offset(screenSize.width / 2, screenSize.height / 2));
   }
 
-  void _clearPoints() {
+  void _clearAnchors() {
     setState(() {
-      _points.clear();
+      _anchors.clear();
     });
   }
 
-  void _undoPoint() {
-    if (_points.isNotEmpty) {
+  void _undoAnchor() {
+    if (_anchors.isNotEmpty) {
       setState(() {
-        _points.removeLast();
+        _anchors.removeLast();
       });
     }
   }
@@ -187,12 +272,6 @@ class _ArCadastralHudScreenState extends State<ArCadastralHudScreen>
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
-    _centerCrosshair = Offset(size.width / 2, size.height / 2);
-
-    // In a real environment, we don't show fake static boundaries.
-    // The officer must manually drop anchor nodes by walking the perimeter
-    // and tapping the '+' button to plot the real-world geometry.
-    final activePolygonPoints = _points;
 
     return Scaffold(
       backgroundColor: Colors.black,
@@ -212,7 +291,7 @@ class _ArCadastralHudScreenState extends State<ArCadastralHudScreen>
               ),
             )
           else
-            // High-fidelity camera viewfinder fallback
+            // Viewfinder Loading / Fallback Banner
             Container(
               decoration: const BoxDecoration(
                 gradient: LinearGradient(
@@ -225,38 +304,44 @@ class _ArCadastralHudScreenState extends State<ArCadastralHudScreen>
                   ],
                 ),
               ),
-              child: const Center(
+              child: Center(
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Icon(Icons.camera_alt, color: Colors.white24, size: 64),
-                    SizedBox(height: 12),
+                    const SizedBox(
+                      width: 48,
+                      height: 48,
+                      child: CircularProgressIndicator(color: Color(0xFF10B981), strokeWidth: 3),
+                    ),
+                    const SizedBox(height: 16),
                     Text(
-                      'Real-Time AR Viewport Active',
-                      style: TextStyle(color: Colors.white60, fontSize: 13, fontWeight: FontWeight.bold),
+                      _cameraError ?? 'Initializing Real-Time AR Camera Feed...',
+                      textAlign: TextAlign.center,
+                      style: const TextStyle(color: Colors.white70, fontSize: 13, fontWeight: FontWeight.bold),
                     ),
                   ],
                 ),
               ),
             ),
 
-          // 2. Interactive Tap-to-Place Target Layer
+          // 2. Interactive World-Locked Spatial AR Layer
           GestureDetector(
             behavior: HitTestBehavior.translucent,
             onTapDown: (details) {
               if (_activeTab == 0) {
-                _addPointAt(details.localPosition);
+                _addAnchorAt(details.localPosition);
               }
             },
             child: AnimatedBuilder(
               animation: _pulseController,
               builder: (context, child) {
                 return CustomPaint(
-                  painter: AppleMeasureArPainter(
-                    points: activePolygonPoints,
-                    center: _centerCrosshair,
+                  painter: WorldSpatialArPainter(
+                    anchors: _anchors,
+                    screenSize: size,
                     pulse: _pulseController.value,
                     isLevelMode: _activeTab == 1,
+                    yaw: _yaw,
                     pitch: _pitch,
                     roll: _roll,
                     dgpsCoordinates: widget.dgpsCoordinates,
@@ -269,20 +354,21 @@ class _ArCadastralHudScreenState extends State<ArCadastralHudScreen>
             ),
           ),
 
-          // 3. Apple Style Dynamic Island Header Bar
+          // 3. Dynamic Island Top Navigation & Status Bar
           SafeArea(
             child: Align(
               alignment: Alignment.topCenter,
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  // Dynamic Island Pill with Live Status
+                  // AR Sentinel Pill Indicator
                   Container(
-                    width: 140,
+                    width: 150,
                     height: 32,
                     decoration: BoxDecoration(
-                      color: Colors.black,
+                      color: Colors.black.withValues(alpha: 0.85),
                       borderRadius: BorderRadius.circular(16),
+                      border: Border.all(color: const Color(0xFF10B981).withValues(alpha: 0.6), width: 1),
                       boxShadow: [
                         BoxShadow(
                           color: Colors.black.withValues(alpha: 0.6),
@@ -302,13 +388,13 @@ class _ArCadastralHudScreenState extends State<ArCadastralHudScreen>
                           ),
                         ),
                         const SizedBox(width: 8),
-                        const Text(
-                          'AR SENTINEL',
-                          style: TextStyle(
+                        Text(
+                          'SPATIAL AR • ${_yaw.toStringAsFixed(0)}°',
+                          style: const TextStyle(
                             color: Colors.white,
                             fontSize: 10,
                             fontWeight: FontWeight.bold,
-                            letterSpacing: 1.0,
+                            letterSpacing: 0.8,
                           ),
                         ),
                       ],
@@ -317,17 +403,17 @@ class _ArCadastralHudScreenState extends State<ArCadastralHudScreen>
 
                   const SizedBox(height: 10),
 
-                  // Top Action Icons Strip (Undo, Title, Clear Trash)
+                  // Header Controls (Undo, Title Badge, Clear, Done)
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 20),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        // Back / Undo Button
+                        // Undo Button
                         GestureDetector(
                           onTap: () {
-                            if (_points.isNotEmpty) {
-                              _undoPoint();
+                            if (_anchors.isNotEmpty) {
+                              _undoAnchor();
                             } else {
                               Navigator.pop(context);
                             }
@@ -336,7 +422,7 @@ class _ArCadastralHudScreenState extends State<ArCadastralHudScreen>
                             width: 44,
                             height: 44,
                             decoration: BoxDecoration(
-                              color: Colors.black.withValues(alpha: 0.55),
+                              color: Colors.black.withValues(alpha: 0.65),
                               shape: BoxShape.circle,
                               border: Border.all(color: Colors.white30),
                             ),
@@ -344,11 +430,11 @@ class _ArCadastralHudScreenState extends State<ArCadastralHudScreen>
                           ),
                         ),
 
-                        // Section 19 Cadastral Pill Badge
+                        // Khasra Badge
                         Container(
                           padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
                           decoration: BoxDecoration(
-                            color: Colors.black.withValues(alpha: 0.7),
+                            color: Colors.black.withValues(alpha: 0.75),
                             borderRadius: BorderRadius.circular(20),
                             border: Border.all(color: const Color(0xFF10B981), width: 1.5),
                           ),
@@ -363,14 +449,14 @@ class _ArCadastralHudScreenState extends State<ArCadastralHudScreen>
                           ),
                         ),
 
-                        // Delete / Clear Points Button
+                        // Clear Trash Button
                         GestureDetector(
-                          onTap: _clearPoints,
+                          onTap: _clearAnchors,
                           child: Container(
                             width: 44,
                             height: 44,
                             decoration: BoxDecoration(
-                              color: Colors.black.withValues(alpha: 0.55),
+                              color: Colors.black.withValues(alpha: 0.65),
                               shape: BoxShape.circle,
                               border: Border.all(color: Colors.white30),
                             ),
@@ -384,7 +470,7 @@ class _ArCadastralHudScreenState extends State<ArCadastralHudScreen>
                             Navigator.pop(context, true);
                           },
                           child: Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
                             decoration: BoxDecoration(
                               color: const Color(0xFF10B981),
                               borderRadius: BorderRadius.circular(20),
@@ -407,23 +493,23 @@ class _ArCadastralHudScreenState extends State<ArCadastralHudScreen>
             ),
           ),
 
-          // 4. Center Reticle Target
+          // 4. Center AR Aiming Reticle
           Center(
             child: IgnorePointer(
               child: Container(
-                width: 16,
-                height: 16,
+                width: 20,
+                height: 20,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
                   border: Border.all(color: Colors.white, width: 2),
-                  color: Colors.white.withValues(alpha: 0.25),
+                  color: Colors.white.withValues(alpha: 0.2),
                 ),
                 child: Center(
                   child: Container(
                     width: 4,
                     height: 4,
                     decoration: const BoxDecoration(
-                      color: Colors.white,
+                      color: Color(0xFF10B981),
                       shape: BoxShape.circle,
                     ),
                   ),
@@ -432,7 +518,7 @@ class _ArCadastralHudScreenState extends State<ArCadastralHudScreen>
             ),
           ),
 
-          // 5. Bottom Controls (Plus Anchor, Shutter Capture, Measure/Level Capsule)
+          // 5. Bottom Measure Controls & Mode Switcher
           Align(
             alignment: Alignment.bottomCenter,
             child: Padding(
@@ -440,43 +526,37 @@ class _ArCadastralHudScreenState extends State<ArCadastralHudScreen>
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  // Single Center Action Trigger (Drop Anchor / Measure)
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      // Large Solid Apple-style Measure Button
-                      GestureDetector(
-                        onTap: _addPointAtCenter,
-                        child: Container(
-                          width: 76,
-                          height: 76,
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: Colors.white.withValues(alpha: 0.2),
-                            border: Border.all(color: Colors.white, width: 3),
-                          ),
-                          padding: const EdgeInsets.all(6),
-                          child: Container(
-                            decoration: const BoxDecoration(
-                              color: Colors.white,
-                              shape: BoxShape.circle,
-                            ),
-                            child: const Center(
-                              child: Icon(Icons.add, color: Colors.black, size: 36),
-                            ),
-                          ),
+                  // Drop Spatial Anchor Button
+                  GestureDetector(
+                    onTap: _addAnchorAtCenter,
+                    child: Container(
+                      width: 76,
+                      height: 76,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: Colors.white.withValues(alpha: 0.25),
+                        border: Border.all(color: Colors.white, width: 3),
+                      ),
+                      padding: const EdgeInsets.all(6),
+                      child: Container(
+                        decoration: const BoxDecoration(
+                          color: Colors.white,
+                          shape: BoxShape.circle,
+                        ),
+                        child: const Center(
+                          child: Icon(Icons.add_location_alt, color: Colors.black, size: 34),
                         ),
                       ),
-                    ],
+                    ),
                   ),
 
-                  const SizedBox(height: 20),
+                  const SizedBox(height: 18),
 
-                  // Bottom Segmented Tab Capsule (Measure | Level)
+                  // Mode Switcher (Measure | Level)
                   Container(
                     padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 4),
                     decoration: BoxDecoration(
-                      color: Colors.black.withValues(alpha: 0.75),
+                      color: Colors.black.withValues(alpha: 0.8),
                       borderRadius: BorderRadius.circular(30),
                       border: Border.all(color: Colors.white24),
                     ),
@@ -501,7 +581,7 @@ class _ArCadastralHudScreenState extends State<ArCadastralHudScreen>
                                 ),
                                 const SizedBox(width: 8),
                                 Text(
-                                  'Measure',
+                                  '3D AR Measure',
                                   style: TextStyle(
                                     color: _activeTab == 0 ? Colors.white : Colors.white60,
                                     fontSize: 12,
@@ -531,7 +611,7 @@ class _ArCadastralHudScreenState extends State<ArCadastralHudScreen>
                                 ),
                                 const SizedBox(width: 8),
                                 Text(
-                                  'Level',
+                                  'Horizon Level',
                                   style: TextStyle(
                                     color: _activeTab == 1 ? Colors.white : Colors.white60,
                                     fontSize: 12,
@@ -555,21 +635,24 @@ class _ArCadastralHudScreenState extends State<ArCadastralHudScreen>
   }
 }
 
-class AppleMeasureArPainter extends CustomPainter {
-  final List<Offset> points;
-  final Offset center;
+/// World Spatial AR Custom Painter rendering 3D anchored vectors
+class WorldSpatialArPainter extends CustomPainter {
+  final List<ArAnchor> anchors;
+  final Size screenSize;
   final double pulse;
   final bool isLevelMode;
+  final double yaw;
   final double pitch;
   final double roll;
   final String dgpsCoordinates;
   final String currentLocation;
 
-  AppleMeasureArPainter({
-    required this.points,
-    required this.center,
+  WorldSpatialArPainter({
+    required this.anchors,
+    required this.screenSize,
     required this.pulse,
     required this.isLevelMode,
+    required this.yaw,
     required this.pitch,
     required this.roll,
     required this.dgpsCoordinates,
@@ -585,75 +668,87 @@ class AppleMeasureArPainter extends CustomPainter {
 
     _paintDgpsOverlay(canvas, size);
 
-    if (points.length < 2) return;
+    // Convert 3D world anchors to current 2D screen positions based on device rotation
+    List<Offset> projectedPoints = anchors.map((a) {
+      return a.toScreenOffset(
+        screenSize: size,
+        currentYaw: yaw,
+        currentPitch: pitch,
+        currentRoll: roll,
+      );
+    }).toList();
+
+    if (projectedPoints.length < 2) {
+      if (projectedPoints.length == 1) {
+        _drawSingleNode(canvas, projectedPoints[0]);
+      }
+      return;
+    }
 
     // 1. Draw Connected Vector Lines
     final linePaint = Paint()
-      ..color = Colors.white
+      ..color = const Color(0xFF10B981)
       ..strokeWidth = 3.5
       ..style = PaintingStyle.stroke;
 
-    final path = Path()..moveTo(points[0].dx, points[0].dy);
-    for (int i = 1; i < points.length; i++) {
-      path.lineTo(points[i].dx, points[i].dy);
+    final path = Path()..moveTo(projectedPoints[0].dx, projectedPoints[0].dy);
+    for (int i = 1; i < projectedPoints.length; i++) {
+      path.lineTo(projectedPoints[i].dx, projectedPoints[i].dy);
     }
-    if (points.length >= 3) {
+    if (projectedPoints.length >= 3) {
       path.close();
 
-      // Semi-transparent polygon fill
+      // Filled Polygon Boundary
       final fillPaint = Paint()
-        ..color = const Color(0xFF10B981).withValues(alpha: 0.18)
+        ..color = const Color(0xFF10B981).withValues(alpha: 0.22)
         ..style = PaintingStyle.fill;
       canvas.drawPath(path, fillPaint);
     }
 
     canvas.drawPath(path, linePaint);
 
-    // 2. Draw Measurement Distance Badges between Vertices
-    for (int i = 0; i < points.length; i++) {
-      final p1 = points[i];
-      final p2 = (i == points.length - 1 && points.length >= 3) ? points[0] : (i < points.length - 1 ? points[i + 1] : null);
+    // 2. Draw Vector Measurement Labels
+    for (int i = 0; i < projectedPoints.length; i++) {
+      final p1 = projectedPoints[i];
+      final p2 = (i == projectedPoints.length - 1 && projectedPoints.length >= 3)
+          ? projectedPoints[0]
+          : (i < projectedPoints.length - 1 ? projectedPoints[i + 1] : null);
 
       if (p2 != null) {
         final mid = Offset((p1.dx + p2.dx) / 2, (p1.dy + p2.dy) / 2);
-        final pixelDist = (p2 - p1).distance;
         
-        // Dynamic real-world distance calculation based on device tilt
-        double assumedHeight = 1.5;
-        double effectivePitch = pitch.abs();
-        if (effectivePitch > 85 && effectivePitch < 95) effectivePitch = 85;
-        
-        double estimatedDistanceToPoint = assumedHeight * math.tan((90 - effectivePitch) * math.pi / 180);
-        
-        double realMeters;
-        if (estimatedDistanceToPoint < 0.1 || estimatedDistanceToPoint > 100) {
-          realMeters = (pixelDist / 220.0);
-        } else {
-          realMeters = (pixelDist / 220.0) * (estimatedDistanceToPoint / 2.0).clamp(0.6, 2.5);
-        }
+        // Compute real-world angular distance in degrees converted to meters
+        final a1 = anchors[i];
+        final a2 = (i == anchors.length - 1 && anchors.length >= 3) ? anchors[0] : anchors[i + 1];
 
+        double dYaw = (a2.worldYaw - a1.worldYaw + 540) % 360 - 180;
+        double dPitch = a2.worldPitch - a1.worldPitch;
+        double angularSpanDeg = math.sqrt(dYaw * dYaw + dPitch * dPitch);
+
+        // Standard surveyor height estimation (1.5m eye height)
+        double realMeters = (angularSpanDeg * 0.18).clamp(0.5, 120.0);
         final label = realMeters >= 1.0 ? '${realMeters.toStringAsFixed(2)} m' : '${(realMeters * 100).round()} cm';
 
         _drawMeasurementTag(canvas, mid, label);
       }
     }
 
-    // 3. Draw Corner Reticle Anchor Nodes
-    final nodePaint = Paint()
-      ..color = Colors.white
-      ..style = PaintingStyle.fill;
-
-    for (var p in points) {
-      canvas.drawCircle(p, 7, nodePaint);
-      canvas.drawCircle(
-        p,
-        11 + (pulse * 4),
-        Paint()
-          ..color = Colors.white.withValues(alpha: 0.35)
-          ..style = PaintingStyle.stroke
-          ..strokeWidth = 2,
-      );
+    // 3. Draw Anchor Nodes
+    for (var p in projectedPoints) {
+      _drawSingleNode(canvas, p);
     }
+  }
+
+  void _drawSingleNode(Canvas canvas, Offset p) {
+    canvas.drawCircle(p, 8, Paint()..color = Colors.white);
+    canvas.drawCircle(
+      p,
+      12 + (pulse * 5),
+      Paint()
+        ..color = const Color(0xFF10B981).withValues(alpha: 0.5)
+        ..style = PaintingStyle.stroke
+        ..strokeWidth = 2.5,
+    );
   }
 
   void _paintDgpsOverlay(Canvas canvas, Size size) {
@@ -665,7 +760,7 @@ class AppleMeasureArPainter extends CustomPainter {
         TextSpan(text: currentLocation, style: const TextStyle(color: Colors.white, fontSize: 11, fontWeight: FontWeight.bold, fontFamily: 'monospace')),
       ],
     );
-    
+
     final tp = TextPainter(
       text: hudTextSpan,
       textDirection: TextDirection.ltr,
@@ -674,7 +769,7 @@ class AppleMeasureArPainter extends CustomPainter {
     final bgRect = Rect.fromLTWH(16, 96, tp.width + 16, tp.height + 14);
     canvas.drawRRect(
       RRect.fromRectAndRadius(bgRect, const Radius.circular(10)),
-      Paint()..color = Colors.black.withValues(alpha: 0.65),
+      Paint()..color = Colors.black.withValues(alpha: 0.7),
     );
 
     tp.paint(canvas, const Offset(24, 103));
@@ -682,7 +777,7 @@ class AppleMeasureArPainter extends CustomPainter {
 
   void _drawMeasurementTag(Canvas canvas, Offset position, String text) {
     final textSpan = TextSpan(
-      text: '$text >',
+      text: '$text',
       style: const TextStyle(
         color: Colors.black,
         fontSize: 11,
@@ -701,13 +796,9 @@ class AppleMeasureArPainter extends CustomPainter {
       height: textPainter.height + 10,
     );
 
-    final rrect = RRect.fromRectAndRadius(pillRect, const Radius.circular(14));
-
     canvas.drawRRect(
-      rrect,
-      Paint()
-        ..color = Colors.white
-        ..style = PaintingStyle.fill,
+      RRect.fromRectAndRadius(pillRect, const Radius.circular(14)),
+      Paint()..color = Colors.white,
     );
 
     textPainter.paint(canvas, Offset(position.dx - (textPainter.width / 2), position.dy - (textPainter.height / 2)));
@@ -715,20 +806,20 @@ class AppleMeasureArPainter extends CustomPainter {
 
   void _paintLevelMode(Canvas canvas, Size size) {
     final c = Offset(size.width / 2, size.height / 2);
-    
+
     final crosshairPaint = Paint()
       ..color = Colors.white30
       ..strokeWidth = 1
       ..style = PaintingStyle.stroke;
-      
+
     canvas.drawLine(Offset(c.dx - 120, c.dy), Offset(c.dx + 120, c.dy), crosshairPaint);
     canvas.drawLine(Offset(c.dx, c.dy - 120), Offset(c.dx, c.dy + 120), crosshairPaint);
 
     final isLevel = pitch.abs() < 2.0 && roll.abs() < 2.0;
 
     canvas.drawCircle(
-      c, 
-      90, 
+      c,
+      90,
       Paint()
         ..color = isLevel ? const Color(0xFF10B981) : Colors.white30
         ..style = PaintingStyle.stroke
@@ -748,5 +839,5 @@ class AppleMeasureArPainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(covariant AppleMeasureArPainter oldDelegate) => true;
+  bool shouldRepaint(covariant WorldSpatialArPainter oldDelegate) => true;
 }
