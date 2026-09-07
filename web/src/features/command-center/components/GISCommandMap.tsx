@@ -146,26 +146,31 @@ export const GISCommandMap: React.FC<MapProps> = ({
         </div>
 
         {/* Vision Mode Buttons */}
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-1">
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-1.5">
           {[
-            { id: 'OPTICAL', label: '🌍 Optical GIS', desc: 'True Color Map' },
-            { id: 'SAR_RADAR', label: '🛰️ SAR Dual-Pol', desc: 'VV/VH Backscatter' },
-            { id: 'INSAR_SUBSIDENCE', label: '🌋 InSAR Subsidence', desc: '±1.2mm/yr Ground' },
-            { id: 'SAR_CHANGE', label: '🔍 Δσ⁰ Possession', desc: 'Sec 38 Verified' },
+            { id: 'OPTICAL', icon: '🌍', label: 'Optical GIS', desc: 'True Color Map' },
+            { id: 'SAR_RADAR', icon: '🛰️', label: 'SAR Dual-Pol', desc: 'VV/VH Backscatter' },
+            { id: 'INSAR_SUBSIDENCE', icon: '🌋', label: 'InSAR Topo', desc: 'Ground Stability' },
+            { id: 'SAR_CHANGE', icon: '✅', label: 'Sec 38 Possession', desc: 'Radar Verified' },
           ].map((mode) => (
             <button
               key={mode.id}
               onClick={() => setVisionMode(mode.id as MapVisionMode)}
-              className={`p-1.5 rounded-lg text-left transition-all cursor-pointer border ${
+              className={`px-2 py-1.5 rounded-lg text-left transition-all cursor-pointer border flex flex-col justify-between min-h-[46px] ${
                 visionMode === mode.id
-                  ? 'bg-[#0F172A] border-[#0F172A] text-white shadow-xs'
-                  : 'bg-[#F0F7FF] border-[#BAE6FD] text-[#0369A1] hover:bg-[#E0F2FE]'
+                  ? 'bg-[#0F172A] border-[#EA580C] text-white shadow-sm ring-1 ring-[#EA580C]/50'
+                  : 'bg-[#F8FAFC] border-[#E2E8F0] text-[#334155] hover:bg-[#F1F5F9] hover:border-[#CBD5E1]'
               }`}
             >
-              <p className={`text-[10px] font-extrabold leading-tight ${visionMode === mode.id ? 'text-[#EA580C]' : 'text-[#0F172A]'}`}>
-                {mode.label}
+              <div className="flex items-center gap-1">
+                <span className="text-xs leading-none">{mode.icon}</span>
+                <p className={`text-[10.5px] font-bold leading-tight ${visionMode === mode.id ? 'text-white' : 'text-[#0F172A]'}`}>
+                  {mode.label}
+                </p>
+              </div>
+              <p className={`text-[8.5px] font-medium mt-0.5 ${visionMode === mode.id ? 'text-[#94A3B8]' : 'text-[#64748B]'}`}>
+                {mode.desc}
               </p>
-              <p className="text-[8px] text-[#64748B] truncate">{mode.desc}</p>
             </button>
           ))}
         </div>
@@ -200,23 +205,23 @@ export const GISCommandMap: React.FC<MapProps> = ({
 
         {/* SAR Telemetry Live HUD (when in SAR Modes) */}
         {visionMode !== 'OPTICAL' && (
-          <div className="p-2 rounded-lg bg-[#0F172A] text-white space-y-1 text-[10px] font-mono border border-[#1E293B]">
+          <div className="p-2.5 rounded-xl bg-[#0F172A] text-white space-y-1.5 text-[11px] font-sans border border-[#1E293B] shadow-inner">
             <div className="flex items-center justify-between text-[#EA580C]">
-              <span className="flex items-center gap-1 font-bold">
-                <Radio className="w-3 h-3 text-[#EA580C] animate-pulse" />
-                <span>
+              <span className="flex items-center gap-1.5 font-bold">
+                <Radio className="w-3.5 h-3.5 text-[#EA580C] animate-pulse" />
+                <span className="text-white font-semibold">
                   {visionMode === 'SAR_RADAR' && 'Sentinel-1 Dual-Pol GRD Intensity'}
                   {visionMode === 'INSAR_SUBSIDENCE' && 'Interferometric Phase Coherence (InSAR)'}
-                  {visionMode === 'SAR_CHANGE' && 'All-Weather Δσ⁰ Land Clearance Radar'}
+                  {visionMode === 'SAR_CHANGE' && 'All-Weather Land Clearance Radar (Sec 38)'}
                 </span>
               </span>
-              <span className="text-[9px] bg-white/10 px-1.5 py-0.2 rounded text-[#38BDF8]">
-                {visionMode === 'SAR_RADAR' && 'σ⁰: -14.2 dB'}
-                {visionMode === 'INSAR_SUBSIDENCE' && 'Δz: -0.8 mm/yr'}
+              <span className="text-[10px] font-mono font-bold bg-white/10 px-2 py-0.5 rounded text-[#38BDF8]">
+                {visionMode === 'SAR_RADAR' && 'Backscatter: -14.2 dB'}
+                {visionMode === 'INSAR_SUBSIDENCE' && 'Displacement: -0.8 mm/yr'}
                 {visionMode === 'SAR_CHANGE' && 'Possession: 94.8%'}
               </span>
             </div>
-            <p className="text-[9px] text-[#94A3B8] leading-tight">
+            <p className="text-[10px] text-[#94A3B8] leading-normal">
               {visionMode === 'SAR_RADAR' && 'Penetrates cloud cover & vegetation canopy. Double-bounce flags illegal tin sheds before Sec 11.'}
               {visionMode === 'INSAR_SUBSIDENCE' && 'Millimetric ground stability tracking for HSR viaducts & expressway embankments.'}
               {visionMode === 'SAR_CHANGE' && 'Verifies physical tree clearing & soil excavation under Section 38. Flags Sec 101 unused land.'}
@@ -415,9 +420,9 @@ export const GISCommandMap: React.FC<MapProps> = ({
                   )}
 
                   {visionMode === 'SAR_CHANGE' && (
-                    <div className="p-1 rounded bg-[#FAF5FF] border border-[#E9D5FF] text-[10px] font-mono text-[#6B21A8] space-y-0.5">
-                      <p>🔍 Δσ⁰ Soil Roughness: Confirmed Cleared</p>
-                      <p>✅ Sec 38 Possession Verified: 96.4%</p>
+                    <div className="p-1.5 rounded bg-[#FAF5FF] border border-[#E9D5FF] text-[10.5px] font-sans text-[#6B21A8] space-y-0.5">
+                      <p className="font-semibold">🔍 Soil Clearance: Confirmed Cleared</p>
+                      <p className="font-semibold text-[#059669]">✅ Sec 38 Possession Verified: 96.4%</p>
                     </div>
                   )}
 
