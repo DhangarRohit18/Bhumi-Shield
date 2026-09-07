@@ -585,6 +585,30 @@ export interface OCRExtractionJob extends BaseEntity {
   humanVerified: boolean;
 }
 
+export interface LandOwnershipRecord {
+  ownerName: string;
+  relationType: 'SELF' | 'INHERITANCE' | 'PURCHASE' | 'GIFT_DEED' | 'GOVERNMENT_ALLOTMENT';
+  periodFrom: string; // e.g. "1994" or "12/04/1994"
+  periodTo: string;   // e.g. "2015" or "Present"
+  transactionType: 'SALE_DEED' | 'SUCCESSION_WARIS' | 'PARTITION' | 'GIFT' | 'ACQUISITION_NOTIFIED';
+  deedRegistrationNo: string;
+  subRegistrarOffice: string;
+  considerationAmountINR?: number; // buy or sell price
+  areaTransferredAcres: number;
+  mutationEntryNo: string;
+  mutationApprovalDate: string;
+  verifiedByTahsildar: string;
+}
+
+export interface EncumbranceRecord {
+  institutionName: string;
+  loanType: 'KCC_CROP_LOAN' | 'LAND_MORTGAGE' | 'EQUIPMENT_LOAN' | 'NIL_ENCUMBRANCE';
+  chargeAmountINR: number;
+  status: 'ACTIVE' | 'DISCHARGED' | 'NOC_ISSUED';
+  chargeDate: string;
+  nocCertificateNo?: string;
+}
+
 // 37. farmer_records (Krishi Sathi Land Intelligence & Farmer Directory)
 export interface FarmerRecord extends BaseEntity {
   farmerName: string;
@@ -605,6 +629,14 @@ export interface FarmerRecord extends BaseEntity {
   soilType: string;
   tenureType: string;
   jointHolders: Array<{ name: string; shareFraction: string; relation: string }>;
+  
+  // Historical Ownership & Buy/Sell Transactions
+  landOwnershipHistory?: LandOwnershipRecord[];
+  encumbrances?: EncumbranceRecord[];
+  initialPurchaseDate?: string;
+  initialPurchasePriceINR?: number;
+  lastAssessedCircleRateINR?: number;
+
   estimatedValuationINR: number;
   solatiumINR: number;
   totalCompensationINR: number;
@@ -624,3 +656,4 @@ export interface FarmerRecord extends BaseEntity {
   qrPasscode: string;
   arVerificationStatus: 'VERIFIED' | 'PENDING_VISIT' | 'FLAGGED_MISMATCH';
 }
+

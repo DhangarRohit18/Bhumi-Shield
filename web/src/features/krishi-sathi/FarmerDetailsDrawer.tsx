@@ -1,4 +1,4 @@
-﻿import React from 'react';
+import React from 'react';
 import { FarmerRecord } from '../../types';
 import {
   X,
@@ -9,7 +9,14 @@ import {
   QrCode,
   Compass,
   Map as MapIcon,
+  History,
+  Coins,
+  Calendar,
+  Landmark,
+  ShieldCheck,
+  CheckCircle2,
 } from 'lucide-react';
+
 
 interface FarmerDetailsDrawerProps {
   farmer: FarmerRecord;
@@ -192,6 +199,148 @@ export const FarmerDetailsDrawer: React.FC<FarmerDetailsDrawerProps> = ({
               </span>
             </div>
           </div>
+        </div>
+
+        {/* Comprehensive Land Ownership & Buy/Sell Transaction History */}
+        <div className="p-4 rounded-xl bg-[#F8FAFC] border border-[#BAE6FD] space-y-3">
+          <div className="flex items-center justify-between">
+            <h4 className="font-extrabold text-xs uppercase tracking-wider text-[#0F172A] flex items-center gap-1.5">
+              <History className="w-4 h-4 text-[#0284C7]" />
+              <span>Chain of Title & Transaction History (Buy / Sell / Inheritance)</span>
+            </h4>
+            <span className="text-[10px] font-bold text-[#0284C7] bg-[#EFF6FF] px-2 py-0.5 rounded border border-[#BFDBFE]">
+              {farmer.landOwnershipHistory?.length || 0} Deed Records
+            </span>
+          </div>
+
+          {/* Historical Timeline */}
+          <div className="space-y-2.5">
+            {farmer.landOwnershipHistory && farmer.landOwnershipHistory.length > 0 ? (
+              farmer.landOwnershipHistory.map((rec, index) => (
+                <div
+                  key={index}
+                  className="p-3 rounded-xl bg-white border border-[#E2E8F0] shadow-xs space-y-2"
+                >
+                  <div className="flex items-start justify-between">
+                    <div className="flex items-center gap-2">
+                      <div className="w-6 h-6 rounded-full bg-[#EFF6FF] text-[#0284C7] flex items-center justify-center font-black text-[10px] border border-[#BFDBFE]">
+                        {index + 1}
+                      </div>
+                      <div>
+                        <p className="font-extrabold text-xs text-[#0F172A]">{rec.ownerName}</p>
+                        <p className="text-[10px] text-[#64748B]">
+                          Tenure: <span className="font-medium text-[#0F172A]">{rec.periodFrom} – {rec.periodTo}</span> ({rec.relationType})
+                        </p>
+                      </div>
+                    </div>
+                    <span
+                      className={`px-2 py-0.5 rounded text-[9px] font-extrabold border ${
+                        rec.transactionType === 'SALE_DEED'
+                          ? 'bg-[#ECFDF5] text-[#059669] border-[#A7F3D0]'
+                          : rec.transactionType === 'SUCCESSION_WARIS'
+                          ? 'bg-[#EFF6FF] text-[#1D4ED8] border-[#BFDBFE]'
+                          : rec.transactionType === 'ACQUISITION_NOTIFIED'
+                          ? 'bg-[#FFF7ED] text-[#EA580C] border-[#FFEDD5]'
+                          : 'bg-[#F8FAFC] text-[#475569] border-[#CBD5E1]'
+                      }`}
+                    >
+                      {rec.transactionType.replace(/_/g, ' ')}
+                    </span>
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-2 text-[11px] pt-1.5 border-t border-[#F1F5F9]">
+                    <div className="flex justify-between py-0.5">
+                      <span className="text-[#64748B] flex items-center gap-1">
+                        <Coins className="w-3 h-3 text-[#EA580C]" /> Transaction Price:
+                      </span>
+                      <span className="font-bold text-[#0F172A] font-mono">
+                        {rec.considerationAmountINR !== undefined
+                          ? `₹${rec.considerationAmountINR.toLocaleString('en-IN')}`
+                          : 'Succession (₹0)'}
+                      </span>
+                    </div>
+
+                    <div className="flex justify-between py-0.5">
+                      <span className="text-[#64748B] flex items-center gap-1">
+                        <Calendar className="w-3 h-3 text-[#0284C7]" /> Mutation Date:
+                      </span>
+                      <span className="font-bold text-[#0F172A]">{rec.mutationApprovalDate}</span>
+                    </div>
+
+                    <div className="flex justify-between py-0.5">
+                      <span className="text-[#64748B]">Area Transferred:</span>
+                      <span className="font-mono font-bold text-[#0F172A]">{rec.areaTransferredAcres} Acres</span>
+                    </div>
+
+                    <div className="flex justify-between py-0.5">
+                      <span className="text-[#64748B]">Mutation / Ferfar No:</span>
+                      <span className="font-mono font-bold text-[#059669]">Ferfar #{rec.mutationEntryNo}</span>
+                    </div>
+
+                    <div className="col-span-2 flex justify-between py-0.5 text-[10px] bg-[#F8FAFC] p-1.5 rounded border border-[#E2E8F0]">
+                      <span className="text-[#64748B] flex items-center gap-1">
+                        <Landmark className="w-3 h-3 text-[#64748B]" /> Sub-Registrar / SRO:
+                      </span>
+                      <span className="font-medium text-[#0F172A]">{rec.subRegistrarOffice} (Deed Reg #{rec.deedRegistrationNo})</span>
+                    </div>
+                  </div>
+                </div>
+              ))
+            ) : (
+              <div className="p-3 bg-white rounded-lg border border-[#E2E8F0] text-center text-xs text-[#64748B]">
+                No historical deeds recorded.
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* Encumbrance & Bank Loan Charge Status (Form 15/16) */}
+        <div className="p-4 rounded-xl bg-[#F8FAFC] border border-[#E2E8F0] space-y-2.5">
+          <div className="flex items-center justify-between">
+            <h4 className="font-extrabold text-xs uppercase tracking-wider text-[#0F172A] flex items-center gap-1.5">
+              <ShieldCheck className="w-3.5 h-3.5 text-[#059669]" />
+              <span>Encumbrance & Land Charge Certificate (Nil / Active Mortgages)</span>
+            </h4>
+          </div>
+
+          {farmer.encumbrances && farmer.encumbrances.length > 0 ? (
+            <div className="space-y-1.5">
+              {farmer.encumbrances.map((enc, idx) => (
+                <div key={idx} className="p-2.5 bg-white rounded-lg border border-[#E2E8F0] flex items-center justify-between text-xs">
+                  <div>
+                    <div className="flex items-center gap-2">
+                      <p className="font-bold text-[#0F172A]">{enc.institutionName}</p>
+                      <span
+                        className={`px-2 py-0.2 rounded-full text-[9px] font-extrabold ${
+                          enc.status === 'NOC_ISSUED' || enc.status === 'DISCHARGED'
+                            ? 'bg-[#ECFDF5] text-[#059669]'
+                            : 'bg-[#FEF2F2] text-[#DC2626]'
+                        }`}
+                      >
+                        {enc.status.replace(/_/g, ' ')}
+                      </span>
+                    </div>
+                    <p className="text-[10px] text-[#64748B] mt-0.5">
+                      Type: {enc.loanType.replace(/_/g, ' ')} • Charge Date: {enc.chargeDate}
+                    </p>
+                  </div>
+                  <div className="text-right">
+                    <p className="font-mono font-bold text-[#0F172A]">
+                      {enc.chargeAmountINR > 0 ? `₹${enc.chargeAmountINR.toLocaleString('en-IN')}` : '₹0 (Nil Charge)'}
+                    </p>
+                    {enc.nocCertificateNo && (
+                      <span className="text-[9px] text-[#059669] font-mono">NOC: {enc.nocCertificateNo}</span>
+                    )}
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="p-2.5 bg-[#ECFDF5] rounded-lg border border-[#A7F3D0] flex items-center gap-2 text-xs text-[#065F46]">
+              <CheckCircle2 className="w-4 h-4 text-[#059669]" />
+              <span className="font-bold">Zero Encumbrance / Clean Freehold Title (No Outstanding Institutional Liens)</span>
+            </div>
+          )}
         </div>
 
         {/* DGPS Ground Demarcation Pillars */}

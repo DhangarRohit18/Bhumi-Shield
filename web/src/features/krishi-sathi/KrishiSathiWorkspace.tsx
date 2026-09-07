@@ -245,6 +245,40 @@ export const KrishiSathiWorkspace: React.FC = () => {
         jointHolders: [
           { name: 'Self Khatedar', shareFraction: '1/1', relation: 'Sole Holder' }
         ],
+        initialPurchaseDate: new Date().toLocaleDateString('en-GB'),
+        initialPurchasePriceINR: baseVal * 0.4,
+        lastAssessedCircleRateINR: baseVal,
+        landOwnershipHistory: [
+          {
+            ownerName: `${formName} (Current Khatedar)`,
+            relationType: 'PURCHASE',
+            periodFrom: '2015',
+            periodTo: 'Present',
+            transactionType: 'SALE_DEED',
+            deedRegistrationNo: `DEED-${stateCode}-${cleanSurvey}-2015`,
+            subRegistrarOffice: `SRO ${formTehsil || formDistrict}`,
+            considerationAmountINR: Math.round(baseVal * 0.4),
+            areaTransferredAcres: totalAc,
+            mutationEntryNo: `${Math.floor(1000 + Math.random() * 9000)}`,
+            mutationApprovalDate: '12/06/2015',
+            verifiedByTahsildar: `Tehsildar ${formTehsil || formDistrict}`,
+          },
+          {
+            ownerName: 'National Land Acquisition Authority (Statutory Award)',
+            relationType: 'GOVERNMENT_ALLOTMENT',
+            periodFrom: '2026',
+            periodTo: 'Current Order',
+            transactionType: 'ACQUISITION_NOTIFIED',
+            deedRegistrationNo: `GAZ-SEC19-${cleanSurvey}`,
+            subRegistrarOffice: 'Special Land Acquisition Officer (SLAO)',
+            considerationAmountINR: totalComp,
+            areaTransferredAcres: acqAc,
+            mutationEntryNo: `${Math.floor(10000 + Math.random() * 9000)}`,
+            mutationApprovalDate: new Date().toLocaleDateString('en-GB'),
+            verifiedByTahsildar: 'Competent Authority & SLAO',
+          }
+        ],
+        encumbrances: [],
         estimatedValuationINR: baseVal,
         solatiumINR: solatium,
         totalCompensationINR: totalComp,
@@ -259,6 +293,7 @@ export const KrishiSathiWorkspace: React.FC = () => {
         qrPasscode: `QR-KS-${stateCode}-${cleanSurvey}`,
         arVerificationStatus: 'VERIFIED',
       }, generatedId);
+
 
       await auditService.logAction({
         targetCollection: 'farmers',
