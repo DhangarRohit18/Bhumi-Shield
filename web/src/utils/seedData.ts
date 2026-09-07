@@ -23,6 +23,7 @@ import {
   ocrExtractionService,
   fieldVisitService,
   fieldEvidenceService,
+  farmerService,
 } from '../services/entities.service';
 import { auditService } from '../services/audit.service';
 import { calculateOfficerWorkloadScore, calculateFairnessIndex } from './intelligenceCalculations';
@@ -927,7 +928,488 @@ export async function seedBhumiShieldDemoData(logCallback?: (msg: string) => voi
     completionReport: 'Ground reality mismatch identified. Encroachment and succession partition disputes require SDM review before award decree.',
   }, 'visit-palghar-0143');
 
-  // 17. Audit Log Chronicle
+  // 17. Krishi Sathi - Comprehensive Farmer Land Records (10 Farmers)
+  log('Seeding 10 Comprehensive Krishi Sathi Farmer Land Records & Spatial Polygons...');
+  
+  // 1. Shri Dattatray B. Patil (Palghar, MH)
+  await farmerService.create({
+    farmerName: 'Shri Dattatray B. Patil',
+    contactNumber: '+91 98231 44521',
+    aadhaarMasked: 'XXXX-XXXX-8821',
+    state: 'Maharashtra',
+    district: 'Palghar',
+    talukaTehsil: 'Palghar',
+    village: 'Manikpur',
+    khataNumber: 'Khata-892',
+    surveyGatNumber: '142/A-1',
+    hissaNumber: 'Hissa-1',
+    ulpin: 'ULPIN-MH-142A1-2026',
+    totalLandAreaAcres: 3.45,
+    acquiredAreaAcres: 2.45,
+    retainedAreaAcres: 1.00,
+    landClassification: 'Agricultural',
+    soilType: 'Alluvial Loam / Fertile Coastal Plain',
+    tenureType: 'Occupant Class I (Freehold Khatedar)',
+    jointHolders: [
+      { name: 'Smt. Anusaya D. Patil', shareFraction: '1/2', relation: 'Wife' },
+      { name: 'Shri Rajesh D. Patil', shareFraction: '1/2', relation: 'Son' }
+    ],
+    estimatedValuationINR: 12500000,
+    solatiumINR: 12500000,
+    totalCompensationINR: 27500000,
+    disbursementStatus: 'DISBURSED',
+    bankDetails: {
+      bankName: 'State Bank of India (Palghar Branch)',
+      accountMasked: 'XXXXXX4092',
+      ifsc: 'SBIN0001244',
+    },
+    dgpsPillars: [
+      { pillarId: 'PIL-142-NW', lat: 19.6975, lng: 72.7690, rtkAccuracyCm: 1.4 },
+      { pillarId: 'PIL-142-NE', lat: 19.6976, lng: 72.7710, rtkAccuracyCm: 1.2 },
+      { pillarId: 'PIL-142-SE', lat: 19.6958, lng: 72.7712, rtkAccuracyCm: 1.6 },
+      { pillarId: 'PIL-142-SW', lat: 19.6957, lng: 72.7691, rtkAccuracyCm: 1.3 },
+    ],
+    boundaryPolygon: [
+      [19.6975, 72.7690],
+      [19.6976, 72.7710],
+      [19.6958, 72.7712],
+      [19.6957, 72.7691],
+    ],
+    qrPasscode: 'QR-KS-MH-142A1',
+    arVerificationStatus: 'VERIFIED',
+  }, 'farmer-palghar-001');
+
+  // 2. Smt. Shakuntala Ramdas Mhatre (Kelve, MH)
+  await farmerService.create({
+    farmerName: 'Smt. Shakuntala Ramdas Mhatre',
+    contactNumber: '+91 97654 11209',
+    aadhaarMasked: 'XXXX-XXXX-3419',
+    state: 'Maharashtra',
+    district: 'Palghar',
+    talukaTehsil: 'Palghar',
+    village: 'Kelve',
+    khataNumber: 'Khata-104',
+    surveyGatNumber: '143/2-B',
+    hissaNumber: 'Hissa-2B',
+    ulpin: 'ULPIN-MH-1432B-2026',
+    totalLandAreaAcres: 4.10,
+    acquiredAreaAcres: 3.10,
+    retainedAreaAcres: 1.00,
+    landClassification: 'Agricultural',
+    soilType: 'Red Laterite Coastal Soil',
+    tenureType: 'Occupant Class I (Ancestral Sole)',
+    jointHolders: [
+      { name: 'Shri Vinayak R. Mhatre', shareFraction: '1/1', relation: 'Son & Legal Heir' }
+    ],
+    estimatedValuationINR: 15500000,
+    solatiumINR: 15500000,
+    totalCompensationINR: 34100000,
+    disbursementStatus: 'IN_PROGRESS',
+    bankDetails: {
+      bankName: 'Bank of Baroda (Kelve Road)',
+      accountMasked: 'XXXXXX9823',
+      ifsc: 'BARB0KELVEX',
+    },
+    dgpsPillars: [
+      { pillarId: 'PIL-143-N', lat: 19.6212, lng: 72.7392, rtkAccuracyCm: 2.1 },
+      { pillarId: 'PIL-143-E', lat: 19.6215, lng: 72.7415, rtkAccuracyCm: 2.4 },
+      { pillarId: 'PIL-143-S', lat: 19.6190, lng: 72.7418, rtkAccuracyCm: 1.9 },
+      { pillarId: 'PIL-143-W', lat: 19.6188, lng: 72.7390, rtkAccuracyCm: 2.0 },
+    ],
+    boundaryPolygon: [
+      [19.6212, 72.7392],
+      [19.6215, 72.7415],
+      [19.6190, 72.7418],
+      [19.6188, 72.7390],
+    ],
+    qrPasscode: 'QR-KS-MH-1432B',
+    arVerificationStatus: 'FLAGGED_MISMATCH',
+  }, 'farmer-palghar-002');
+
+  // 3. Shri Arvindbhai Shankarbhai Patel (Surat, GJ)
+  await farmerService.create({
+    farmerName: 'Shri Arvindbhai Shankarbhai Patel',
+    contactNumber: '+91 98982 77610',
+    aadhaarMasked: 'XXXX-XXXX-9901',
+    state: 'Gujarat',
+    district: 'Surat',
+    talukaTehsil: 'Choryasi',
+    village: 'Sachin',
+    khataNumber: 'Khata-412',
+    surveyGatNumber: '204/1',
+    hissaNumber: 'Hissa-A',
+    ulpin: 'ULPIN-GJ-2041A-2026',
+    totalLandAreaAcres: 5.80,
+    acquiredAreaAcres: 5.20,
+    retainedAreaAcres: 0.60,
+    landClassification: 'Agricultural',
+    soilType: 'Black Cotton Heavy Clay Soil',
+    tenureType: 'Occupant Class I (Freehold)',
+    jointHolders: [
+      { name: 'Shri Bhaveshbhai A. Patel', shareFraction: '1/2', relation: 'Son' },
+      { name: 'Shri Hiteshbhai A. Patel', shareFraction: '1/2', relation: 'Son' }
+    ],
+    estimatedValuationINR: 31000000,
+    solatiumINR: 31000000,
+    totalCompensationINR: 68200000,
+    disbursementStatus: 'DISBURSED',
+    bankDetails: {
+      bankName: 'HDFC Bank (Surat Ring Road)',
+      accountMasked: 'XXXXXX5512',
+      ifsc: 'HDFC0000067',
+    },
+    dgpsPillars: [
+      { pillarId: 'PIL-SRT-01', lat: 21.1710, lng: 72.8300, rtkAccuracyCm: 1.1 },
+      { pillarId: 'PIL-SRT-02', lat: 21.1718, lng: 72.8335, rtkAccuracyCm: 0.9 },
+      { pillarId: 'PIL-SRT-03', lat: 21.1690, lng: 72.8339, rtkAccuracyCm: 1.2 },
+      { pillarId: 'PIL-SRT-04', lat: 21.1685, lng: 72.8305, rtkAccuracyCm: 1.0 },
+    ],
+    boundaryPolygon: [
+      [21.1710, 72.8300],
+      [21.1718, 72.8335],
+      [21.1690, 72.8339],
+      [21.1685, 72.8305],
+    ],
+    qrPasscode: 'QR-KS-GJ-2041A',
+    arVerificationStatus: 'VERIFIED',
+  }, 'farmer-surat-003');
+
+  // 4. Shri Jagdishprasad R. Sharma (Jaipur, RJ)
+  await farmerService.create({
+    farmerName: 'Shri Jagdishprasad R. Sharma',
+    contactNumber: '+91 94140 22891',
+    aadhaarMasked: 'XXXX-XXXX-6612',
+    state: 'Rajasthan',
+    district: 'Jaipur',
+    talukaTehsil: 'Bassi',
+    village: 'Bassi Rural',
+    khataNumber: 'Khata-771',
+    surveyGatNumber: '119/2',
+    hissaNumber: 'Hissa-3',
+    ulpin: 'ULPIN-RJ-1192J-2026',
+    totalLandAreaAcres: 6.20,
+    acquiredAreaAcres: 5.10,
+    retainedAreaAcres: 1.10,
+    landClassification: 'Agricultural',
+    soilType: 'Sandy Loam Semiarid Soil',
+    tenureType: 'Khatedar Tenant (Permanent)',
+    jointHolders: [
+      { name: 'Smt. Murti Devi Sharma', shareFraction: '1/3', relation: 'Wife' },
+      { name: 'Shri Mukesh Sharma', shareFraction: '2/3', relation: 'Son' }
+    ],
+    estimatedValuationINR: 19000000,
+    solatiumINR: 19000000,
+    totalCompensationINR: 41800000,
+    disbursementStatus: 'DISBURSED',
+    bankDetails: {
+      bankName: 'Punjab National Bank (Jaipur Bassi)',
+      accountMasked: 'XXXXXX1902',
+      ifsc: 'PUNB0024400',
+    },
+    dgpsPillars: [
+      { pillarId: 'PIL-JPR-01', lat: 26.8915, lng: 76.3285, rtkAccuracyCm: 1.5 },
+      { pillarId: 'PIL-JPR-02', lat: 26.8920, lng: 76.3325, rtkAccuracyCm: 1.3 },
+      { pillarId: 'PIL-JPR-03', lat: 26.8885, lng: 76.3330, rtkAccuracyCm: 1.7 },
+      { pillarId: 'PIL-JPR-04', lat: 26.8880, lng: 76.3288, rtkAccuracyCm: 1.4 },
+    ],
+    boundaryPolygon: [
+      [26.8915, 76.3285],
+      [26.8920, 76.3325],
+      [26.8885, 76.3330],
+      [26.8880, 76.3288],
+    ],
+    qrPasscode: 'QR-KS-RJ-1192J',
+    arVerificationStatus: 'VERIFIED',
+  }, 'farmer-jaipur-004');
+
+  // 5. Shri Ramakant S. Mishra (Varanasi, UP)
+  await farmerService.create({
+    farmerName: 'Shri Ramakant S. Mishra',
+    contactNumber: '+91 94500 88231',
+    aadhaarMasked: 'XXXX-XXXX-1144',
+    state: 'Uttar Pradesh',
+    district: 'Varanasi',
+    talukaTehsil: 'Pindra',
+    village: 'Rohania',
+    khataNumber: 'Khata-512',
+    surveyGatNumber: '881/P-4',
+    hissaNumber: 'Hissa-4',
+    ulpin: 'ULPIN-UP-881P4-2026',
+    totalLandAreaAcres: 4.50,
+    acquiredAreaAcres: 4.20,
+    retainedAreaAcres: 0.30,
+    landClassification: 'Agricultural',
+    soilType: 'Gangetic Alluvial Silt Soil',
+    tenureType: 'Bhumidhar with Transferable Rights',
+    jointHolders: [
+      { name: 'Shri Govind R. Mishra', shareFraction: '1/2', relation: 'Brother' },
+      { name: 'Shri Shyam R. Mishra', shareFraction: '1/2', relation: 'Brother' }
+    ],
+    estimatedValuationINR: 16000000,
+    solatiumINR: 16000000,
+    totalCompensationINR: 35200000,
+    disbursementStatus: 'IN_PROGRESS',
+    bankDetails: {
+      bankName: 'Union Bank of India (Varanasi Cantonment)',
+      accountMasked: 'XXXXXX7732',
+      ifsc: 'UBIN0530182',
+    },
+    dgpsPillars: [
+      { pillarId: 'PIL-VNS-01', lat: 25.3188, lng: 82.9715, rtkAccuracyCm: 1.8 },
+      { pillarId: 'PIL-VNS-02', lat: 25.3195, lng: 82.9755, rtkAccuracyCm: 1.4 },
+      { pillarId: 'PIL-VNS-03', lat: 25.3160, lng: 82.9760, rtkAccuracyCm: 1.9 },
+      { pillarId: 'PIL-VNS-04', lat: 25.3155, lng: 82.9718, rtkAccuracyCm: 1.6 },
+    ],
+    boundaryPolygon: [
+      [25.3188, 82.9715],
+      [25.3195, 82.9755],
+      [25.3160, 82.9760],
+      [25.3155, 82.9718],
+    ],
+    qrPasscode: 'QR-KS-UP-881P4',
+    arVerificationStatus: 'PENDING_VISIT',
+  }, 'farmer-varanasi-005');
+
+  // 6. Smt. Kaushalya Devi Yadav (Prayagraj, UP)
+  await farmerService.create({
+    farmerName: 'Smt. Kaushalya Devi Yadav',
+    contactNumber: '+91 94152 66718',
+    aadhaarMasked: 'XXXX-XXXX-4523',
+    state: 'Uttar Pradesh',
+    district: 'Prayagraj',
+    talukaTehsil: 'Soraon',
+    village: 'Mau Aima',
+    khataNumber: 'Khata-328',
+    surveyGatNumber: '415/2',
+    hissaNumber: 'Hissa-2',
+    ulpin: 'ULPIN-UP-4152P-2026',
+    totalLandAreaAcres: 4.80,
+    acquiredAreaAcres: 4.10,
+    retainedAreaAcres: 0.70,
+    landClassification: 'Agricultural',
+    soilType: 'Doab Alluvial Deep Soil',
+    tenureType: 'Bhumidhar with Transferable Rights',
+    jointHolders: [
+      { name: 'Shri Akhilesh Yadav', shareFraction: '1/2', relation: 'Son' },
+      { name: 'Smt. Sarita Yadav', shareFraction: '1/2', relation: 'Daughter-in-law' }
+    ],
+    estimatedValuationINR: 18000000,
+    solatiumINR: 18000000,
+    totalCompensationINR: 39600000,
+    disbursementStatus: 'PENDING',
+    bankDetails: {
+      bankName: 'Indian Bank (Civil Lines Prayagraj)',
+      accountMasked: 'XXXXXX8819',
+      ifsc: 'IDIB000C028',
+    },
+    dgpsPillars: [
+      { pillarId: 'PIL-PRY-01', lat: 25.4370, lng: 81.8445, rtkAccuracyCm: 1.5 },
+      { pillarId: 'PIL-PRY-02', lat: 25.4378, lng: 81.8480, rtkAccuracyCm: 1.2 },
+      { pillarId: 'PIL-PRY-03', lat: 25.4345, lng: 81.8485, rtkAccuracyCm: 1.7 },
+      { pillarId: 'PIL-PRY-04', lat: 25.4340, lng: 81.8448, rtkAccuracyCm: 1.3 },
+    ],
+    boundaryPolygon: [
+      [25.4370, 81.8445],
+      [25.4378, 81.8480],
+      [25.4345, 81.8485],
+      [25.4340, 81.8448],
+    ],
+    qrPasscode: 'QR-KS-UP-4152P',
+    arVerificationStatus: 'VERIFIED',
+  }, 'farmer-prayagraj-006');
+
+  // 7. Shri Nilesh Jayant Deshmukh (Thane, MH)
+  await farmerService.create({
+    farmerName: 'Shri Nilesh Jayant Deshmukh',
+    contactNumber: '+91 98201 33499',
+    aadhaarMasked: 'XXXX-XXXX-7788',
+    state: 'Maharashtra',
+    district: 'Thane',
+    talukaTehsil: 'Bhiwandi',
+    village: 'Anjur',
+    khataNumber: 'Khata-602',
+    surveyGatNumber: '512/3',
+    hissaNumber: 'Hissa-3',
+    ulpin: 'ULPIN-MH-5123THN-2026',
+    totalLandAreaAcres: 3.20,
+    acquiredAreaAcres: 2.10,
+    retainedAreaAcres: 1.10,
+    landClassification: 'Residential',
+    soilType: 'Coastal Clay Urban Fringe',
+    tenureType: 'Occupant Class I (NA Converted)',
+    jointHolders: [
+      { name: 'Smt. Priya N. Deshmukh', shareFraction: '1/2', relation: 'Wife' },
+      { name: 'Shri Jayant S. Deshmukh', shareFraction: '1/2', relation: 'Father' }
+    ],
+    estimatedValuationINR: 22000000,
+    solatiumINR: 22000000,
+    totalCompensationINR: 48400000,
+    disbursementStatus: 'UNDER_DISPUTE',
+    bankDetails: {
+      bankName: 'ICICI Bank (Thane West)',
+      accountMasked: 'XXXXXX6641',
+      ifsc: 'ICIC0000102',
+    },
+    dgpsPillars: [
+      { pillarId: 'PIL-THN-01', lat: 19.2195, lng: 72.9760, rtkAccuracyCm: 1.3 },
+      { pillarId: 'PIL-THN-02', lat: 19.2202, lng: 72.9798, rtkAccuracyCm: 1.1 },
+      { pillarId: 'PIL-THN-03', lat: 19.2170, lng: 72.9802, rtkAccuracyCm: 1.5 },
+      { pillarId: 'PIL-THN-04', lat: 19.2165, lng: 72.9765, rtkAccuracyCm: 1.4 },
+    ],
+    boundaryPolygon: [
+      [19.2195, 72.9760],
+      [19.2202, 72.9798],
+      [19.2170, 72.9802],
+      [19.2165, 72.9765],
+    ],
+    qrPasscode: 'QR-KS-MH-5123T',
+    arVerificationStatus: 'FLAGGED_MISMATCH',
+  }, 'farmer-thane-007');
+
+  // 8. Shri Mansukhbhai Gordhanbhai Vaghela (Vadodara, GJ)
+  await farmerService.create({
+    farmerName: 'Shri Mansukhbhai Gordhanbhai Vaghela',
+    contactNumber: '+91 98791 55204',
+    aadhaarMasked: 'XXXX-XXXX-2233',
+    state: 'Gujarat',
+    district: 'Vadodara',
+    talukaTehsil: 'Karjan',
+    village: 'Karjan Rural',
+    khataNumber: 'Khata-994',
+    surveyGatNumber: '312/1',
+    hissaNumber: 'Hissa-1',
+    ulpin: 'ULPIN-GJ-3121V-2026',
+    totalLandAreaAcres: 5.10,
+    acquiredAreaAcres: 4.60,
+    retainedAreaAcres: 0.50,
+    landClassification: 'Agricultural',
+    soilType: 'Mahi River Alluvium Medium Black Soil',
+    tenureType: 'Occupant Class I (Freehold)',
+    jointHolders: [
+      { name: 'Shri Kiritbhai M. Vaghela', shareFraction: '1/2', relation: 'Son' },
+      { name: 'Shri Sanjaybhai M. Vaghela', shareFraction: '1/2', relation: 'Son' }
+    ],
+    estimatedValuationINR: 24000000,
+    solatiumINR: 24000000,
+    totalCompensationINR: 52800000,
+    disbursementStatus: 'DISBURSED',
+    bankDetails: {
+      bankName: 'State Bank of India (Karjan)',
+      accountMasked: 'XXXXXX3319',
+      ifsc: 'SBIN0000401',
+    },
+    dgpsPillars: [
+      { pillarId: 'PIL-VAD-01', lat: 22.3085, lng: 73.1795, rtkAccuracyCm: 1.0 },
+      { pillarId: 'PIL-VAD-02', lat: 22.3092, lng: 73.1830, rtkAccuracyCm: 0.8 },
+      { pillarId: 'PIL-VAD-03', lat: 22.3058, lng: 73.1835, rtkAccuracyCm: 1.2 },
+      { pillarId: 'PIL-VAD-04', lat: 22.3052, lng: 73.1800, rtkAccuracyCm: 1.1 },
+    ],
+    boundaryPolygon: [
+      [22.3085, 73.1795],
+      [22.3092, 73.1830],
+      [22.3058, 73.1835],
+      [22.3052, 73.1800],
+    ],
+    qrPasscode: 'QR-KS-GJ-3121V',
+    arVerificationStatus: 'VERIFIED',
+  }, 'farmer-vadodara-008');
+
+  // 9. Shri Suresh Chandra Verma (Kanpur, UP)
+  await farmerService.create({
+    farmerName: 'Shri Suresh Chandra Verma',
+    contactNumber: '+91 94150 99412',
+    aadhaarMasked: 'XXXX-XXXX-5561',
+    state: 'Uttar Pradesh',
+    district: 'Kanpur Nagar',
+    talukaTehsil: 'Bilhaur',
+    village: 'Araul',
+    khataNumber: 'Khata-817',
+    surveyGatNumber: '712/4',
+    hissaNumber: 'Hissa-4',
+    ulpin: 'ULPIN-UP-7124K-2026',
+    totalLandAreaAcres: 5.60,
+    acquiredAreaAcres: 5.60,
+    retainedAreaAcres: 0.00,
+    landClassification: 'Commercial',
+    soilType: 'Heavy Alluvial Plain with Highway Frontage',
+    tenureType: 'Bhumidhar with Transferable Rights',
+    jointHolders: [
+      { name: 'Smt. Shanti Devi Verma', shareFraction: '1/1', relation: 'Wife' }
+    ],
+    estimatedValuationINR: 32000000,
+    solatiumINR: 32000000,
+    totalCompensationINR: 70400000,
+    disbursementStatus: 'IN_PROGRESS',
+    bankDetails: {
+      bankName: 'Canara Bank (Mall Road Kanpur)',
+      accountMasked: 'XXXXXX1248',
+      ifsc: 'CNRB0000219',
+    },
+    dgpsPillars: [
+      { pillarId: 'PIL-KNP-01', lat: 26.4515, lng: 80.3300, rtkAccuracyCm: 1.4 },
+      { pillarId: 'PIL-KNP-02', lat: 26.4522, lng: 80.3340, rtkAccuracyCm: 1.3 },
+      { pillarId: 'PIL-KNP-03', lat: 26.4485, lng: 80.3345, rtkAccuracyCm: 1.6 },
+      { pillarId: 'PIL-KNP-04', lat: 26.4480, lng: 80.3305, rtkAccuracyCm: 1.5 },
+    ],
+    boundaryPolygon: [
+      [26.4515, 80.3300],
+      [26.4522, 80.3340],
+      [26.4485, 80.3345],
+      [26.4480, 80.3305],
+    ],
+    qrPasscode: 'QR-KS-UP-7124K',
+    arVerificationStatus: 'VERIFIED',
+  }, 'farmer-kanpur-009');
+
+  // 10. Smt. Parvatibai Tukaram Gavit (Kelve Tribal Pocket, Palghar, MH)
+  await farmerService.create({
+    farmerName: 'Smt. Parvatibai Tukaram Gavit',
+    contactNumber: '+91 97633 44018',
+    aadhaarMasked: 'XXXX-XXXX-9045',
+    state: 'Maharashtra',
+    district: 'Palghar',
+    talukaTehsil: 'Palghar',
+    village: 'Umroli Tribal Circle',
+    khataNumber: 'Khata-219',
+    surveyGatNumber: '98/3',
+    hissaNumber: 'Hissa-3',
+    ulpin: 'ULPIN-MH-983UM-2026',
+    totalLandAreaAcres: 3.75,
+    acquiredAreaAcres: 3.75,
+    retainedAreaAcres: 0.00,
+    landClassification: 'Agricultural',
+    soilType: 'Forest Fringe Gravelly Loam',
+    tenureType: 'Occupant Class II (Forest Rights Act Title Holder)',
+    jointHolders: [
+      { name: 'Shri Hiraman T. Gavit', shareFraction: '1/2', relation: 'Son' },
+      { name: 'Smt. Sitabai T. Gavit', shareFraction: '1/2', relation: 'Daughter' }
+    ],
+    estimatedValuationINR: 11000000,
+    solatiumINR: 11000000,
+    totalCompensationINR: 24200000,
+    disbursementStatus: 'DISBURSED',
+    bankDetails: {
+      bankName: 'Thane District Central Co-op Bank (Umroli)',
+      accountMasked: 'XXXXXX5011',
+      ifsc: 'TDCB0000042',
+    },
+    dgpsPillars: [
+      { pillarId: 'PIL-UMR-01', lat: 19.6820, lng: 72.7510, rtkAccuracyCm: 1.7 },
+      { pillarId: 'PIL-UMR-02', lat: 19.6828, lng: 72.7545, rtkAccuracyCm: 1.5 },
+      { pillarId: 'PIL-UMR-03', lat: 19.6795, lng: 72.7550, rtkAccuracyCm: 1.8 },
+      { pillarId: 'PIL-UMR-04', lat: 19.6790, lng: 72.7515, rtkAccuracyCm: 1.6 },
+    ],
+    boundaryPolygon: [
+      [19.6820, 72.7510],
+      [19.6828, 72.7545],
+      [19.6795, 72.7550],
+      [19.6790, 72.7515],
+    ],
+    qrPasscode: 'QR-KS-MH-983UM',
+    arVerificationStatus: 'VERIFIED',
+  }, 'farmer-palghar-010');
+
+  // 18. Audit Log Chronicle
   log('Recording Immutable Audit Trail for National Command Center...');
   await auditService.logAction({
     targetCollection: 'system',
@@ -936,8 +1418,9 @@ export async function seedBhumiShieldDemoData(logCallback?: (msg: string) => voi
     actorId: 'sys-national-controller',
     actorName: 'National Command Center Orchestrator',
     actorRole: 'NATIONAL_EXECUTIVE',
-    diffPayload: { status: 'SYNCHRONIZED', totalStrategicCorridors: 3, statesActive: 5 },
+    diffPayload: { status: 'SYNCHRONIZED', totalStrategicCorridors: 3, statesActive: 5, totalFarmersSeeded: 10 },
   });
 
-  log('BHUMI-SHIELD National Command Center dataset successfully seeded!');
+  log('BHUMI-SHIELD National Command Center & Krishi Sathi dataset successfully seeded!');
 }
+

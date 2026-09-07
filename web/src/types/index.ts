@@ -584,3 +584,43 @@ export interface OCRExtractionJob extends BaseEntity {
   confidenceScores: Record<string, number>;
   humanVerified: boolean;
 }
+
+// 37. farmer_records (Krishi Sathi Land Intelligence & Farmer Directory)
+export interface FarmerRecord extends BaseEntity {
+  farmerName: string;
+  contactNumber: string;
+  aadhaarMasked: string;
+  state: string;
+  district: string;
+  talukaTehsil: string;
+  village: string;
+  khataNumber: string;
+  surveyGatNumber: string;
+  hissaNumber: string;
+  ulpin: string;
+  totalLandAreaAcres: number;
+  acquiredAreaAcres: number;
+  retainedAreaAcres: number;
+  landClassification: 'Agricultural' | 'Commercial' | 'Residential' | 'Barren' | 'Forest';
+  soilType: string;
+  tenureType: string;
+  jointHolders: Array<{ name: string; shareFraction: string; relation: string }>;
+  estimatedValuationINR: number;
+  solatiumINR: number;
+  totalCompensationINR: number;
+  disbursementStatus: 'PENDING' | 'IN_PROGRESS' | 'DISBURSED' | 'UNDER_DISPUTE';
+  bankDetails: {
+    bankName: string;
+    accountMasked: string;
+    ifsc: string;
+  };
+  dgpsPillars: Array<{
+    pillarId: string;
+    lat: number;
+    lng: number;
+    rtkAccuracyCm: number;
+  }>;
+  boundaryPolygon: Array<[number, number]>; // Array of [lat, lng]
+  qrPasscode: string;
+  arVerificationStatus: 'VERIFIED' | 'PENDING_VISIT' | 'FLAGGED_MISMATCH';
+}

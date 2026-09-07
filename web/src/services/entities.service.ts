@@ -35,6 +35,7 @@ import {
   CompensationFairnessMetrics,
   OCRExtractionJob,
   AuditLogEntry,
+  FarmerRecord,
 } from '../types';
 
 export const userService = new FirestoreGenericService<UserProfile>('users');
@@ -72,3 +73,4 @@ export const officerWorkloadService = new FirestoreGenericService<OfficerWorkloa
 export const dataLockService = new FirestoreGenericService<DataLock>('data_locks');
 export const compensationFairnessService = new FirestoreGenericService<CompensationFairnessMetrics>('compensation_fairness');
 export const ocrExtractionService = new FirestoreGenericService<OCRExtractionJob>('ocr_extractions');
+export const farmerService = new FirestoreGenericService<FarmerRecord>('farmers');

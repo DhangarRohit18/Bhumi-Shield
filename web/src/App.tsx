@@ -7,6 +7,7 @@ import { CommandCenter } from './features/command-center/CommandCenter';
 import { ProjectDigitalTwin } from './features/digital-twin/ProjectDigitalTwin';
 import { OperationsIntelligenceCenter } from './features/operations-intelligence/OperationsIntelligenceCenter';
 import { AdministrationWorkspace } from './features/admin/AdministrationWorkspace';
+import { KrishiSathiWorkspace } from './features/krishi-sathi/KrishiSathiWorkspace';
 import { LoginScreen } from './features/auth/LoginScreen';
 import { BhumiPolicyCopilot } from './components/BhumiPolicyCopilot';
 import { UserRole } from './types';
@@ -78,6 +79,7 @@ export const App: React.FC = () => {
           {activeTab === 'digital_twin' && <ProjectDigitalTwin />}
           {activeTab === 'ops_intelligence' && <OperationsIntelligenceCenter />}
           {activeTab === 'admin' && <AdministrationWorkspace />}
+          {activeTab === 'krishi_sathi' && <KrishiSathiWorkspace />}
         </main>
       </div>
 

@@ -12,6 +12,8 @@ export type Permission =
   | 'VIEW_DIGITAL_TWIN'
   | 'VIEW_OPS_INTELLIGENCE'
   | 'VIEW_ADMIN_WORKSPACE'
+  | 'VIEW_KRISHI_SATHI'
+  | 'REGISTER_FARMER'
 
   // Digital Twin Tabs
   | 'TAB_OVERVIEW'
@@ -69,6 +71,8 @@ export const ROLE_CAPABILITIES: Record<UserRole, RoleCapability> = {
       'VIEW_DIGITAL_TWIN',
       'VIEW_OPS_INTELLIGENCE',
       'VIEW_ADMIN_WORKSPACE',
+      'VIEW_KRISHI_SATHI',
+      'REGISTER_FARMER',
       'TAB_OVERVIEW',
       'TAB_LIFECYCLE',
       'TAB_GIS',
@@ -109,6 +113,8 @@ export const ROLE_CAPABILITIES: Record<UserRole, RoleCapability> = {
     permissions: [
       'VIEW_DIGITAL_TWIN',
       'VIEW_OPS_INTELLIGENCE',
+      'VIEW_KRISHI_SATHI',
+      'REGISTER_FARMER',
       'TAB_OVERVIEW',
       'TAB_LIFECYCLE',
       'TAB_GIS',
@@ -142,6 +148,7 @@ export const ROLE_CAPABILITIES: Record<UserRole, RoleCapability> = {
       'VIEW_COMMAND_CENTER',
       'VIEW_DIGITAL_TWIN',
       'VIEW_ADMIN_WORKSPACE',
+      'VIEW_KRISHI_SATHI',
       'TAB_OVERVIEW',
       'TAB_LIFECYCLE',
       'TAB_GIS',

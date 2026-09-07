@@ -1,0 +1,649 @@
+import React, { useEffect, useState, useMemo } from 'react';
+import { FarmerRecord } from '../../types';
+import { farmerService } from '../../services/entities.service';
+import { auditService } from '../../services/audit.service';
+import { useAuth } from '../../contexts/AuthContext';
+import { hasPermission, getPermissionReason } from '../../utils/rbac';
+import { FarmerDetailsDrawer } from './FarmerDetailsDrawer';
+import { FarmerLandVisualizer } from './FarmerLandVisualizer';
+import {
+  Sprout,
+  PlusCircle,
+  Search,
+  Filter,
+  MapPin,
+  FileText,
+  Map as MapIcon,
+  ChevronRight,
+  X,
+  CreditCard,
+  QrCode,
+  ShieldCheck,
+  CheckCircle2,
+  AlertTriangle,
+  Clock,
+  Sparkles,
+  Users,
+} from 'lucide-react';
+
+export const KrishiSathiWorkspace: React.FC = () => {
+  const { userProfile, activeRole } = useAuth();
+  const [farmers, setFarmers] = useState<FarmerRecord[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+
+  // Search & Filters
+  const [searchQuery, setSearchQuery] = useState<string>('');
+  const [selectedState, setSelectedState] = useState<string>('ALL');
+  const [selectedStatus, setSelectedStatus] = useState<string>('ALL');
+
+  // Interactive View Modals & Drawers
+  const [inspectingFarmer, setInspectingFarmer] = useState<FarmerRecord | null>(null);
+  const [visualizingFarmer, setVisualizingFarmer] = useState<FarmerRecord | null>(null);
+
+  // Real-time Admin Farmer Registration Modal
+  const [modalOpen, setModalOpen] = useState<boolean>(false);
+  const [saving, setSaving] = useState<boolean>(false);
+
+  // Form State for Adding Farmer Real-Time
+  const [formName, setFormName] = useState('');
+  const [formContact, setFormContact] = useState('+91 ');
+  const [formAadhaar, setFormAadhaar] = useState('XXXX-XXXX-');
+  const [formState, setFormState] = useState('Maharashtra');
+  const [formDistrict, setFormDistrict] = useState('Palghar');
+  const [formTehsil, setFormTehsil] = useState('Palghar');
+  const [formVillage, setFormVillage] = useState('Manikpur');
+  const [formKhata, setFormKhata] = useState('Khata-');
+  const [formSurvey, setFormSurvey] = useState('');
+  const [formHissa, setFormHissa] = useState('Hissa-1');
+  const [formTotalAcres, setFormTotalAcres] = useState('3.50');
+  const [formAcquiredAcres, setFormAcquiredAcres] = useState('2.50');
+  const [formClassification, setFormClassification] = useState<'Agricultural' | 'Commercial' | 'Residential' | 'Barren' | 'Forest'>('Agricultural');
+  const [formSoilType, setFormSoilType] = useState('Alluvial Loam');
+  const [formTenure, setFormTenure] = useState('Occupant Class I (Freehold Khatedar)');
+  const [formValuation, setFormValuation] = useState('15000000');
+  const [formBankName, setFormBankName] = useState('State Bank of India');
+  const [formAccountMasked, setFormAccountMasked] = useState('XXXXXX1234');
+  const [formIfsc, setFormIfsc] = useState('SBIN0001244');
+  const [formLat, setFormLat] = useState('19.6967');
+  const [formLng, setFormLng] = useState('72.7699');
+
+  // Real-time Live Firestore Subscription
+  useEffect(() => {
+    setLoading(true);
+    const unsubscribe = farmerService.subscribe((data) => {
+      setFarmers(data);
+      setLoading(false);
+    });
+    return () => unsubscribe();
+  }, []);
+
+  // Filtered Farmers
+  const filteredFarmers = useMemo(() => {
+    return farmers.filter((f) => {
+      const matchesSearch =
+        f.farmerName.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        f.village.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        f.district.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        f.surveyGatNumber.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        f.ulpin.toLowerCase().includes(searchQuery.toLowerCase());
+
+      const matchesState = selectedState === 'ALL' || f.state === selectedState;
+      const matchesStatus =
+        selectedStatus === 'ALL' || f.arVerificationStatus === selectedStatus;
+
+      return matchesSearch && matchesState && matchesStatus;
+    });
+  }, [farmers, searchQuery, selectedState, selectedStatus]);
+
+  // Aggregate Metrics
+  const totalFarmers = farmers.length;
+  const totalAcquiredAcres = farmers.reduce((sum, f) => sum + (f.acquiredAreaAcres || 0), 0);
+  const totalDisbursedINR = farmers
+    .filter((f) => f.disbursementStatus === 'DISBURSED')
+    .reduce((sum, f) => sum + (f.totalCompensationINR || 0), 0);
+  const verifiedCount = farmers.filter((f) => f.arVerificationStatus === 'VERIFIED').length;
+
+  const handleCreateFarmer = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setSaving(true);
+    try {
+      const lat = parseFloat(formLat) || 19.6967;
+      const lng = parseFloat(formLng) || 72.7699;
+      const totalAc = parseFloat(formTotalAcres) || 1;
+      const acqAc = parseFloat(formAcquiredAcres) || 1;
+      const retainedAc = Math.max(0, totalAc - acqAc);
+      const baseVal = parseFloat(formValuation) || 0;
+      const solatium = baseVal;
+      const totalComp = baseVal + solatium;
+
+      const cleanSurvey = formSurvey.replace(/[^a-zA-Z0-9]/g, '');
+      const stateCode = formState.substring(0, 2).toUpperCase();
+      const generatedUlpin = `ULPIN-${stateCode}-${cleanSurvey || '999'}-2026`;
+      const generatedId = `farmer-${Date.now()}`;
+
+      // 4 Corner boundary polygon based on lat/lng center
+      const deltaLat = 0.0010;
+      const deltaLng = 0.0015;
+      const boundaryPolygon: Array<[number, number]> = [
+        [lat + deltaLat, lng - deltaLng],
+        [lat + deltaLat, lng + deltaLng],
+        [lat - deltaLat, lng + deltaLng],
+        [lat - deltaLat, lng - deltaLng],
+      ];
+
+      const dgpsPillars = [
+        { pillarId: `PIL-${cleanSurvey}-NW`, lat: lat + deltaLat, lng: lng - deltaLng, rtkAccuracyCm: 1.2 },
+        { pillarId: `PIL-${cleanSurvey}-NE`, lat: lat + deltaLat, lng: lng + deltaLng, rtkAccuracyCm: 1.1 },
+        { pillarId: `PIL-${cleanSurvey}-SE`, lat: lat - deltaLat, lng: lng + deltaLng, rtkAccuracyCm: 1.4 },
+        { pillarId: `PIL-${cleanSurvey}-SW`, lat: lat - deltaLat, lng: lng - deltaLng, rtkAccuracyCm: 1.3 },
+      ];
+
+      await farmerService.create({
+        farmerName: formName,
+        contactNumber: formContact,
+        aadhaarMasked: formAadhaar,
+        state: formState,
+        district: formDistrict,
+        talukaTehsil: formTehsil,
+        village: formVillage,
+        khataNumber: formKhata,
+        surveyGatNumber: formSurvey,
+        hissaNumber: formHissa,
+        ulpin: generatedUlpin,
+        totalLandAreaAcres: totalAc,
+        acquiredAreaAcres: acqAc,
+        retainedAreaAcres: retainedAc,
+        landClassification: formClassification,
+        soilType: formSoilType,
+        tenureType: formTenure,
+        jointHolders: [
+          { name: 'Self Khatedar', shareFraction: '1/1', relation: 'Sole Holder' }
+        ],
+        estimatedValuationINR: baseVal,
+        solatiumINR: solatium,
+        totalCompensationINR: totalComp,
+        disbursementStatus: 'IN_PROGRESS',
+        bankDetails: {
+          bankName: formBankName,
+          accountMasked: formAccountMasked,
+          ifsc: formIfsc,
+        },
+        dgpsPillars,
+        boundaryPolygon,
+        qrPasscode: `QR-KS-${stateCode}-${cleanSurvey}`,
+        arVerificationStatus: 'VERIFIED',
+      }, generatedId);
+
+      await auditService.logAction({
+        targetCollection: 'farmers',
+        targetDocId: generatedId,
+        action: 'CREATE',
+        actorId: userProfile?.uid || 'admin-01',
+        actorName: userProfile?.displayName || 'Authorized Administrator',
+        actorRole: activeRole,
+        diffPayload: { farmerName: formName, ulpin: generatedUlpin, surveyGatNumber: formSurvey },
+      });
+
+      setModalOpen(false);
+      setFormName('');
+      setFormSurvey('');
+    } catch (err) {
+      console.error('Error creating farmer record:', err);
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  return (
+    <div className="space-y-4 font-sans">
+      {/* Header Bar */}
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-3 bg-white p-4 rounded-2xl border border-[#BAE6FD] shadow-sm">
+        <div>
+          <div className="flex items-center gap-2">
+            <div className="w-8 h-8 rounded-xl bg-[#EA580C] text-white flex items-center justify-center font-bold text-sm shadow-sm">
+              <Sprout className="w-4 h-4 text-white" />
+            </div>
+            <h1 className="text-lg font-black text-[#0F172A] tracking-tight">Krishi Sathi</h1>
+            <span className="px-2 py-0.5 rounded-full text-[10px] font-extrabold bg-[#FFF7ED] text-[#EA580C] border border-[#FFEDD5]">
+              Farmer Land & AR Spatial Hub
+            </span>
+          </div>
+          <p className="text-xs text-[#64748B] mt-0.5">
+            Cadastral 7/12 Land Records, Direct PFMS Compensation & Centimeter-Level AR Verification
+          </p>
+        </div>
+
+        {/* Real-time Admin Onboarding Button */}
+        <button
+          onClick={() => setModalOpen(true)}
+          className="flex items-center gap-2 px-4 py-2 rounded-xl bg-[#EA580C] hover:bg-[#C2410C] text-white text-xs font-black shadow-sm transition-all cursor-pointer"
+        >
+          <PlusCircle className="w-4 h-4" />
+          <span>Register New Farmer & Land Record</span>
+        </button>
+      </div>
+
+      {/* Aggregate KPI Summary Cards */}
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+        <div className="p-4 rounded-2xl bg-white border border-[#BAE6FD] shadow-sm space-y-1">
+          <span className="text-[10px] font-extrabold uppercase tracking-wider text-[#64748B]">Registered Farmers</span>
+          <p className="text-xl font-black text-[#0F172A]">{totalFarmers}</p>
+          <p className="text-[10px] text-[#059669] font-semibold">Across 4 Strategic States</p>
+        </div>
+
+        <div className="p-4 rounded-2xl bg-white border border-[#BAE6FD] shadow-sm space-y-1">
+          <span className="text-[10px] font-extrabold uppercase tracking-wider text-[#64748B]">Total Acquired Area</span>
+          <p className="text-xl font-black text-[#EA580C]">{totalAcquiredAcres.toFixed(1)} <span className="text-xs font-normal">Acres</span></p>
+          <p className="text-[10px] text-[#64748B]">Statutory Sec 19 Alignment</p>
+        </div>
+
+        <div className="p-4 rounded-2xl bg-white border border-[#BAE6FD] shadow-sm space-y-1">
+          <span className="text-[10px] font-extrabold uppercase tracking-wider text-[#64748B]">Direct PFMS Disbursed</span>
+          <p className="text-xl font-black text-[#059669]">₹{(totalDisbursedINR / 10000000).toFixed(2)} <span className="text-xs font-normal">Cr</span></p>
+          <p className="text-[10px] text-[#059669] font-semibold">100% Solatium Credited</p>
+        </div>
+
+        <div className="p-4 rounded-2xl bg-white border border-[#BAE6FD] shadow-sm space-y-1">
+          <span className="text-[10px] font-extrabold uppercase tracking-wider text-[#64748B]">AR Ground Coherence</span>
+          <p className="text-xl font-black text-[#0284C7]">{totalFarmers > 0 ? ((verifiedCount / totalFarmers) * 100).toFixed(0) : 0}%</p>
+          <p className="text-[10px] text-[#0284C7] font-semibold">{verifiedCount} of {totalFarmers} AR Verified</p>
+        </div>
+      </div>
+
+      {/* Filter & Search Bar */}
+      <div className="flex flex-col md:flex-row items-center gap-3 bg-white p-3 rounded-2xl border border-[#BAE6FD] shadow-sm">
+        <div className="relative flex-1 w-full">
+          <Search className="w-4 h-4 text-[#94A3B8] absolute left-3 top-2.5" />
+          <input
+            type="text"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            placeholder="Search by Farmer Name, Survey/Gat No, ULPIN, Village or District..."
+            className="w-full bg-[#F8FAFC] border border-[#CBD5E1] rounded-xl pl-9 pr-3 py-2 text-xs text-[#0F172A] focus:outline-none focus:border-[#EA580C]"
+          />
+        </div>
+
+        <div className="flex items-center gap-2 w-full md:w-auto">
+          <select
+            value={selectedState}
+            onChange={(e) => setSelectedState(e.target.value)}
+            className="bg-[#F8FAFC] border border-[#CBD5E1] rounded-xl px-3 py-2 text-xs font-bold text-[#0F172A] focus:outline-none focus:border-[#EA580C] cursor-pointer"
+          >
+            <option value="ALL">All States</option>
+            <option value="Maharashtra">Maharashtra</option>
+            <option value="Gujarat">Gujarat</option>
+            <option value="Uttar Pradesh">Uttar Pradesh</option>
+            <option value="Rajasthan">Rajasthan</option>
+          </select>
+
+          <select
+            value={selectedStatus}
+            onChange={(e) => setSelectedStatus(e.target.value)}
+            className="bg-[#F8FAFC] border border-[#CBD5E1] rounded-xl px-3 py-2 text-xs font-bold text-[#0F172A] focus:outline-none focus:border-[#EA580C] cursor-pointer"
+          >
+            <option value="ALL">All AR Statuses</option>
+            <option value="VERIFIED">AR Verified</option>
+            <option value="PENDING_VISIT">Pending Visit</option>
+            <option value="FLAGGED_MISMATCH">Discrepancy Flagged</option>
+          </select>
+        </div>
+      </div>
+
+      {/* Farmers Land Record Directory Table */}
+      <div className="bg-white rounded-2xl border border-[#BAE6FD] shadow-sm overflow-hidden">
+        <div className="p-4 border-b border-[#E2E8F0] flex justify-between items-center bg-[#F8FAFC]">
+          <h3 className="font-extrabold text-xs text-[#0F172A] uppercase tracking-wider flex items-center gap-1.5">
+            <Users className="w-3.5 h-3.5 text-[#0284C7]" />
+            <span>Landholder Records Directory ({filteredFarmers.length})</span>
+          </h3>
+          <span className="text-[11px] text-[#64748B]">Real-Time Synchronized</span>
+        </div>
+
+        <div className="overflow-x-auto">
+          <table className="w-full text-left border-collapse text-xs">
+            <thead>
+              <tr className="border-b border-[#E2E8F0] bg-[#F1F5F9]/50 text-[#64748B] font-bold text-[11px]">
+                <th className="p-3 pl-4">Farmer / Landowner</th>
+                <th className="p-3">Cadastral Reference & ULPIN</th>
+                <th className="p-3">Location & Village</th>
+                <th className="p-3">Holding Area</th>
+                <th className="p-3">Statutory Award</th>
+                <th className="p-3">AR Reality Status</th>
+                <th className="p-3 text-right pr-4">Interactive Actions</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-[#E2E8F0]">
+              {filteredFarmers.map((farmer) => (
+                <tr key={farmer.id} className="hover:bg-[#F8FAFC] transition-colors">
+                  <td className="p-3 pl-4">
+                    <div className="flex items-center gap-2.5">
+                      <div className="w-8 h-8 rounded-lg bg-[#ECFDF5] text-[#059669] flex items-center justify-center font-bold text-xs shrink-0 border border-[#A7F3D0]">
+                        🌾
+                      </div>
+                      <div>
+                        <p className="font-black text-[#0F172A] text-xs">{farmer.farmerName}</p>
+                        <p className="text-[10px] text-[#64748B]">{farmer.contactNumber}</p>
+                      </div>
+                    </div>
+                  </td>
+
+                  <td className="p-3 font-mono">
+                    <span className="text-[11px] font-extrabold text-[#EA580C] bg-[#FFF7ED] px-1.5 py-0.5 rounded border border-[#FFEDD5]">
+                      {farmer.ulpin}
+                    </span>
+                    <p className="text-[10px] text-[#64748B] mt-0.5">
+                      Survey: <strong>{farmer.surveyGatNumber}</strong> • {farmer.hissaNumber}
+                    </p>
+                  </td>
+
+                  <td className="p-3">
+                    <p className="font-bold text-[#0F172A]">{farmer.village}</p>
+                    <p className="text-[10px] text-[#64748B]">{farmer.district}, {farmer.state}</p>
+                  </td>
+
+                  <td className="p-3">
+                    <p className="font-bold text-[#0F172A]">{farmer.totalLandAreaAcres} Acres</p>
+                    <p className="text-[10px] text-[#059669] font-medium">Acquired: {farmer.acquiredAreaAcres} Ac</p>
+                  </td>
+
+                  <td className="p-3 font-mono">
+                    <span className="font-extrabold text-[#0F172A]">
+                      ₹{(farmer.totalCompensationINR / 100000).toFixed(1)} L
+                    </span>
+                    <p className="text-[9px] text-[#64748B]">{farmer.disbursementStatus}</p>
+                  </td>
+
+                  <td className="p-3">
+                    <span
+                      className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-extrabold border ${
+                        farmer.arVerificationStatus === 'VERIFIED'
+                          ? 'bg-[#ECFDF5] text-[#059669] border-[#A7F3D0]'
+                          : farmer.arVerificationStatus === 'FLAGGED_MISMATCH'
+                          ? 'bg-[#FEF2F2] text-[#DC2626] border-[#FECACA]'
+                          : 'bg-[#FFFBEB] text-[#D97706] border-[#FDE68A]'
+                      }`}
+                    >
+                      {farmer.arVerificationStatus === 'VERIFIED' ? (
+                        <>
+                          <CheckCircle2 className="w-3 h-3 text-[#059669]" />
+                          <span>AR Verified</span>
+                        </>
+                      ) : farmer.arVerificationStatus === 'FLAGGED_MISMATCH' ? (
+                        <>
+                          <AlertTriangle className="w-3 h-3 text-[#DC2626]" />
+                          <span>Discrepancy</span>
+                        </>
+                      ) : (
+                        <>
+                          <Clock className="w-3 h-3 text-[#D97706]" />
+                          <span>Pending Visit</span>
+                        </>
+                      )}
+                    </span>
+                  </td>
+
+                  <td className="p-3 pr-4 text-right">
+                    <div className="flex items-center justify-end gap-1.5">
+                      {/* Option 1: View Detailed Farmer Profile */}
+                      <button
+                        onClick={() => setInspectingFarmer(farmer)}
+                        className="px-2.5 py-1.5 rounded-xl bg-[#F1F5F9] hover:bg-[#E2E8F0] text-[#0F172A] text-xs font-bold flex items-center gap-1 transition-all cursor-pointer"
+                        title="View Detailed Farmer Profile & 7/12"
+                      >
+                        <FileText className="w-3.5 h-3.5 text-[#0284C7]" />
+                        <span>Details</span>
+                      </button>
+
+                      {/* Option 2: Visualise Land Area */}
+                      <button
+                        onClick={() => setVisualizingFarmer(farmer)}
+                        className="px-2.5 py-1.5 rounded-xl bg-[#EA580C] hover:bg-[#C2410C] text-white text-xs font-bold flex items-center gap-1 shadow-xs transition-all cursor-pointer"
+                        title="Visualise Land Area in 2D/3D Map"
+                      >
+                        <MapIcon className="w-3.5 h-3.5 text-white" />
+                        <span>Visualise Land</span>
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      {/* Drawer 1: Option 1 - Farmer Details Drawer */}
+      {inspectingFarmer && (
+        <FarmerDetailsDrawer
+          farmer={inspectingFarmer}
+          onClose={() => setInspectingFarmer(null)}
+          onVisualiseLand={(f) => {
+            setInspectingFarmer(null);
+            setVisualizingFarmer(f);
+          }}
+        />
+      )}
+
+      {/* Modal 2: Option 2 - Land Area Visualizer */}
+      {visualizingFarmer && (
+        <FarmerLandVisualizer
+          farmer={visualizingFarmer}
+          onClose={() => setVisualizingFarmer(null)}
+          onOpenDetails={(f) => {
+            setVisualizingFarmer(null);
+            setInspectingFarmer(f);
+          }}
+        />
+      )}
+
+      {/* Real-Time Admin Registration Modal */}
+      {modalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-xs p-4 font-sans">
+          <div className="w-full max-w-2xl bg-white rounded-2xl shadow-2xl border border-[#BAE6FD] overflow-hidden flex flex-col max-h-[90vh]">
+            <div className="p-4 bg-gradient-to-r from-[#FFF7ED] to-white border-b border-[#E2E8F0] flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <div className="w-8 h-8 rounded-xl bg-[#EA580C] text-white flex items-center justify-center font-bold text-sm">
+                  🌾
+                </div>
+                <h3 className="font-extrabold text-sm text-[#0F172A]">
+                  Register New Farmer & Land Record (Real-Time)
+                </h3>
+              </div>
+              <button
+                onClick={() => setModalOpen(false)}
+                className="text-[#64748B] hover:text-[#0F172A] cursor-pointer"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            <form onSubmit={handleCreateFarmer} className="p-4 overflow-y-auto space-y-3 text-xs">
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="block text-[#64748B] font-bold mb-1">Farmer / Landowner Name *</label>
+                  <input
+                    required
+                    type="text"
+                    value={formName}
+                    onChange={(e) => setFormName(e.target.value)}
+                    placeholder="e.g. Shri Baburao M. Patil"
+                    className="w-full bg-[#F8FAFC] border border-[#CBD5E1] rounded-xl px-3 py-2 text-xs text-[#0F172A] focus:outline-none focus:border-[#EA580C]"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-[#64748B] font-bold mb-1">Contact Phone Number</label>
+                  <input
+                    type="text"
+                    value={formContact}
+                    onChange={(e) => setFormContact(e.target.value)}
+                    placeholder="+91 98XXX XXXXX"
+                    className="w-full bg-[#F8FAFC] border border-[#CBD5E1] rounded-xl px-3 py-2 text-xs text-[#0F172A] focus:outline-none focus:border-[#EA580C]"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-[#64748B] font-bold mb-1">State *</label>
+                  <select
+                    value={formState}
+                    onChange={(e) => setFormState(e.target.value)}
+                    className="w-full bg-[#F8FAFC] border border-[#CBD5E1] rounded-xl px-3 py-2 text-xs font-bold text-[#0F172A] focus:outline-none focus:border-[#EA580C]"
+                  >
+                    <option value="Maharashtra">Maharashtra</option>
+                    <option value="Gujarat">Gujarat</option>
+                    <option value="Uttar Pradesh">Uttar Pradesh</option>
+                    <option value="Rajasthan">Rajasthan</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label className="block text-[#64748B] font-bold mb-1">District *</label>
+                  <input
+                    required
+                    type="text"
+                    value={formDistrict}
+                    onChange={(e) => setFormDistrict(e.target.value)}
+                    placeholder="e.g. Palghar"
+                    className="w-full bg-[#F8FAFC] border border-[#CBD5E1] rounded-xl px-3 py-2 text-xs text-[#0F172A] focus:outline-none focus:border-[#EA580C]"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-[#64748B] font-bold mb-1">Taluka / Tehsil</label>
+                  <input
+                    type="text"
+                    value={formTehsil}
+                    onChange={(e) => setFormTehsil(e.target.value)}
+                    placeholder="e.g. Palghar"
+                    className="w-full bg-[#F8FAFC] border border-[#CBD5E1] rounded-xl px-3 py-2 text-xs text-[#0F172A] focus:outline-none focus:border-[#EA580C]"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-[#64748B] font-bold mb-1">Revenue Village *</label>
+                  <input
+                    required
+                    type="text"
+                    value={formVillage}
+                    onChange={(e) => setFormVillage(e.target.value)}
+                    placeholder="e.g. Manikpur"
+                    className="w-full bg-[#F8FAFC] border border-[#CBD5E1] rounded-xl px-3 py-2 text-xs text-[#0F172A] focus:outline-none focus:border-[#EA580C]"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-[#64748B] font-bold mb-1">Survey / Gat Number *</label>
+                  <input
+                    required
+                    type="text"
+                    value={formSurvey}
+                    onChange={(e) => setFormSurvey(e.target.value)}
+                    placeholder="e.g. 145/2-A"
+                    className="w-full bg-[#F8FAFC] border border-[#CBD5E1] rounded-xl px-3 py-2 text-xs font-mono text-[#0F172A] focus:outline-none focus:border-[#EA580C]"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-[#64748B] font-bold mb-1">Hissa / Sub-Division</label>
+                  <input
+                    type="text"
+                    value={formHissa}
+                    onChange={(e) => setFormHissa(e.target.value)}
+                    placeholder="e.g. Hissa-1"
+                    className="w-full bg-[#F8FAFC] border border-[#CBD5E1] rounded-xl px-3 py-2 text-xs font-mono text-[#0F172A] focus:outline-none focus:border-[#EA580C]"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-[#64748B] font-bold mb-1">Total Holding (Acres) *</label>
+                  <input
+                    required
+                    type="number"
+                    step="0.01"
+                    value={formTotalAcres}
+                    onChange={(e) => setFormTotalAcres(e.target.value)}
+                    className="w-full bg-[#F8FAFC] border border-[#CBD5E1] rounded-xl px-3 py-2 text-xs text-[#0F172A] focus:outline-none focus:border-[#EA580C]"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-[#64748B] font-bold mb-1">Acquired Area (Acres) *</label>
+                  <input
+                    required
+                    type="number"
+                    step="0.01"
+                    value={formAcquiredAcres}
+                    onChange={(e) => setFormAcquiredAcres(e.target.value)}
+                    className="w-full bg-[#F8FAFC] border border-[#CBD5E1] rounded-xl px-3 py-2 text-xs text-[#0F172A] focus:outline-none focus:border-[#EA580C]"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-[#64748B] font-bold mb-1">Land Classification</label>
+                  <select
+                    value={formClassification}
+                    onChange={(e) => setFormClassification(e.target.value as any)}
+                    className="w-full bg-[#F8FAFC] border border-[#CBD5E1] rounded-xl px-3 py-2 text-xs font-bold text-[#0F172A] focus:outline-none focus:border-[#EA580C]"
+                  >
+                    <option value="Agricultural">Agricultural</option>
+                    <option value="Commercial">Commercial</option>
+                    <option value="Residential">Residential</option>
+                    <option value="Barren">Barren</option>
+                    <option value="Forest">Forest</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label className="block text-[#64748B] font-bold mb-1">Base Market Valuation (INR)</label>
+                  <input
+                    type="number"
+                    value={formValuation}
+                    onChange={(e) => setFormValuation(e.target.value)}
+                    className="w-full bg-[#F8FAFC] border border-[#CBD5E1] rounded-xl px-3 py-2 text-xs font-mono text-[#0F172A] focus:outline-none focus:border-[#EA580C]"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-[#64748B] font-bold mb-1">Center GPS Lat</label>
+                  <input
+                    type="text"
+                    value={formLat}
+                    onChange={(e) => setFormLat(e.target.value)}
+                    className="w-full bg-[#F8FAFC] border border-[#CBD5E1] rounded-xl px-3 py-2 text-xs font-mono text-[#0F172A] focus:outline-none focus:border-[#EA580C]"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-[#64748B] font-bold mb-1">Center GPS Lng</label>
+                  <input
+                    type="text"
+                    value={formLng}
+                    onChange={(e) => setFormLng(e.target.value)}
+                    className="w-full bg-[#F8FAFC] border border-[#CBD5E1] rounded-xl px-3 py-2 text-xs font-mono text-[#0F172A] focus:outline-none focus:border-[#EA580C]"
+                  />
+                </div>
+              </div>
+
+              <div className="pt-3 border-t border-[#E2E8F0] flex justify-end gap-2">
+                <button
+                  type="button"
+                  onClick={() => setModalOpen(false)}
+                  className="px-4 py-2 rounded-xl text-xs font-bold text-[#64748B] hover:bg-[#F8FAFC] cursor-pointer"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  disabled={saving}
+                  className="px-4 py-2 rounded-xl text-xs font-bold bg-[#EA580C] text-white hover:bg-[#C2410C] cursor-pointer disabled:opacity-50"
+                >
+                  {saving ? 'Registering & Generating ULPIN...' : 'Register Farmer & Plot'}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
