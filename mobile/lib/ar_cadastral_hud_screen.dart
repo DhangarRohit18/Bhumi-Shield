@@ -3,6 +3,8 @@ import 'package:camera/camera.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:sensors_plus/sensors_plus.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:arcore_flutter_plugin/arcore_flutter_plugin.dart';
+import 'package:vector_math/vector_math_64.dart' as vector;
 import 'dart:math' as math;
 import 'dart:async';
 
@@ -70,19 +72,28 @@ class ArCadastralHudScreen extends StatefulWidget {
 
 class _ArCadastralHudScreenState extends State<ArCadastralHudScreen>
     with SingleTickerProviderStateMixin, WidgetsBindingObserver {
+  // Camera & ARCore Controllers
   CameraController? _cameraController;
+  ArCoreController? _arCoreController;
   List<CameraDescription>? _cameras;
   bool _isCameraReady = false;
+  bool _useNativeArCore = true; // Toggle between ARCore 6-DoF SLAM & Low-Pass Filtered Sensors
   String? _cameraError;
   int _activeTab = 0; // 0 = Measure (AR), 1 = Level
 
-  // Real 3D World-Anchored Points
+  // Real 3D World-Anchored Points (Sensor Mode)
   final List<ArAnchor> _anchors = [];
 
-  // Real-time Device Sensor States (Yaw/Compass, Pitch, Roll)
+  // ARCore 3D Position Anchors (SLAM Mode)
+  final List<vector.Vector3> _arCorePositions = [];
+
+  // Smoothed Low-Pass Filtered Device Sensor States (Yaw, Pitch, Roll)
   double _yaw = 0.0;
   double _pitch = 0.0;
   double _roll = 0.0;
+
+  // Raw buffer for low-pass exponential filter
+  static const double _filterAlpha = 0.10; // Smoothing factor (0.05-0.15 = rock solid stability)
 
   StreamSubscription<AccelerometerEvent>? _accelSubscription;
   StreamSubscription<MagnetometerEvent>? _magSubscription;
@@ -103,13 +114,38 @@ class _ArCadastralHudScreenState extends State<ArCadastralHudScreen>
       duration: const Duration(milliseconds: 1200),
     )..repeat(reverse: true);
 
-    _initCamera();
+    _checkArCoreAndInit();
     _initSensors();
     _initLocation();
   }
 
+  Future<void> _checkArCoreAndInit() async {
+    try {
+      final bool arCoreAvailable = await ArCoreController.checkArCoreAvailability();
+      if (arCoreAvailable && mounted) {
+        setState(() {
+          _useNativeArCore = true;
+        });
+        return;
+      } else {
+        setState(() {
+          _useNativeArCore = false;
+          _cameraError = 'ARCore is not available. Please install Google Play Services for AR from the Play Store.';
+        });
+      }
+    } catch (e) {
+      debugPrint('ARCore check note: $e');
+      setState(() {
+        _useNativeArCore = false;
+        _cameraError = 'ARCore initialization failed: $e';
+      });
+    }
+  }
+
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (_useNativeArCore) return;
+
     final CameraController? cameraController = _cameraController;
     if (cameraController == null || !cameraController.value.isInitialized) {
       return;
@@ -164,23 +200,39 @@ class _ArCadastralHudScreenState extends State<ArCadastralHudScreen>
   }
 
   void _initSensors() {
-    // Accelerometer for Pitch & Roll
+    // Accelerometer for Pitch & Roll with Low-Pass Exponential Filter
     _accelSubscription = accelerometerEventStream().listen((AccelerometerEvent event) {
       if (mounted) {
+        double rawPitch = math.atan2(event.y, math.sqrt(event.x * event.x + event.z * event.z)) * 180 / math.pi;
+        double rawRoll = math.atan2(-event.x, event.z) * 180 / math.pi;
+
         setState(() {
-          _pitch = math.atan2(event.y, math.sqrt(event.x * event.x + event.z * event.z)) * 180 / math.pi;
-          _roll = math.atan2(-event.x, event.z) * 180 / math.pi;
+          if (_pitch == 0.0 && _roll == 0.0) {
+            _pitch = rawPitch;
+            _roll = rawRoll;
+          } else {
+            // Apply exponential low-pass filter to eliminate sensor jitter & tremor
+            _pitch = _pitch + _filterAlpha * (rawPitch - _pitch);
+            _roll = _roll + _filterAlpha * (rawRoll - _roll);
+          }
         });
       }
     });
 
-    // Magnetometer for Compass Heading (Yaw)
+    // Magnetometer for Compass Heading (Yaw) with Low-Pass Exponential Filter
     _magSubscription = magnetometerEventStream().listen((MagnetometerEvent event) {
       if (mounted) {
-        double heading = math.atan2(event.y, event.x) * 180 / math.pi;
-        if (heading < 0) heading += 360;
+        double rawYaw = math.atan2(event.y, event.x) * 180 / math.pi;
+        if (rawYaw < 0) rawYaw += 360;
+
         setState(() {
-          _yaw = heading;
+          if (_yaw == 0.0) {
+            _yaw = rawYaw;
+          } else {
+            // Wrap-around aware low-pass filter
+            double diffYaw = (rawYaw - _yaw + 540) % 360 - 180;
+            _yaw = (_yaw + _filterAlpha * diffYaw + 360) % 360;
+          }
         });
       }
     });
@@ -220,6 +272,7 @@ class _ArCadastralHudScreenState extends State<ArCadastralHudScreen>
   @override
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
+    _arCoreController?.dispose();
     _cameraController?.dispose();
     _pulseController.dispose();
     _accelSubscription?.cancel();
@@ -228,6 +281,35 @@ class _ArCadastralHudScreenState extends State<ArCadastralHudScreen>
     super.dispose();
   }
 
+  // --- ARCore 6-DoF SLAM Callback ---
+  void _onArCoreViewCreated(ArCoreController controller) {
+    _arCoreController = controller;
+    _arCoreController?.onPlaneTap = _handleArCorePlaneTap;
+  }
+
+  void _handleArCorePlaneTap(List<ArCoreHitTestResult> hits) {
+    if (hits.isEmpty) return;
+
+    final hit = hits.first;
+    final pos = hit.pose.translation;
+
+    // Add a stable 3D visual sphere node into ARCore SLAM world space
+    final node = ArCoreNode(
+      shape: ArCoreSphere(
+        materials: [ArCoreMaterial(color: const Color(0xFF10B981))],
+        radius: 0.04, // 4cm node
+      ),
+      position: pos,
+    );
+
+    _arCoreController?.addArCoreNodeWithAnchor(node);
+
+    setState(() {
+      _arCorePositions.add(pos);
+    });
+  }
+
+  // --- Sensor Mode Spatial Anchor Placement ---
   void _addAnchorAt(Offset screenPosition) {
     final size = MediaQuery.of(context).size;
     double centerX = size.width / 2;
@@ -258,11 +340,17 @@ class _ArCadastralHudScreenState extends State<ArCadastralHudScreen>
   void _clearAnchors() {
     setState(() {
       _anchors.clear();
+      _arCorePositions.clear();
     });
   }
 
   void _undoAnchor() {
-    if (_anchors.isNotEmpty) {
+    if (_useNativeArCore && _arCorePositions.isNotEmpty) {
+      setState(() {
+        _arCorePositions.removeLast();
+      });
+      _arCoreController?.removeNodeWithIndex(_arCorePositions.length);
+    } else if (_anchors.isNotEmpty) {
       setState(() {
         _anchors.removeLast();
       });
@@ -278,8 +366,14 @@ class _ArCadastralHudScreenState extends State<ArCadastralHudScreen>
       body: Stack(
         fit: StackFit.expand,
         children: [
-          // 1. Fullscreen Live Camera Viewport
-          if (_isCameraReady && _cameraController != null && _cameraController!.value.isInitialized)
+          // 1. Native ARCore 6-DoF SLAM View or Camera Viewport Fallback
+          if (_useNativeArCore)
+            ArCoreView(
+              onArCoreViewCreated: _onArCoreViewCreated,
+              enableTapRecognizer: true,
+              enablePlaneRenderer: true,
+            )
+          else if (_isCameraReady && _cameraController != null && _cameraController!.value.isInitialized)
             SizedBox.expand(
               child: FittedBox(
                 fit: BoxFit.cover,
@@ -315,7 +409,7 @@ class _ArCadastralHudScreenState extends State<ArCadastralHudScreen>
                     ),
                     const SizedBox(height: 16),
                     Text(
-                      _cameraError ?? 'Initializing Real-Time AR Camera Feed...',
+                      _cameraError ?? 'Initializing Rock-Solid AR Engine...',
                       textAlign: TextAlign.center,
                       style: const TextStyle(color: Colors.white70, fontSize: 13, fontWeight: FontWeight.bold),
                     ),
@@ -324,35 +418,36 @@ class _ArCadastralHudScreenState extends State<ArCadastralHudScreen>
               ),
             ),
 
-          // 2. Interactive World-Locked Spatial AR Layer
-          GestureDetector(
-            behavior: HitTestBehavior.translucent,
-            onTapDown: (details) {
-              if (_activeTab == 0) {
-                _addAnchorAt(details.localPosition);
-              }
-            },
-            child: AnimatedBuilder(
-              animation: _pulseController,
-              builder: (context, child) {
-                return CustomPaint(
-                  painter: WorldSpatialArPainter(
-                    anchors: _anchors,
-                    screenSize: size,
-                    pulse: _pulseController.value,
-                    isLevelMode: _activeTab == 1,
-                    yaw: _yaw,
-                    pitch: _pitch,
-                    roll: _roll,
-                    dgpsCoordinates: widget.dgpsCoordinates,
-                    currentLocation: _currentPosition != null
-                        ? '${_currentPosition!.latitude.toStringAsFixed(5)}° N, ${_currentPosition!.longitude.toStringAsFixed(5)}° E'
-                        : 'Calibrating RTK-3D...',
-                  ),
-                );
+          // 2. Interactive World-Locked Spatial Overlay (Sensor Mode)
+          if (!_useNativeArCore)
+            GestureDetector(
+              behavior: HitTestBehavior.translucent,
+              onTapDown: (details) {
+                if (_activeTab == 0) {
+                  _addAnchorAt(details.localPosition);
+                }
               },
+              child: AnimatedBuilder(
+                animation: _pulseController,
+                builder: (context, child) {
+                  return CustomPaint(
+                    painter: WorldSpatialArPainter(
+                      anchors: _anchors,
+                      screenSize: size,
+                      pulse: _pulseController.value,
+                      isLevelMode: _activeTab == 1,
+                      yaw: _yaw,
+                      pitch: _pitch,
+                      roll: _roll,
+                      dgpsCoordinates: widget.dgpsCoordinates,
+                      currentLocation: _currentPosition != null
+                          ? '${_currentPosition!.latitude.toStringAsFixed(5)}° N, ${_currentPosition!.longitude.toStringAsFixed(5)}° E'
+                          : 'Calibrating RTK-3D...',
+                    ),
+                  );
+                },
+              ),
             ),
-          ),
 
           // 3. Dynamic Island Top Navigation & Status Bar
           SafeArea(
@@ -361,43 +456,54 @@ class _ArCadastralHudScreenState extends State<ArCadastralHudScreen>
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  // AR Sentinel Pill Indicator
-                  Container(
-                    width: 150,
-                    height: 32,
-                    decoration: BoxDecoration(
-                      color: Colors.black.withValues(alpha: 0.85),
-                      borderRadius: BorderRadius.circular(16),
-                      border: Border.all(color: const Color(0xFF10B981).withValues(alpha: 0.6), width: 1),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black.withValues(alpha: 0.6),
-                          blurRadius: 12,
-                        )
-                      ],
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Container(
-                          width: 8,
-                          height: 8,
-                          decoration: const BoxDecoration(
-                            color: Color(0xFF22C55E),
-                            shape: BoxShape.circle,
+                  // AR Engine Mode Indicator
+                  GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        _useNativeArCore = !_useNativeArCore;
+                        if (!_useNativeArCore && !_isCameraReady) {
+                          _initCamera();
+                        }
+                      });
+                    },
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
+                      decoration: BoxDecoration(
+                        color: Colors.black.withValues(alpha: 0.85),
+                        borderRadius: BorderRadius.circular(16),
+                        border: Border.all(color: const Color(0xFF10B981).withValues(alpha: 0.7), width: 1),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withValues(alpha: 0.6),
+                            blurRadius: 12,
+                          )
+                        ],
+                      ),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Container(
+                            width: 8,
+                            height: 8,
+                            decoration: BoxDecoration(
+                              color: _useNativeArCore ? const Color(0xFF3B82F6) : const Color(0xFF22C55E),
+                              shape: BoxShape.circle,
+                            ),
                           ),
-                        ),
-                        const SizedBox(width: 8),
-                        Text(
-                          'SPATIAL AR • ${_yaw.toStringAsFixed(0)}°',
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 10,
-                            fontWeight: FontWeight.bold,
-                            letterSpacing: 0.8,
+                          const SizedBox(width: 8),
+                          Text(
+                            _useNativeArCore ? 'ARCORE 6-DOF SLAM' : 'FILTERED SPATIAL AR • ${_yaw.toStringAsFixed(0)}°',
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 10,
+                              fontWeight: FontWeight.bold,
+                              letterSpacing: 0.8,
+                            ),
                           ),
-                        ),
-                      ],
+                          const SizedBox(width: 6),
+                          const Icon(Icons.swap_horiz, color: Colors.white70, size: 14),
+                        ],
+                      ),
                     ),
                   ),
 
@@ -412,7 +518,7 @@ class _ArCadastralHudScreenState extends State<ArCadastralHudScreen>
                         // Undo Button
                         GestureDetector(
                           onTap: () {
-                            if (_anchors.isNotEmpty) {
+                            if (_anchors.isNotEmpty || _arCorePositions.isNotEmpty) {
                               _undoAnchor();
                             } else {
                               Navigator.pop(context);
@@ -668,7 +774,7 @@ class WorldSpatialArPainter extends CustomPainter {
 
     _paintDgpsOverlay(canvas, size);
 
-    // Convert 3D world anchors to current 2D screen positions based on device rotation
+    // Convert 3D world anchors to current 2D screen positions based on smoothed device rotation
     List<Offset> projectedPoints = anchors.map((a) {
       return a.toScreenOffset(
         screenSize: size,
@@ -716,7 +822,7 @@ class WorldSpatialArPainter extends CustomPainter {
 
       if (p2 != null) {
         final mid = Offset((p1.dx + p2.dx) / 2, (p1.dy + p2.dy) / 2);
-        
+
         // Compute real-world angular distance in degrees converted to meters
         final a1 = anchors[i];
         final a2 = (i == anchors.length - 1 && anchors.length >= 3) ? anchors[0] : anchors[i + 1];

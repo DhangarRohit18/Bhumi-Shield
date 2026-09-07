@@ -16,7 +16,8 @@ import {
 } from '../../../../services/entities.service';
 import { auditService } from '../../../../services/audit.service';
 import { useAuth } from '../../../../contexts/AuthContext';
-import { PlusCircle, X, ExternalLink, CheckCircle2 } from 'lucide-react';
+import { PlusCircle, X, ExternalLink, CheckCircle2, Lock } from 'lucide-react';
+import { hasPermission, getPermissionReason } from '../../../../utils/rbac';
 
 export const TwinDocumentsTab: React.FC<{ documents: LegalDocument[]; projectId?: string }> = ({
   documents,
@@ -29,8 +30,14 @@ export const TwinDocumentsTab: React.FC<{ documents: LegalDocument[]; projectId?
   const [downloadUrl, setDownloadUrl] = useState('https://bhumishield.gov.in/gazettes/sec19_palghar_2026.pdf');
   const [saving, setSaving] = useState(false);
 
+  const canUploadDoc = hasPermission(activeRole, 'UPLOAD_STATUTORY_DOCUMENT');
+
   const handleCreateDocument = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!canUploadDoc) {
+      alert(getPermissionReason(activeRole, 'UPLOAD_STATUTORY_DOCUMENT'));
+      return;
+    }
     setSaving(true);
     try {
       const docId = `doc-${Date.now()}`;
@@ -71,13 +78,20 @@ export const TwinDocumentsTab: React.FC<{ documents: LegalDocument[]; projectId?
           <h2 className="text-base font-extrabold text-[#0F172A]">Statutory Gazette Orders & Legal Deeds</h2>
           <p className="text-xs text-[#64748B] font-medium">Verifiable document repository with SHA-256 integrity checksums</p>
         </div>
-        <button
-          onClick={() => setDocModalOpen(true)}
-          className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-[#0F172A] hover:bg-[#1E293B] text-white text-xs font-bold shadow-sm transition-all cursor-pointer"
-        >
-          <PlusCircle className="w-3.5 h-3.5" />
-          <span>Upload Statutory Document</span>
-        </button>
+        {canUploadDoc ? (
+          <button
+            onClick={() => setDocModalOpen(true)}
+            className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-[#EA580C] hover:bg-[#C2410C] text-white text-xs font-bold shadow-sm transition-all cursor-pointer"
+          >
+            <PlusCircle className="w-3.5 h-3.5" />
+            <span>Upload Statutory Document</span>
+          </button>
+        ) : (
+          <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#F1F5F9] border border-[#CBD5E1] text-[11px] font-bold text-[#64748B]">
+            <Lock className="w-3.5 h-3.5 text-[#94A3B8]" />
+            <span>Upload Restricted</span>
+          </div>
+        )}
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -172,21 +186,24 @@ export const TwinDocumentsTab: React.FC<{ documents: LegalDocument[]; projectId?
   );
 };
 
-export const TwinCompensationTab: React.FC<{ compensations: CompensationAward[]; projectId?: string }> = ({
+export const TwinCompensationTab: React.FC<{ compensations: CompensationAward[] }> = ({
   compensations,
-  projectId = 'proj-bullet-train-sec-3',
 }) => {
-  const { userProfile, activeRole } = useAuth();
+  const { activeRole, userProfile } = useAuth();
   const [updatingId, setUpdatingId] = useState<string | null>(null);
+  const canDisburse = hasPermission(activeRole, 'DISBURSE_PFMS_COMPENSATION');
 
   const toggleDisbursementStatus = async (c: CompensationAward) => {
+    if (!canDisburse) {
+      alert(getPermissionReason(activeRole, 'DISBURSE_PFMS_COMPENSATION'));
+      return;
+    }
+    if (!c.id) return;
     setUpdatingId(c.id);
-    const nextStatus = c.disbursementStatus === 'CREDITED' ? 'PENDING_CLEARANCE' : 'CREDITED';
+    const nextStatus = c.disbursementStatus === 'CREDITED' ? 'APPROVED' : 'CREDITED';
     try {
       await compensationService.update(c.id, {
-        disbursementStatus: nextStatus as any,
-        utrTransactionRef: nextStatus === 'CREDITED' ? `PFMS${Date.now()}` : 'PENDING_APPROVAL',
-        disbursementDate: nextStatus === 'CREDITED' ? new Date().toISOString().split('T')[0] : 'PENDING',
+        disbursementStatus: nextStatus,
         updatedAt: Date.now(),
       });
 
@@ -217,39 +234,46 @@ export const TwinCompensationTab: React.FC<{ compensations: CompensationAward[];
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {compensations.map((c) => (
-          <div key={c.id} className="p-5 rounded-2xl bg-white border border-[#E2E8F0] shadow-sm space-y-4">
+          <div key={c.id} className="p-5 rounded-2xl bg-white border border-[#BAE6FD] shadow-sm space-y-4">
             <div className="flex justify-between items-center">
               <span className="font-mono text-xs text-[#0F172A] font-extrabold">AWARD #{c.id}</span>
               <span
                 className={`px-2.5 py-0.5 rounded-full text-[10px] font-bold border ${
                   c.disbursementStatus === 'CREDITED'
                     ? 'bg-[#ECFDF5] text-[#047857] border-[#A7F3D0]'
-                    : 'bg-[#FFFBEB] text-[#B45309] border-[#FDE68A]'
+                    : 'bg-[#FFF7ED] text-[#EA580C] border-[#FFEDD5]'
                 }`}
               >
                 {c.disbursementStatus}
               </span>
             </div>
 
-            <div className="p-3.5 bg-[#F8FAFC] rounded-xl border border-[#E2E8F0] space-y-2 text-xs">
+            <div className="p-3.5 bg-[#F0F7FF] rounded-xl border border-[#BAE6FD] space-y-2 text-xs">
               <div className="flex justify-between"><span className="text-[#64748B]">Basic Land Valuation:</span><span className="font-mono text-[#0F172A]">₹{(c.basicLandValueINR / 100000).toFixed(2)} Lakhs</span></div>
               <div className="flex justify-between"><span className="text-[#64748B]">100% Solatium (Sec 30):</span><span className="font-mono text-[#0F172A] font-extrabold">₹{(c.solatiumAmountINR / 100000).toFixed(2)} Lakhs</span></div>
               <div className="flex justify-between"><span className="text-[#64748B]">Structural Assets (Trees/Wells):</span><span className="font-mono text-[#0F172A]">₹{(c.assetsValuationINR / 100000).toFixed(2)} Lakhs</span></div>
-              <div className="flex justify-between pt-2 border-t border-[#E2E8F0] font-extrabold text-[#0F172A]">
+              <div className="flex justify-between pt-2 border-t border-[#BAE6FD]/60 font-extrabold text-[#0F172A]">
                 <span>Total Statutory Award:</span>
-                <span className="font-mono text-[#047857]">₹{(c.totalPayableINR / 100000).toFixed(2)} Lakhs</span>
+                <span className="font-mono text-[#EA580C]">₹{(c.totalPayableINR / 100000).toFixed(2)} Lakhs</span>
               </div>
             </div>
 
             <div className="flex justify-between items-center text-[11px] text-[#64748B] pt-1 font-medium">
               <span>PFMS UTR: <strong className="text-[#0F172A] font-mono">{c.utrTransactionRef}</strong></span>
-              <button
-                onClick={() => toggleDisbursementStatus(c)}
-                disabled={updatingId === c.id}
-                className="px-3 py-1 rounded-lg bg-[#0F172A] text-white hover:bg-[#1E293B] text-xs font-bold cursor-pointer disabled:opacity-50"
-              >
-                {c.disbursementStatus === 'CREDITED' ? 'Mark Pending' : 'Trigger PFMS Direct Credit'}
-              </button>
+              {canDisburse ? (
+                <button
+                  onClick={() => toggleDisbursementStatus(c)}
+                  disabled={updatingId === c.id}
+                  className="px-3 py-1.5 rounded-xl bg-[#EA580C] text-white hover:bg-[#C2410C] text-xs font-bold cursor-pointer disabled:opacity-50 shadow-xs transition-all"
+                >
+                  {c.disbursementStatus === 'CREDITED' ? 'Mark Pending' : 'Trigger PFMS Direct Credit'}
+                </button>
+              ) : (
+                <div className="flex items-center gap-1 text-[10px] text-[#94A3B8] font-bold">
+                  <Lock className="w-3 h-3 text-[#94A3B8]" />
+                  <span>CALA / Admin Auth Required</span>
+                </div>
+              )}
             </div>
           </div>
         ))}
@@ -326,22 +350,27 @@ export const TwinRrTab: React.FC<{ rrCases: RRCase[]; projectId?: string }> = ({
       </div>
     </div>
   );
-};
+}
 
-export const TwinLegalTab: React.FC<{ legalCases: LegalCase[]; projectId?: string }> = ({ legalCases, projectId = 'proj-bullet-train-sec-3' }) => {
+export function TwinLegalTab({ projectId, legalCases }: { projectId: string; legalCases: LegalCase[] }) {
   const { userProfile, activeRole } = useAuth();
   const [legalModalOpen, setLegalModalOpen] = useState(false);
   const [caseNo, setCaseNo] = useState('');
-  const [court, setCourt] = useState('Bombay High Court (Appellate Side)');
+  const [court, setCourt] = useState('High Court of Bombay');
   const [petitioner, setPetitioner] = useState('');
-  const [advocate, setAdvocate] = useState('Adv. Priya S. Deshmukh');
+  const [advocate, setAdvocate] = useState('Adv. S.K. Deshmukh');
   const [saving, setSaving] = useState(false);
+  const canFileLegal = hasPermission(activeRole, 'FILE_LEGAL_WRIT');
 
   const handleCreateLegalCase = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!canFileLegal) {
+      alert(getPermissionReason(activeRole, 'FILE_LEGAL_WRIT'));
+      return;
+    }
     setSaving(true);
     try {
-      const caseId = `leg-${Date.now()}`;
+      const caseId = `case-${Date.now()}`;
       await legalCaseService.create({
         projectId,
         parcelId: 'pcl-pal-0144',
@@ -382,18 +411,25 @@ export const TwinLegalTab: React.FC<{ legalCases: LegalCase[]; projectId?: strin
           <h2 className="text-base font-extrabold text-[#0F172A]">Legal Cases & Land Reference Court Inquiries</h2>
           <p className="text-xs text-[#64748B] font-medium">High Court writ petitions, stay orders, and Section 64 reference appeals</p>
         </div>
-        <button
-          onClick={() => setLegalModalOpen(true)}
-          className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-[#0F172A] hover:bg-[#1E293B] text-white text-xs font-bold shadow-sm transition-all cursor-pointer"
-        >
-          <PlusCircle className="w-3.5 h-3.5" />
-          <span>Docket New Legal Writ</span>
-        </button>
+        {canFileLegal ? (
+          <button
+            onClick={() => setLegalModalOpen(true)}
+            className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-[#EA580C] hover:bg-[#C2410C] text-white text-xs font-bold shadow-sm transition-all cursor-pointer"
+          >
+            <PlusCircle className="w-3.5 h-3.5" />
+            <span>Docket New Legal Writ</span>
+          </button>
+        ) : (
+          <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#F1F5F9] border border-[#CBD5E1] text-[11px] font-bold text-[#64748B]">
+            <Lock className="w-3.5 h-3.5 text-[#94A3B8]" />
+            <span>Docketing Restricted</span>
+          </div>
+        )}
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {legalCases.map((l) => (
-          <div key={l.id} className="p-5 rounded-2xl bg-white border border-[#E2E8F0] shadow-sm space-y-3">
+          <div key={l.id} className="p-5 rounded-2xl bg-white border border-[#BAE6FD] shadow-sm space-y-3">
             <div className="flex justify-between items-center text-xs">
               <span className="font-mono text-[#0F172A] font-extrabold">{l.caseNumber} ({l.courtName})</span>
               <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-bold border ${l.stayGranted ? 'bg-[#FFF1F2] text-[#9F1239] border-[#FECDD3]' : 'bg-[#ECFDF5] text-[#047857] border-[#A7F3D0]'}`}>
@@ -402,9 +438,9 @@ export const TwinLegalTab: React.FC<{ legalCases: LegalCase[]; projectId?: strin
             </div>
             <h3 className="text-sm font-bold text-[#0F172A]">{l.litigantName}</h3>
             <p className="text-xs text-[#64748B] font-medium">Advocate on Record: <strong className="text-[#0F172A]">{l.advocateName}</strong></p>
-            <div className="flex justify-between text-[11px] text-[#64748B] pt-2 border-t border-[#E2E8F0]">
+            <div className="flex justify-between text-[11px] text-[#64748B] pt-2 border-t border-[#BAE6FD]/60">
               <span>Next Hearing: <strong className="text-[#0F172A] font-mono">{l.nextHearingDate}</strong></span>
-              <span className="font-bold text-[#047857]">CALA Response Affidavit Filed</span>
+              <span className="font-bold text-[#0369A1]">CALA Response Affidavit Filed</span>
             </div>
           </div>
         ))}
@@ -412,8 +448,8 @@ export const TwinLegalTab: React.FC<{ legalCases: LegalCase[]; projectId?: strin
 
       {legalModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-xs p-4">
-          <div className="w-full max-w-md bg-white rounded-2xl p-6 shadow-xl border border-[#E2E8F0] space-y-4">
-            <div className="flex justify-between items-center border-b border-[#E2E8F0] pb-3">
+          <div className="w-full max-w-md bg-white rounded-2xl p-6 shadow-xl border border-[#BAE6FD] space-y-4">
+            <div className="flex justify-between items-center border-b border-[#BAE6FD]/60 pb-3">
               <h3 className="text-sm font-extrabold text-[#0F172A]">Docket High Court Writ / Tribunal Appeal</h3>
               <button onClick={() => setLegalModalOpen(false)} className="text-[#64748B] hover:text-[#0F172A] cursor-pointer"><X className="w-4 h-4" /></button>
             </div>
@@ -426,7 +462,7 @@ export const TwinLegalTab: React.FC<{ legalCases: LegalCase[]; projectId?: strin
                   value={caseNo}
                   onChange={(e) => setCaseNo(e.target.value)}
                   placeholder="e.g. WP/10442/2026"
-                  className="w-full bg-[#F8FAFC] border border-[#CBD5E1] rounded-xl px-3 py-2 text-xs text-[#0F172A] focus:outline-none focus:border-[#0F172A]"
+                  className="w-full bg-[#F0F7FF] border border-[#BAE6FD] rounded-xl px-3 py-2 text-xs text-[#0F172A] focus:outline-none focus:border-[#EA580C]"
                 />
               </div>
               <div>
@@ -435,7 +471,7 @@ export const TwinLegalTab: React.FC<{ legalCases: LegalCase[]; projectId?: strin
                   type="text"
                   value={court}
                   onChange={(e) => setCourt(e.target.value)}
-                  className="w-full bg-[#F8FAFC] border border-[#CBD5E1] rounded-xl px-3 py-2 text-xs text-[#0F172A] focus:outline-none focus:border-[#0F172A]"
+                  className="w-full bg-[#F0F7FF] border border-[#BAE6FD] rounded-xl px-3 py-2 text-xs text-[#0F172A] focus:outline-none focus:border-[#EA580C]"
                 />
               </div>
               <div>
@@ -446,23 +482,16 @@ export const TwinLegalTab: React.FC<{ legalCases: LegalCase[]; projectId?: strin
                   value={petitioner}
                   onChange={(e) => setPetitioner(e.target.value)}
                   placeholder="e.g. Shri R.K. Patil vs State of Maharashtra"
-                  className="w-full bg-[#F8FAFC] border border-[#CBD5E1] rounded-xl px-3 py-2 text-xs text-[#0F172A] focus:outline-none focus:border-[#0F172A]"
+                  className="w-full bg-[#F0F7FF] border border-[#BAE6FD] rounded-xl px-3 py-2 text-xs text-[#0F172A] focus:outline-none focus:border-[#EA580C]"
                 />
               </div>
-              <div className="pt-2 flex justify-end gap-2">
-                <button
-                  type="button"
-                  onClick={() => setLegalModalOpen(false)}
-                  className="px-4 py-2 rounded-xl text-xs font-bold text-[#64748B] hover:bg-[#F8FAFC] cursor-pointer"
-                >
-                  Cancel
-                </button>
+              <div className="pt-2">
                 <button
                   type="submit"
                   disabled={saving}
-                  className="px-4 py-2 rounded-xl text-xs font-bold bg-[#0F172A] text-white hover:bg-[#1E293B] cursor-pointer disabled:opacity-50"
+                  className="w-full py-2.5 bg-[#EA580C] hover:bg-[#C2410C] text-white font-bold rounded-xl text-xs transition-all cursor-pointer"
                 >
-                  {saving ? 'Docketing...' : 'Docket Writ Petition'}
+                  {saving ? 'Registering Docket…' : 'Register Legal Docket & Seal'}
                 </button>
               </div>
             </form>
@@ -473,28 +502,33 @@ export const TwinLegalTab: React.FC<{ legalCases: LegalCase[]; projectId?: strin
   );
 };
 
-export const TwinFieldEvidenceTab: React.FC<{ evidence: FieldEvidence[] }> = ({ evidence }) => (
+export const TwinFieldEvidenceTab: React.FC<{ evidence: FieldEvidence[]; projectId?: string }> = ({ evidence }) => (
   <div className="space-y-4 font-sans">
     <div>
-      <h2 className="text-base font-extrabold text-[#0F172A]">Field Evidence & Ground Truth Sentinel</h2>
-      <p className="text-xs text-[#64748B] font-medium">High-resolution geotagged photographs, drone survey orthophotos & witness records</p>
+      <h2 className="text-base font-extrabold text-[#0F172A]">DGPS & Tamper-Evident Ground Field Evidence</h2>
+      <p className="text-xs text-[#64748B] font-medium">Real-time mobile uploads synchronized with cryptographic hash verification</p>
     </div>
 
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-      <div className="p-5 rounded-2xl bg-white border border-[#E2E8F0] shadow-sm space-y-3">
-        <div className="flex justify-between items-center text-xs">
-          <span className="font-mono text-[#0F172A] font-extrabold">EVD-GEO-MH-9021</span>
-          <span className="px-2.5 py-0.5 rounded-full text-[10px] bg-[#F1F5F9] text-[#0F172A] border border-[#CBD5E1] font-bold">DGPS VERIFIED</span>
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+      {evidence.map((ev) => (
+        <div key={ev.id} className="p-4 rounded-2xl bg-white border border-[#BAE6FD] shadow-sm space-y-2">
+          <div className="flex justify-between items-center text-xs">
+            <span className="font-mono text-[#0F172A] font-extrabold">INSPECTION #{ev.id}</span>
+            <span className="px-2 py-0.5 rounded-full text-[9px] font-bold bg-[#ECFDF5] text-[#047857] border border-[#A7F3D0]">
+              VERIFIED
+            </span>
+          </div>
+          <div className="h-32 bg-[#F0F7FF] rounded-xl flex items-center justify-center border border-[#BAE6FD] text-xs text-[#0369A1] font-mono">
+            📷 Geotagged Capture Photo Preview
+          </div>
+          <p className="text-xs text-[#0F172A] font-bold">{ev.notes || 'Boundary verification confirmed'}</p>
+          <div className="text-[10px] text-[#64748B] font-mono space-y-0.5 pt-1 border-t border-[#BAE6FD]/60">
+            <div>GPS: {ev.gpsCoordinates?.lat?.toFixed(4) || '19.0760'}° N, {ev.gpsCoordinates?.lng?.toFixed(4) || '72.8777'}° E (±{ev.accuracyMeters || 1.2}m)</div>
+            <div>Officer: {ev.capturedByOfficerName}</div>
+            <div className="truncate text-[#0369A1]">SHA-256: {ev.tamperProofHash}</div>
+          </div>
         </div>
-        <div className="h-32 bg-[#F8FAFC] rounded-xl flex items-center justify-center border border-[#E2E8F0] text-[#64748B] text-xs font-bold">
-          [Geotagged Survey Photo: Boundary Pillar QR-PIL-MH-0921]
-        </div>
-        <div className="text-[11px] text-[#64748B] space-y-1 font-medium">
-          <p>Coordinates: <strong className="text-[#0F172A] font-mono">19.6967° N, 72.7699° E</strong> (Accuracy: 0.4m)</p>
-          <p>Captured By: <strong className="text-[#0F172A]">Ramesh Sawant (Field Officer)</strong></p>
-          <p>SHA-256 Proof: <strong className="text-[#0F172A] font-mono text-[10px]">9a8b7c6d5e4f3a2b1c...</strong></p>
-        </div>
-      </div>
+      ))}
     </div>
   </div>
 );
@@ -502,54 +536,46 @@ export const TwinFieldEvidenceTab: React.FC<{ evidence: FieldEvidence[] }> = ({ 
 export const TwinIntelligenceTab: React.FC<{ prediction?: PredictionRecord }> = ({ prediction }) => (
   <div className="space-y-4 font-sans">
     <div>
-      <h2 className="text-base font-extrabold text-[#0F172A]">Predictive Intelligence & Delay Risk Forecaster</h2>
-      <p className="text-xs text-[#64748B] font-medium">AI/ML risk calibration model analyzing statutory pace and court litigation probability</p>
+      <h2 className="text-base font-extrabold text-[#0F172A]">AI Forecast Engine & Risk Analytics</h2>
+      <p className="text-xs text-[#64748B] font-medium">Predictive bottleneck simulation and statutory timeline breach forecasts</p>
     </div>
 
-    <div className="p-5 rounded-2xl bg-white border border-[#E2E8F0] shadow-sm space-y-4">
-      <div className="flex justify-between items-center text-xs">
-        <span className="font-mono text-[#0F172A] font-extrabold">{prediction?.modelName || 'BhumiShield-Forecaster-v4'}</span>
-        <span className="px-2.5 py-0.5 rounded-full text-xs bg-[#F1F5F9] text-[#0F172A] border border-[#CBD5E1] font-bold">
-          Confidence: {((prediction?.confidenceScore || 0.94) * 100).toFixed(0)}%
+    <div className="p-6 rounded-2xl bg-white border border-[#BAE6FD] shadow-sm space-y-4">
+      <div className="flex justify-between items-center border-b border-[#BAE6FD]/60 pb-3">
+        <h3 className="text-sm font-extrabold text-[#0F172A]">Corridor Milestone Forecast & Delay Risk</h3>
+        <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-[#FFF7ED] text-[#EA580C] border border-[#FFEDD5]">
+          LITIGATION RISK: {prediction ? `${prediction.litigationRiskScore}%` : '42%'}
         </span>
       </div>
 
-      <div className="grid grid-cols-3 gap-3 text-center">
-        <div className="p-3.5 bg-[#F8FAFC] rounded-xl border border-[#E2E8F0]">
-          <p className="text-xs text-[#64748B] font-bold">Predicted Delay</p>
-          <p className="text-lg font-extrabold text-[#0F172A]">+{prediction?.predictedDelayDays || 18} Days</p>
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
+        <div className="p-4 rounded-xl bg-[#F0F7FF] border border-[#BAE6FD]">
+          <span className="text-[#0369A1] font-bold">Predicted Handover Delay:</span>
+          <p className="text-xl font-extrabold text-[#0F172A] font-mono mt-1">+{prediction?.predictedDelayDays || 48} Days</p>
         </div>
-        <div className="p-3.5 bg-[#F8FAFC] rounded-xl border border-[#E2E8F0]">
-          <p className="text-xs text-[#64748B] font-bold">Litigation Risk Index</p>
-          <p className="text-lg font-extrabold text-[#0F172A]">{prediction?.litigationRiskScore || 24} / 100</p>
+        <div className="p-4 rounded-xl bg-[#F0F7FF] border border-[#BAE6FD]">
+          <span className="text-[#0369A1] font-bold">Cost Overrun Risk:</span>
+          <p className="text-sm font-extrabold text-[#EA580C] mt-1">{prediction?.costOverrunRiskPercentage ? `${prediction.costOverrunRiskPercentage}%` : 'Section 15 Claim Hearings Volume'}</p>
         </div>
-        <div className="p-3.5 bg-[#F8FAFC] rounded-xl border border-[#E2E8F0]">
-          <p className="text-xs text-[#64748B] font-bold">Cost Overrun Risk</p>
-          <p className="text-lg font-extrabold text-[#0F172A]">+{prediction?.costOverrunRiskPercentage || 4.8}%</p>
+        <div className="p-4 rounded-xl bg-[#F0F7FF] border border-[#BAE6FD]">
+          <span className="text-[#0369A1] font-bold">Model Confidence:</span>
+          <p className="text-xl font-extrabold text-[#059669] font-mono mt-1">{prediction ? `${(prediction.confidenceScore * 100).toFixed(1)}%` : '94.2%'}</p>
         </div>
-      </div>
-
-      <div>
-        <p className="text-xs font-bold text-[#0F172A] mb-1">Key Factors & AI Observations:</p>
-        <ul className="list-disc list-inside text-xs text-[#64748B] space-y-1 font-medium">
-          {(prediction?.factorsContributing || [
-            'High compliance with Sec 19 declaration timelines',
-            'PFMS direct credit activation completed',
-            '1 pending High Court writ petition under review',
-          ]).map((f, i) => (
-            <li key={i}>{f}</li>
-          ))}
-        </ul>
       </div>
     </div>
   </div>
 );
 
-export const TwinActionsTab: React.FC<{ projectId: string }> = ({ projectId }) => {
-  const { userProfile, activeRole } = useAuth();
+export const TwinActionsTab: React.FC<{ projectId?: string }> = ({ projectId = 'proj-bullet-train-sec-3' }) => {
+  const { activeRole, userProfile } = useAuth();
   const [issuedMessage, setIssuedMessage] = useState<string | null>(null);
+  const canIssueDirective = hasPermission(activeRole, 'ISSUE_INTERVENTION_DIRECTIVE');
 
   const handleIssueDirective = async (type: string, desc: string) => {
+    if (!canIssueDirective) {
+      alert(getPermissionReason(activeRole, 'ISSUE_INTERVENTION_DIRECTIVE'));
+      return;
+    }
     try {
       await auditService.logAction({
         targetCollection: 'projects',
@@ -582,30 +608,44 @@ export const TwinActionsTab: React.FC<{ projectId: string }> = ({ projectId }) =
       )}
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div className="p-5 rounded-2xl bg-white border border-[#E2E8F0] shadow-sm space-y-3">
+        <div className="p-5 rounded-2xl bg-white border border-[#BAE6FD] shadow-sm space-y-3">
           <h3 className="text-xs font-extrabold text-[#0F172A]">Issue Provisional Solatium Clearance</h3>
           <p className="text-[11px] text-[#64748B] font-medium">
             Direct CALA to execute Supreme Court SLP standard affidavit and release 50% provisional solatium under Section 30.
           </p>
-          <button
-            onClick={() => handleIssueDirective('Provisional Solatium Release', '50% release under Sec 30')}
-            className="w-full py-2.5 bg-[#0F172A] hover:bg-[#1E293B] text-white border border-[#0F172A] rounded-xl text-xs font-bold shadow-sm transition-all cursor-pointer"
-          >
-            Issue Order to CALA
-          </button>
+          {canIssueDirective ? (
+            <button
+              onClick={() => handleIssueDirective('Provisional Solatium Release', '50% release under Sec 30')}
+              className="w-full py-2.5 bg-[#EA580C] hover:bg-[#C2410C] text-white rounded-xl text-xs font-bold shadow-sm transition-all cursor-pointer"
+            >
+              Issue Order to CALA
+            </button>
+          ) : (
+            <div className="w-full py-2 bg-[#F1F5F9] border border-[#CBD5E1] rounded-xl text-[11px] font-bold text-[#64748B] text-center flex items-center justify-center gap-1.5">
+              <Lock className="w-3.5 h-3.5 text-[#94A3B8]" />
+              <span>Directive Issuance Restricted</span>
+            </div>
+          )}
         </div>
 
-        <div className="p-5 rounded-2xl bg-white border border-[#E2E8F0] shadow-sm space-y-3">
+        <div className="p-5 rounded-2xl bg-white border border-[#BAE6FD] shadow-sm space-y-3">
           <h3 className="text-xs font-extrabold text-[#0F172A]">Convene High-Powered State Clearance Board</h3>
           <p className="text-[11px] text-[#64748B] font-medium">
             Transmit expedited statutory Section 2 Forest clearance request to Principal Chief Conservator of Forests.
           </p>
-          <button
-            onClick={() => handleIssueDirective('State NOC Escalation', 'Expedited Forest NOC transmission')}
-            className="w-full py-2.5 bg-[#0F172A] hover:bg-[#1E293B] text-white border border-[#0F172A] rounded-xl text-xs font-bold shadow-sm transition-all cursor-pointer"
-          >
-            Transmit State NOC Directive
-          </button>
+          {canIssueDirective ? (
+            <button
+              onClick={() => handleIssueDirective('State NOC Escalation', 'Expedited Forest NOC transmission')}
+              className="w-full py-2.5 bg-[#EA580C] hover:bg-[#C2410C] text-white rounded-xl text-xs font-bold shadow-sm transition-all cursor-pointer"
+            >
+              Transmit State NOC Directive
+            </button>
+          ) : (
+            <div className="w-full py-2 bg-[#F1F5F9] border border-[#CBD5E1] rounded-xl text-[11px] font-bold text-[#64748B] text-center flex items-center justify-center gap-1.5">
+              <Lock className="w-3.5 h-3.5 text-[#94A3B8]" />
+              <span>Directive Issuance Restricted</span>
+            </div>
+          )}
         </div>
       </div>
     </div>

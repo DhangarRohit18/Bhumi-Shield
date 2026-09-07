@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 import { WorkflowEvent, Parcel } from '../../../../types';
-import { CheckCircle2, Circle, Clock, ShieldCheck, ScrollText, AlertTriangle, Zap } from 'lucide-react';
+import { CheckCircle2, Circle, Clock, ShieldCheck, ScrollText, AlertTriangle, Zap, Lock } from 'lucide-react';
 import { computeWeightedProgress, getStatusColor } from '../../../../utils/progressWeights';
+import { useAuth } from '../../../../contexts/AuthContext';
+import { hasPermission, getPermissionReason } from '../../../../utils/rbac';
 
 interface LifecycleProps {
   currentStage: string;
@@ -16,7 +18,9 @@ export const TwinLifecycleTab: React.FC<LifecycleProps> = ({
   onAdvanceStage,
   parcels = [],
 }) => {
+  const { activeRole } = useAuth();
   const [advancing, setAdvancing] = useState(false);
+  const canAdvance = hasPermission(activeRole, 'ADVANCE_LIFECYCLE_STAGE');
 
   const stages: { key: string; label: string; desc: string; actSec: string }[] = [
     { key: 'Proposal', label: '1. Proposal & Requisition', desc: 'Administrative Approval & Alignment Sanction', actSec: 'Sec 4' },
@@ -39,6 +43,10 @@ export const TwinLifecycleTab: React.FC<LifecycleProps> = ({
   );
 
   const handleAdvance = async () => {
+    if (!canAdvance) {
+      alert(getPermissionReason(activeRole, 'ADVANCE_LIFECYCLE_STAGE'));
+      return;
+    }
     if (!nextStageObj) return;
     setAdvancing(true);
     try {
@@ -52,15 +60,20 @@ export const TwinLifecycleTab: React.FC<LifecycleProps> = ({
     <div className="space-y-6 font-sans">
       {/* Statutory Stage Advancement Action Banner */}
       {nextStageObj && (
-        <div className="p-5 rounded-2xl bg-white border border-[#E2E8F0] shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div className="p-5 rounded-2xl bg-white border border-[#BAE6FD] shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div className="flex items-center gap-3">
-            <div className="p-2.5 rounded-xl bg-[#0F172A] text-white border border-[#0F172A]">
+            <div className="p-2.5 rounded-xl bg-[#EA580C] text-white shadow-sm">
               <ScrollText className="w-5 h-5 text-white" />
             </div>
             <div>
-              <span className="text-[10px] uppercase font-extrabold text-[#0F172A] tracking-wider">
-                Statutory Milestone Progression
-              </span>
+              <div className="flex items-center gap-2">
+                <span className="text-[10px] uppercase font-extrabold text-[#0369A1] tracking-wider">
+                  Statutory Milestone Progression
+                </span>
+                <span className="text-[9px] font-mono font-bold px-1.5 py-0.5 rounded bg-[#FFF7ED] text-[#EA580C] border border-[#FFEDD5]">
+                  {canAdvance ? '✓ Stage Advancement Authorized' : '🔒 Authorization Required'}
+                </span>
+              </div>
               <h3 className="text-sm font-extrabold text-[#0F172A]">
                 Ready to advance to {nextStageObj.label}?
               </h3>
@@ -70,14 +83,21 @@ export const TwinLifecycleTab: React.FC<LifecycleProps> = ({
             </div>
           </div>
 
-          <button
-            onClick={handleAdvance}
-            disabled={advancing}
-            className="px-4 py-2.5 rounded-xl bg-[#0F172A] hover:bg-[#1E293B] text-white border border-[#0F172A] text-xs font-bold shadow-sm flex items-center justify-center gap-2 transition-all cursor-pointer"
-          >
-            <ShieldCheck className="w-4 h-4 text-white" />
-            <span>{advancing ? 'Publishing Order…' : `Advance to ${nextStageObj.label}`}</span>
-          </button>
+          {canAdvance ? (
+            <button
+              onClick={handleAdvance}
+              disabled={advancing}
+              className="px-4 py-2.5 rounded-xl bg-[#EA580C] hover:bg-[#C2410C] text-white text-xs font-bold shadow-sm flex items-center justify-center gap-2 transition-all cursor-pointer"
+            >
+              <ShieldCheck className="w-4 h-4 text-white" />
+              <span>{advancing ? 'Publishing Order…' : `Advance to ${nextStageObj.label}`}</span>
+            </button>
+          ) : (
+            <div className="flex items-center gap-2 px-3 py-2 rounded-xl bg-[#F1F5F9] border border-[#CBD5E1] text-xs font-bold text-[#64748B]">
+              <Lock className="w-4 h-4 text-[#94A3B8]" />
+              <span>Requires National/State Admin Authority</span>
+            </div>
+          )}
         </div>
       )}
 

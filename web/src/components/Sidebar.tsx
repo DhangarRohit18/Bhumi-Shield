@@ -10,6 +10,7 @@ import {
 } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { UserRole } from '../types';
+import { ROLE_CAPABILITIES } from '../utils/rbac';
 
 export type MainWorkspaceId =
   | 'command_center'
@@ -123,9 +124,19 @@ export const Sidebar: React.FC<SidebarProps> = ({
           <RefreshCw className={`w-3.5 h-3.5 text-[#0284C7] ${seeding ? 'animate-spin' : ''}`} />
         </button>
 
-        <div className="p-2.5 rounded-xl bg-[#F0F7FF] border border-[#BAE6FD] text-[11px] text-[#0369A1] flex items-center gap-2">
-          <Lock className="w-3.5 h-3.5 text-[#EA580C] shrink-0" />
-          <span>Active Role: <strong className="text-[#0F172A] font-extrabold">{activeRole}</strong></span>
+        <div className="p-3 rounded-xl bg-[#F0F7FF] border border-[#BAE6FD] text-[11px] text-[#0369A1] space-y-1">
+          <div className="flex items-center justify-between">
+            <span className="flex items-center gap-1.5 font-extrabold text-[#0F172A]">
+              <Lock className="w-3.5 h-3.5 text-[#EA580C]" />
+              <span>{activeRole}</span>
+            </span>
+            <span className="text-[9px] font-mono font-bold px-1.5 py-0.5 rounded bg-[#FFF7ED] text-[#EA580C] border border-[#FFEDD5]">
+              {ROLE_CAPABILITIES[activeRole]?.scope || 'Jurisdiction'}
+            </span>
+          </div>
+          <p className="text-[10px] text-[#64748B] leading-tight">
+            {ROLE_CAPABILITIES[activeRole]?.description || 'Statutory clearance'}
+          </p>
         </div>
       </div>
     </aside>

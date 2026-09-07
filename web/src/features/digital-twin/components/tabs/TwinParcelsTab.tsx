@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import { Village, Parcel, AffectedFamily, CompensationAward, RRCase, LegalCase } from '../../../../types';
-import { MapPin, ChevronRight, QrCode, DollarSign, Home, Scale, Eye, PlusCircle, CheckCircle, Edit3, Trash2, X } from 'lucide-react';
+import { MapPin, ChevronRight, QrCode, DollarSign, Home, Scale, Eye, PlusCircle, CheckCircle, Edit3, Trash2, X, Lock } from 'lucide-react';
 import { parcelService, compensationService } from '../../../../services/entities.service';
 import { auditService } from '../../../../services/audit.service';
 import { useAuth } from '../../../../contexts/AuthContext';
+import { hasPermission, getPermissionReason } from '../../../../utils/rbac';
 
 interface ParcelsTabProps {
   villages: Village[];
@@ -28,6 +29,12 @@ export const TwinParcelsTab: React.FC<ParcelsTabProps> = ({
   const [selectedVillageId, setSelectedVillageId] = useState<string>('');
   const [selectedParcelId, setSelectedParcelId] = useState<string | null>(null);
 
+  // RBAC Permission checks
+  const canIntake = hasPermission(activeRole, 'INTAKE_PARCEL');
+  const canEdit = hasPermission(activeRole, 'EDIT_PARCEL');
+  const canSignAward = hasPermission(activeRole, 'SIGN_AWARD_DECREE');
+  const canDisburse = hasPermission(activeRole, 'MARK_PARCEL_DISBURSED');
+
   // Modal State for Real-Time Creation & Editing
   const [modalOpen, setModalOpen] = useState(false);
   const [editingParcel, setEditingParcel] = useState<Parcel | null>(null);
@@ -50,6 +57,10 @@ export const TwinParcelsTab: React.FC<ParcelsTabProps> = ({
   const activeLegal = legalCases.find((l) => l.parcelId === activeParcel?.id);
 
   const openCreateModal = () => {
+    if (!canIntake) {
+      alert(getPermissionReason(activeRole, 'INTAKE_PARCEL'));
+      return;
+    }
     setEditingParcel(null);
     setKhasraNo('');
     setAreaAcres('2.5');
@@ -60,6 +71,10 @@ export const TwinParcelsTab: React.FC<ParcelsTabProps> = ({
   };
 
   const openEditModal = (p: Parcel) => {
+    if (!canEdit) {
+      alert(getPermissionReason(activeRole, 'EDIT_PARCEL'));
+      return;
+    }
     setEditingParcel(p);
     setKhasraNo(p.khasraSurveyNo);
     setAreaAcres(p.areaAcres.toString());
@@ -132,6 +147,15 @@ export const TwinParcelsTab: React.FC<ParcelsTabProps> = ({
   };
 
   const handleUpdateStatus = async (parcelId: string, nextStatus: 'AWARDED' | 'DISBURSED' | 'IDENTIFIED') => {
+    if (nextStatus === 'AWARDED' && !canSignAward) {
+      alert(getPermissionReason(activeRole, 'SIGN_AWARD_DECREE'));
+      return;
+    }
+    if (nextStatus === 'DISBURSED' && !canDisburse) {
+      alert(getPermissionReason(activeRole, 'MARK_PARCEL_DISBURSED'));
+      return;
+    }
+
     await parcelService.update(parcelId, { status: nextStatus });
     await auditService.logAction({
       targetCollection: 'parcels',
@@ -176,22 +200,29 @@ export const TwinParcelsTab: React.FC<ParcelsTabProps> = ({
             ))}
           </select>
 
-          <button
-            onClick={openCreateModal}
-            className="px-4 py-2 bg-[#0F172A] hover:bg-[#1E293B] text-white border border-[#0F172A] rounded-xl text-xs font-bold flex items-center gap-1.5 shadow-sm transition-all cursor-pointer"
-          >
-            <PlusCircle className="w-4 h-4 text-white" />
-            <span>+ Intake Cadastral Plot</span>
-          </button>
+          {canIntake ? (
+            <button
+              onClick={openCreateModal}
+              className="px-4 py-2 bg-[#EA580C] hover:bg-[#C2410C] text-white border border-[#EA580C] rounded-xl text-xs font-bold flex items-center gap-1.5 shadow-sm transition-all cursor-pointer"
+            >
+              <PlusCircle className="w-4 h-4 text-white" />
+              <span>+ Intake Cadastral Plot</span>
+            </button>
+          ) : (
+            <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#F1F5F9] border border-[#CBD5E1] text-[11px] font-bold text-[#64748B]" title="Intake restricted to authorized Acquisition and Revenue officers">
+              <Lock className="w-3.5 h-3.5 text-[#94A3B8]" />
+              <span>Intake Restricted</span>
+            </div>
+          )}
         </div>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Left 2 Cols: Parcels Cadastral Table with Real-time Edit Buttons */}
-        <div className="lg:col-span-2 rounded-2xl border border-[#E2E8F0] overflow-hidden shadow-sm bg-white">
-          <div className="p-4 bg-[#F8FAFC] border-b border-[#E2E8F0] flex items-center justify-between">
+        <div className="lg:col-span-2 rounded-2xl border border-[#BAE6FD] overflow-hidden shadow-sm bg-white">
+          <div className="p-4 bg-[#F0F7FF] border-b border-[#BAE6FD] flex items-center justify-between">
             <h3 className="text-xs font-extrabold text-[#0F172A]">Live Cadastral Plots in Jurisdiction ({filteredParcels.length})</h3>
-            <span className="text-[11px] text-[#0F172A] font-bold flex items-center gap-1">
+            <span className="text-[11px] text-[#0369A1] font-bold flex items-center gap-1">
               <span className="w-2 h-2 rounded-full bg-[#10B981] animate-ping" />
               <span>Live Subscriptions Active</span>
             </span>
@@ -199,7 +230,7 @@ export const TwinParcelsTab: React.FC<ParcelsTabProps> = ({
 
           <div className="overflow-x-auto">
             <table className="w-full text-left text-xs text-[#0F172A]">
-              <thead className="bg-[#F8FAFC] text-[10px] uppercase tracking-wider text-[#64748B] font-extrabold border-b border-[#E2E8F0]">
+              <thead className="bg-[#F0F7FF]/50 text-[10px] uppercase tracking-wider text-[#64748B] font-extrabold border-b border-[#BAE6FD]/60">
                 <tr>
                   <th className="p-3">Khasra Survey #</th>
                   <th className="p-3">Classification</th>
@@ -210,7 +241,7 @@ export const TwinParcelsTab: React.FC<ParcelsTabProps> = ({
                   <th className="p-3 text-right">Actions</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-[#E2E8F0]">
+              <tbody className="divide-y divide-[#BAE6FD]/40">
                 {filteredParcels.map((p) => {
                   const isSelected = p.id === (activeParcel?.id || '');
                   return (
@@ -218,15 +249,15 @@ export const TwinParcelsTab: React.FC<ParcelsTabProps> = ({
                       key={p.id}
                       onClick={() => setSelectedParcelId(p.id!)}
                       className={`cursor-pointer transition-colors ${
-                        isSelected ? 'bg-[#F8FAFC] border-l-4 border-l-[#0F172A]' : 'hover:bg-[#F8FAFC]/60'
+                        isSelected ? 'bg-[#E0F2FE] border-l-4 border-l-[#EA580C]' : 'hover:bg-[#F0F7FF]/60'
                       }`}
                     >
                       <td className="p-3 font-extrabold text-[#0F172A] flex items-center gap-1.5">
-                        <MapPin className="w-3.5 h-3.5 text-[#0F172A]" />
+                        <MapPin className="w-3.5 h-3.5 text-[#EA580C]" />
                         <span>{p.khasraSurveyNo}</span>
                       </td>
                       <td className="p-3">
-                        <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-[#F1F5F9] text-[#0F172A] border border-[#CBD5E1]">
+                        <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-[#F0F7FF] text-[#0369A1] border border-[#BAE6FD]">
                           {p.landClassification}
                         </span>
                       </td>
@@ -243,13 +274,19 @@ export const TwinParcelsTab: React.FC<ParcelsTabProps> = ({
                         </span>
                       </td>
                       <td className="p-3 text-right" onClick={(e) => e.stopPropagation()}>
-                        <button
-                          onClick={() => openEditModal(p)}
-                          className="p-1.5 rounded-lg hover:bg-[#F1F5F9] text-[#64748B] hover:text-[#0F172A] transition-all cursor-pointer"
-                          title="Edit Cadastral Plot"
-                        >
-                          <Edit3 className="w-3.5 h-3.5" />
-                        </button>
+                        {canEdit ? (
+                          <button
+                            onClick={() => openEditModal(p)}
+                            className="p-1.5 rounded-lg hover:bg-[#E0F2FE] text-[#0369A1] hover:text-[#0F172A] transition-all cursor-pointer"
+                            title="Edit Cadastral Plot"
+                          >
+                            <Edit3 className="w-3.5 h-3.5" />
+                          </button>
+                        ) : (
+                          <span className="p-1.5 text-[#94A3B8]" title="Read-Only View">
+                            <Lock className="w-3.5 h-3.5 inline" />
+                          </span>
+                        )}
                       </td>
                     </tr>
                   );
@@ -260,10 +297,10 @@ export const TwinParcelsTab: React.FC<ParcelsTabProps> = ({
         </div>
 
         {/* Right Col: Deep Case Inspector (Parcel -> Case) with Real-Time Mutation Actions */}
-        <div className="p-5 rounded-2xl border border-[#E2E8F0] shadow-sm bg-white space-y-4 font-sans">
-          <div className="flex items-center justify-between border-b border-[#E2E8F0] pb-3">
+        <div className="p-5 rounded-2xl border border-[#BAE6FD] shadow-sm bg-white space-y-4 font-sans">
+          <div className="flex items-center justify-between border-b border-[#BAE6FD]/60 pb-3">
             <div>
-              <span className="text-[10px] font-mono text-[#64748B] font-bold">INSPECTING CADASTRAL PLOT</span>
+              <span className="text-[10px] font-mono text-[#0369A1] font-bold">INSPECTING CADASTRAL PLOT</span>
               <h3 className="text-sm font-extrabold text-[#0F172A]">Khasra #{activeParcel?.khasraSurveyNo || '142/A-1'}</h3>
             </div>
             <span className="px-2.5 py-0.5 rounded-full text-[10px] font-extrabold bg-[#0F172A] text-white">
@@ -271,19 +308,36 @@ export const TwinParcelsTab: React.FC<ParcelsTabProps> = ({
             </span>
           </div>
 
-          {/* Quick Statutory Transition Trigger */}
-          <div className="p-3.5 bg-[#F8FAFC] rounded-xl border border-[#E2E8F0] space-y-2">
-            <span className="text-[10px] uppercase font-extrabold text-[#64748B]">Statutory Status Action</span>
+          {/* Quick Statutory Transition Trigger with RBAC Enforcement */}
+          <div className="p-3.5 bg-[#F0F7FF] rounded-xl border border-[#BAE6FD] space-y-2">
+            <div className="flex items-center justify-between">
+              <span className="text-[10px] uppercase font-extrabold text-[#0369A1]">Statutory Status Action</span>
+              <span className="text-[9px] font-mono font-bold text-[#EA580C]">
+                {canSignAward ? '✓ Authorized' : '🔒 Restricted'}
+              </span>
+            </div>
             <div className="flex gap-2">
               <button
                 onClick={() => activeParcel?.id && handleUpdateStatus(activeParcel.id, 'AWARDED')}
-                className="flex-1 py-1.5 px-2 bg-[#0F172A] hover:bg-[#1E293B] text-white border border-[#0F172A] rounded-lg text-[11px] font-bold transition-all cursor-pointer shadow-sm"
+                disabled={!canSignAward}
+                className={`flex-1 py-1.5 px-2 rounded-lg text-[11px] font-bold transition-all shadow-xs ${
+                  canSignAward
+                    ? 'bg-[#EA580C] hover:bg-[#C2410C] text-white cursor-pointer'
+                    : 'bg-[#E2E8F0] text-[#94A3B8] cursor-not-allowed'
+                }`}
+                title={canSignAward ? 'Sign Section 23 Award Decree' : getPermissionReason(activeRole, 'SIGN_AWARD_DECREE')}
               >
                 Sign Award Decree
               </button>
               <button
                 onClick={() => activeParcel?.id && handleUpdateStatus(activeParcel.id, 'DISBURSED')}
-                className="flex-1 py-1.5 px-2 bg-white hover:bg-[#F1F5F9] text-[#0F172A] border border-[#CBD5E1] rounded-lg text-[11px] font-bold transition-all cursor-pointer shadow-sm"
+                disabled={!canDisburse}
+                className={`flex-1 py-1.5 px-2 rounded-lg text-[11px] font-bold transition-all shadow-xs ${
+                  canDisburse
+                    ? 'bg-white hover:bg-[#E0F2FE] text-[#0F172A] border border-[#BAE6FD] cursor-pointer'
+                    : 'bg-[#F1F5F9] text-[#94A3B8] border border-[#E2E8F0] cursor-not-allowed'
+                }`}
+                title={canDisburse ? 'Mark Compensation Disbursed' : getPermissionReason(activeRole, 'MARK_PARCEL_DISBURSED')}
               >
                 Mark Disbursed
               </button>

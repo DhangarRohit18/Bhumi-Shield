@@ -220,7 +220,7 @@ export const ProjectDigitalTwin: React.FC = () => {
         {activeTab === 'documents' && <TwinDocumentsTab documents={projectDocuments} />}
         {activeTab === 'compensation' && <TwinCompensationTab compensations={projectCompensations} />}
         {activeTab === 'rr' && <TwinRrTab rrCases={projectRRCases} />}
-        {activeTab === 'legal' && <TwinLegalTab legalCases={projectLegalCases} />}
+        {activeTab === 'legal' && <TwinLegalTab projectId={activeProject.id || 'proj-bullet-train-sec-3'} legalCases={projectLegalCases} />}
         {activeTab === 'field_evidence' && <TwinFieldEvidenceTab evidence={projectFieldEvidence} />}
         {activeTab === 'intelligence' && <TwinIntelligenceTab prediction={projectPrediction} />}
         {activeTab === 'actions' && <TwinActionsTab projectId={activeProject.id || ''} />}

@@ -2,6 +2,7 @@ import React from 'react';
 import { Shield, Lock, Bell, User, CheckCircle2, LogOut } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { UserRole } from '../types';
+import { ROLE_CAPABILITIES } from '../utils/rbac';
 
 interface HeaderProps {
   onLogout?: () => void;
@@ -58,6 +59,9 @@ export const Header: React.FC<HeaderProps> = ({ onLogout }) => {
                 </option>
               ))}
             </select>
+            <span className="hidden lg:inline-block text-[10px] font-mono font-bold px-2 py-0.5 rounded-md bg-[#FFF7ED] text-[#EA580C] border border-[#FFEDD5]">
+              {ROLE_CAPABILITIES[activeRole]?.scope || 'Jurisdiction'}
+            </span>
           </div>
 
           {/* Profile Card */}
