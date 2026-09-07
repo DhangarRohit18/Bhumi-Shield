@@ -251,36 +251,97 @@ export const GISCommandMap: React.FC<MapProps> = ({
         </div>
       )}
 
-      {/* Leaflet Map Canvas */}
-      <MapContainer
-        center={[INDIA_CENTER.lat, INDIA_CENTER.lng]}
-        zoom={INDIA_CENTER.zoom}
-        className="w-full h-full"
-        zoomControl={false}
-      >
-        <TileLayer
-          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-        />
+      {/* Leaflet Map Canvas with dynamic radar styling */}
+      <div className={`w-full h-full relative transition-all duration-700 ${
+        visionMode === 'SAR_RADAR' ? 'filter contrast-150 brightness-95' :
+        visionMode === 'INSAR_SUBSIDENCE' ? 'filter saturate-150 contrast-125' :
+        visionMode === 'SAR_CHANGE' ? 'filter brightness-105 contrast-110' : ''
+      }`}>
+        {/* Animated Radar Sweep Grid when in SAR mode */}
+        {visionMode === 'SAR_RADAR' && (
+          <div className="absolute inset-0 pointer-events-none z-[400] bg-[radial-gradient(circle_at_center,rgba(6,182,212,0.12)_0%,transparent_70%)]">
+            <div className="w-full h-full bg-[linear-gradient(to_right,rgba(6,182,212,0.08)_1px,transparent_1px),linear-gradient(to_bottom,rgba(6,182,212,0.08)_1px,transparent_1px)] bg-[size:40px_40px]" />
+          </div>
+        )}
 
-        <MapViewController drillDown={drillDown} parcels={parcels} />
+        {/* InSAR Interferometric Fringe Gradient when in InSAR mode */}
+        {visionMode === 'INSAR_SUBSIDENCE' && (
+          <div className="absolute inset-0 pointer-events-none z-[400] bg-[radial-gradient(ellipse_at_top,rgba(239,68,68,0.1)_0%,rgba(16,185,129,0.1)_50%,transparent_80%)]" />
+        )}
 
-        {/* Strategic Corridor Polylines */}
-        {STRATEGIC_CORRIDORS.map((corridor) => (
-          <Polyline
-            key={corridor.projectId}
-            positions={corridor.points}
-            pathOptions={{
-              color: corridor.projectId === 'proj-bullet-train-sec-3' ? '#0F172A' : '#334155',
-              weight: 4,
-              opacity: 0.9,
-              dashArray: corridor.projectId === 'proj-eastern-dfc' ? '6, 8' : undefined,
-            }}
-            eventHandlers={{
-              click: () => onSelectProject(corridor.projectId),
-            }}
-          />
-        ))}
+        <MapContainer
+          center={[INDIA_CENTER.lat, INDIA_CENTER.lng]}
+          zoom={INDIA_CENTER.zoom}
+          className="w-full h-full"
+          zoomControl={false}
+        >
+          {visionMode === 'OPTICAL' && (
+            <TileLayer
+              key="optical-layer"
+              attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+              url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+            />
+          )}
+
+          {visionMode === 'SAR_RADAR' && (
+            <TileLayer
+              key="sar-radar-layer"
+              attribution='&copy; Copernicus Sentinel-1 SAR C-Band | ESA / ISRO NISAR'
+              url="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"
+              className="filter hue-rotate-180 invert-20 contrast-150"
+            />
+          )}
+
+          {visionMode === 'INSAR_SUBSIDENCE' && (
+            <TileLayer
+              key="insar-topo-layer"
+              attribution='&copy; InSAR Ground Displacement Radar | USGS / Survey of India'
+              url="https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}"
+            />
+          )}
+
+          {visionMode === 'SAR_CHANGE' && (
+            <TileLayer
+              key="sar-change-layer"
+              attribution='&copy; Sentinel-1 Temporal Change Radar Δσ⁰ | ESA'
+              url="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"
+            />
+          )}
+
+          <MapViewController drillDown={drillDown} parcels={parcels} />
+
+          {/* Strategic Corridor Polylines with visionMode-specific neon styling */}
+          {STRATEGIC_CORRIDORS.map((corridor) => {
+            let corridorColor = corridor.projectId === 'proj-bullet-train-sec-3' ? '#0F172A' : '#334155';
+            let corridorWeight = 4;
+
+            if (visionMode === 'SAR_RADAR') {
+              corridorColor = '#06B6D4'; // Glowing Cyan Radar
+              corridorWeight = 5;
+            } else if (visionMode === 'INSAR_SUBSIDENCE') {
+              corridorColor = '#10B981'; // Green InSAR deformation line
+              corridorWeight = 5;
+            } else if (visionMode === 'SAR_CHANGE') {
+              corridorColor = '#8B5CF6'; // Violet possession line
+              corridorWeight = 5;
+            }
+
+            return (
+              <Polyline
+                key={corridor.projectId + visionMode}
+                positions={corridor.points}
+                pathOptions={{
+                  color: corridorColor,
+                  weight: corridorWeight,
+                  opacity: 0.95,
+                  dashArray: corridor.projectId === 'proj-eastern-dfc' ? '6, 8' : undefined,
+                }}
+                eventHandlers={{
+                  click: () => onSelectProject(corridor.projectId),
+                }}
+              />
+            );
+          })}
 
         {/* Intelligent Heatmap Parcel Circle Markers */}
         {parcels.map((parcel) => {
@@ -384,6 +445,7 @@ export const GISCommandMap: React.FC<MapProps> = ({
           />
         ))}
       </MapContainer>
+      </div>
 
       {/* Parcel Passport Slide-Over Drawer */}
       <ParcelPassportDrawer
