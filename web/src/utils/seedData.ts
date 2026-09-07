@@ -1,4 +1,5 @@
 import {
+  userService,
   projectService,
   parcelService,
   affectedFamilyService,
@@ -31,6 +32,80 @@ export async function seedBhumiShieldDemoData(logCallback?: (msg: string) => voi
   };
 
   log('Initiating BHUMI-SHIELD National Command Center Dataset Seed...');
+
+  // 0. Official Users & Role Identities
+  log('Seeding Official Users & Identity Verification...');
+  await userService.create({
+    uid: 'user-nat-exec-01',
+    displayName: 'Dr. Rajiv Gauba, Cabinet Sec.',
+    email: 'rajiv.gauba@nic.in',
+    phoneNumber: '+91 11 2301 2345',
+    role: 'NATIONAL_EXECUTIVE',
+    isActive: true,
+    departmentId: 'dept-nhsrcl',
+  }, 'user-nat-exec-01');
+
+  await userService.create({
+    uid: 'user-sec-rev-01',
+    displayName: 'Smt. Sujata Sharma, IAS (Sec. Revenue)',
+    email: 'sujata.sharma@maharashtra.gov.in',
+    phoneNumber: '+91 22 2202 5411',
+    role: 'NATIONAL_EXECUTIVE',
+    stateId: 'state-mh',
+    isActive: true,
+  }, 'user-sec-rev-01');
+
+  await userService.create({
+    uid: 'user-dm-palghar',
+    displayName: 'Shri Vikram Joshi, IAS (DM & Collector Palghar)',
+    email: 'collector.palghar@maharashtra.gov.in',
+    phoneNumber: '+91 2525 252100',
+    role: 'NATIONAL_EXECUTIVE',
+    districtId: 'dist-palghar',
+    stateId: 'state-mh',
+    isActive: true,
+  }, 'user-dm-palghar');
+
+  await userService.create({
+    uid: 'user-cala-palghar',
+    displayName: 'Shri Sanjay V. Patil (CALA & SDO Palghar)',
+    email: 'cala.palghar@maharashtra.gov.in',
+    phoneNumber: '+91 2525 252204',
+    role: 'FIELD_ACQUISITION',
+    districtId: 'dist-palghar',
+    stateId: 'state-mh',
+    isActive: true,
+  }, 'user-cala-palghar');
+
+  await userService.create({
+    uid: 'user-cpm-nhsrcl',
+    displayName: 'Er. Rajesh Kulkarni (Chief Project Manager NHSRCL)',
+    email: 'rajesh.kulkarni@nhsrcl.in',
+    phoneNumber: '+91 22 6824 5000',
+    role: 'FIELD_ACQUISITION',
+    departmentId: 'dept-nhsrcl',
+    isActive: true,
+  }, 'user-cpm-nhsrcl');
+
+  await userService.create({
+    uid: 'user-auditor-cag',
+    displayName: 'Smt. Nandini Sundaram (Senior Audit Officer CAG)',
+    email: 'nandini.sundaram@cag.gov.in',
+    phoneNumber: '+91 11 2323 5432',
+    role: 'AUDIT_CITIZEN',
+    isActive: true,
+  }, 'user-auditor-cag');
+
+  await userService.create({
+    uid: 'user-citizen-paf',
+    displayName: 'Smt. Anusaya Pandurang Patil (PAF Landowner)',
+    email: 'anusaya.patil@kisanmail.in',
+    phoneNumber: '+91 98230 44092',
+    role: 'AUDIT_CITIZEN',
+    districtId: 'dist-palghar',
+    stateId: 'state-mh',
+    isActive: true,
+  }, 'user-citizen-paf');
 
   // 1. States
   log('Seeding National States Master...');
