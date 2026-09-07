@@ -1,8 +1,9 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
 import 'models/field_models.dart';
 import 'services/field_service.dart';
+import 'ar_cadastral_hud_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -619,10 +620,22 @@ class _MobileDashboardRootState extends State<MobileDashboardRoot> {
                         side: const BorderSide(color: Color(0xFFC5B49E)),
                         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
                       ),
-                      onPressed: () {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text('AR Geofence Viewport Active (Cadastral Boundary 142/A-1 Aligned).')),
+                      onPressed: () async {
+                        final result = await Navigator.push<bool>(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => ArCadastralHudScreen(
+                              khasraNo: passport.khasraSurveyNo,
+                              villageName: passport.villageName,
+                              areaAcres: passport.areaAcres,
+                              dgpsCoordinates: '19.6967° N, 72.7699° E',
+                            ),
+                          ),
                         );
+
+                        if (result == true) {
+                          _captureAndSubmitEvidence(passport, task);
+                        }
                       },
                       icon: const Icon(Icons.visibility, color: Color(0xFF4A3B2C), size: 14),
                       label: const Text('Open AR Boundary Camera Viewport', style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold)),
