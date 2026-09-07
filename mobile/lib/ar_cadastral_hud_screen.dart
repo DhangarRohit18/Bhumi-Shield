@@ -52,6 +52,28 @@ class ArAnchor {
   }
 }
 
+enum BoundaryPointStatus { UNVERIFIED, VERIFIED, FLAGGED }
+
+class BoundaryPointModel {
+  final String id;
+  final int index;
+  final double lat;
+  final double lng;
+  BoundaryPointStatus status;
+  String? note;
+  String? photoUri;
+
+  BoundaryPointModel({
+    required this.id,
+    required this.index,
+    required this.lat,
+    required this.lng,
+    this.status = BoundaryPointStatus.UNVERIFIED,
+    this.note,
+    this.photoUri,
+  });
+}
+
 class ArCadastralHudScreen extends StatefulWidget {
   final String khasraNo;
   final String villageName;
@@ -79,13 +101,17 @@ class _ArCadastralHudScreenState extends State<ArCadastralHudScreen>
   bool _isCameraReady = false;
   bool _useNativeArCore = true; // Toggle between ARCore 6-DoF SLAM & Low-Pass Filtered Sensors
   String? _cameraError;
-  int _activeTab = 0; // 0 = Measure (AR), 1 = Level
+  int _activeTab = 0; // 0 = Measure (AR), 1 = Level, 2 = Points Verification
 
   // Real 3D World-Anchored Points (Sensor Mode)
   final List<ArAnchor> _anchors = [];
 
   // ARCore 3D Position Anchors (SLAM Mode)
   final List<vector.Vector3> _arCorePositions = [];
+
+  // Cadastral Boundary Points from Bhumi-Shield_AR package
+  late List<BoundaryPointModel> _boundaryPoints;
+  BoundaryPointModel? _selectedPoint;
 
   // Smoothed Low-Pass Filtered Device Sensor States (Yaw, Pitch, Roll)
   double _yaw = 0.0;
@@ -113,6 +139,15 @@ class _ArCadastralHudScreenState extends State<ArCadastralHudScreen>
       vsync: this,
       duration: const Duration(milliseconds: 1200),
     )..repeat(reverse: true);
+
+    // Initialize boundary points based on parcel context
+    _boundaryPoints = [
+      BoundaryPointModel(id: 'P1', index: 1, lat: 19.6967, lng: 72.7699),
+      BoundaryPointModel(id: 'P2', index: 2, lat: 19.6972, lng: 72.7705),
+      BoundaryPointModel(id: 'P3', index: 3, lat: 19.6968, lng: 72.7712),
+      BoundaryPointModel(id: 'P4', index: 4, lat: 19.6962, lng: 72.7706),
+    ];
+    _selectedPoint = _boundaryPoints.first;
 
     _checkArCoreAndInit();
     _initSensors();
@@ -687,9 +722,196 @@ class _ArCadastralHudScreenState extends State<ArCadastralHudScreen>
                             ),
                           ),
                         ),
+                        // Points Verification Tab
+                        GestureDetector(
+                          onTap: () => setState(() => _activeTab = 2),
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                            decoration: BoxDecoration(
+                              color: _activeTab == 2 ? const Color(0xFFEA580C) : Colors.transparent,
+                              borderRadius: BorderRadius.circular(24),
+                            ),
+                            child: Row(
+                              children: [
+                                Icon(
+                                  Icons.verified_outlined,
+                                  color: _activeTab == 2 ? Colors.white : Colors.white60,
+                                  size: 16,
+                                ),
+                                const SizedBox(width: 6),
+                                Text(
+                                  'Pillars (${_boundaryPoints.where((p) => p.status == BoundaryPointStatus.VERIFIED).length}/${_boundaryPoints.length})',
+                                  style: TextStyle(
+                                    color: _activeTab == 2 ? Colors.white : Colors.white60,
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
                       ],
                     ),
                   ),
+
+                  // Interactive Boundary Point Inspection Card (From Bhumi-Shield_AR package)
+                  if (_activeTab == 2 && _selectedPoint != null) ...[
+                    const SizedBox(height: 12),
+                    Container(
+                      margin: const EdgeInsets.symmetric(horizontal: 16),
+                      padding: const EdgeInsets.all(12),
+                      decoration: BoxDecoration(
+                        color: const Color(0xEE1E293B),
+                        borderRadius: BorderRadius.circular(14),
+                        border: Border.all(color: const Color(0xFF00E5FF).withValues(alpha: 0.6)),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withValues(alpha: 0.5),
+                            blurRadius: 10,
+                            offset: const Offset(0, 4),
+                          ),
+                        ],
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Row(
+                                children: [
+                                  Text(
+                                    'POINT ${_selectedPoint!.id}',
+                                    style: const TextStyle(
+                                      fontSize: 13,
+                                      fontWeight: FontWeight.bold,
+                                      color: Color(0xFF00E5FF),
+                                      fontFamily: 'monospace',
+                                    ),
+                                  ),
+                                  const SizedBox(width: 8),
+                                  Container(
+                                    padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                                    decoration: BoxDecoration(
+                                      color: _selectedPoint!.status == BoundaryPointStatus.VERIFIED
+                                          ? const Color(0xFF059669).withValues(alpha: 0.3)
+                                          : (_selectedPoint!.status == BoundaryPointStatus.FLAGGED
+                                              ? const Color(0xFFDC2626).withValues(alpha: 0.3)
+                                              : Colors.white12),
+                                      borderRadius: BorderRadius.circular(4),
+                                    ),
+                                    child: Text(
+                                      _selectedPoint!.status.name,
+                                      style: TextStyle(
+                                        fontSize: 9,
+                                        fontWeight: FontWeight.bold,
+                                        color: _selectedPoint!.status == BoundaryPointStatus.VERIFIED
+                                            ? const Color(0xFF34D399)
+                                            : (_selectedPoint!.status == BoundaryPointStatus.FLAGGED
+                                                ? const Color(0xFFF87171)
+                                                : Colors.white70),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              Text(
+                                'Lat: ${_selectedPoint!.lat.toStringAsFixed(4)}°, Lng: ${_selectedPoint!.lng.toStringAsFixed(4)}°',
+                                style: const TextStyle(fontSize: 10, fontFamily: 'monospace', color: Colors.white70),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 8),
+                          Row(
+                            children: [
+                              ..._boundaryPoints.map((pt) {
+                                final isSel = pt.id == _selectedPoint!.id;
+                                return Expanded(
+                                  child: GestureDetector(
+                                    onTap: () => setState(() => _selectedPoint = pt),
+                                    child: Container(
+                                      margin: const EdgeInsets.symmetric(horizontal: 2),
+                                      padding: const EdgeInsets.symmetric(vertical: 4),
+                                      decoration: BoxDecoration(
+                                        color: isSel ? const Color(0xFF00E5FF).withValues(alpha: 0.25) : Colors.black26,
+                                        border: Border.all(
+                                          color: isSel ? const Color(0xFF00E5FF) : Colors.white24,
+                                        ),
+                                        borderRadius: BorderRadius.circular(6),
+                                      ),
+                                      child: Center(
+                                        child: Text(
+                                          pt.id,
+                                          style: TextStyle(
+                                            fontSize: 10,
+                                            fontWeight: FontWeight.bold,
+                                            color: isSel ? const Color(0xFF00E5FF) : Colors.white60,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                );
+                              }),
+                            ],
+                          ),
+                          const SizedBox(height: 10),
+                          Row(
+                            children: [
+                              Expanded(
+                                child: ElevatedButton(
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: const Color(0xFF059669),
+                                    foregroundColor: Colors.white,
+                                    padding: const EdgeInsets.symmetric(vertical: 8),
+                                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                                  ),
+                                  onPressed: () {
+                                    setState(() {
+                                      _selectedPoint!.status = BoundaryPointStatus.VERIFIED;
+                                    });
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(
+                                        content: Text('Boundary Point ${_selectedPoint!.id} marked as VERIFIED'),
+                                        backgroundColor: const Color(0xFF059669),
+                                        duration: const Duration(seconds: 1),
+                                      ),
+                                    );
+                                  },
+                                  child: const Text('VERIFY', style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold)),
+                                ),
+                              ),
+                              const SizedBox(width: 8),
+                              Expanded(
+                                child: ElevatedButton(
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: const Color(0xFFDC2626),
+                                    foregroundColor: Colors.white,
+                                    padding: const EdgeInsets.symmetric(vertical: 8),
+                                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                                  ),
+                                  onPressed: () {
+                                    setState(() {
+                                      _selectedPoint!.status = BoundaryPointStatus.FLAGGED;
+                                    });
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(
+                                        content: Text('Boundary Point ${_selectedPoint!.id} FLAGGED for discrepancy'),
+                                        backgroundColor: const Color(0xFFDC2626),
+                                        duration: const Duration(seconds: 1),
+                                      ),
+                                    );
+                                  },
+                                  child: const Text('FLAG', style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold)),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
                 ],
               ),
             ),
