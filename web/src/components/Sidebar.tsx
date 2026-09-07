@@ -6,6 +6,7 @@ import {
   Brain,
   Shield,
   Sprout,
+  Sparkles,
 } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { UserRole } from '../types';
@@ -26,13 +27,11 @@ interface SidebarProps {
 }
 
 // Statutory RBAC Permission Matrix for Workspace Access
-// Krishi Sathi is restricted exclusively to Admin (NATIONAL_EXECUTIVE) and Data Acquisition (FIELD_ACQUISITION)
 const ROLE_WORKSPACE_PERMISSIONS: Record<UserRole, MainWorkspaceId[]> = {
   'NATIONAL_EXECUTIVE': ['command_center', 'corridor_readiness', 'digital_twin', 'ops_intelligence', 'admin', 'krishi_sathi'],
   'FIELD_ACQUISITION': ['corridor_readiness', 'digital_twin', 'ops_intelligence', 'krishi_sathi'],
   'AUDIT_CITIZEN': ['command_center', 'corridor_readiness', 'digital_twin', 'admin'],
 };
-
 
 export const Sidebar: React.FC<SidebarProps> = ({
   activeTab,
@@ -45,43 +44,39 @@ export const Sidebar: React.FC<SidebarProps> = ({
   const allWorkspaces: {
     id: MainWorkspaceId;
     name: string;
-    description: string;
+    badge?: string;
     icon: any;
   }[] = [
     {
       id: 'command_center',
       name: 'Command Center',
-      description: 'Corridor GIS & Macro Overview',
       icon: Globe,
     },
     {
       id: 'corridor_readiness',
       name: 'Corridor Readiness',
-      description: 'Social Consent & Risk Corridor',
+      badge: 'GIS AI',
       icon: Route,
     },
     {
       id: 'digital_twin',
       name: 'Digital Twin',
-      description: 'Cadastral Plots & Sec 30 Awards',
       icon: Cpu,
     },
     {
       id: 'ops_intelligence',
       name: 'Interventions',
-      description: 'Root-Cause Diagnostics & What-If',
       icon: Brain,
     },
     {
       id: 'admin',
       name: 'Audit & Security',
-      description: 'SHA-256 Ledger & Access Control',
       icon: Shield,
     },
     {
       id: 'krishi_sathi',
       name: 'Krishi Sathi',
-      description: 'Farmer Land & AR Spatial Intelligence',
+      badge: 'AR',
       icon: Sprout,
     },
   ];
@@ -89,46 +84,91 @@ export const Sidebar: React.FC<SidebarProps> = ({
   const visibleWorkspaces = allWorkspaces.filter((w) => allowedWorkspaces.includes(w.id));
 
   return (
-    <aside className="w-full md:w-60 border-r border-[#BAE6FD]/60 bg-white/90 backdrop-blur-md p-4 flex flex-col justify-between shrink-0 font-sans shadow-sm">
-      <div className="space-y-4">
+    <aside className="w-full md:w-64 bg-white border-r border-slate-200/80 p-4 flex flex-col justify-between shrink-0 font-sans shadow-[4px_0_24px_-12px_rgba(0,0,0,0.03)] z-40">
+      <div className="space-y-6">
         {/* Brand Header */}
-        <div className="flex items-center gap-2.5 px-2 pb-2 border-b border-[#BAE6FD]/40">
-          <div className="w-8 h-8 rounded-xl bg-[#EA580C] text-white shadow-sm flex items-center justify-center shrink-0">
+        <div className="flex items-center gap-3 px-2 py-1">
+          <div className="w-9 h-9 rounded-2xl bg-gradient-to-tr from-[#4F46E5] to-[#7C3AED] text-white shadow-soft flex items-center justify-center shrink-0">
             <Shield className="w-4 h-4 text-white stroke-[2.5]" />
           </div>
-          <span className="font-black text-sm tracking-tight text-[#0F172A] whitespace-nowrap">
-            BHUMI-SHIELD
-          </span>
+          <div>
+            <div className="flex items-center gap-1.5">
+              <span className="font-extrabold text-base tracking-tight text-[#0B132B]">
+                BHUMI-SHIELD
+              </span>
+            </div>
+            <span className="text-[10px] font-bold text-indigo-600/90 block leading-tight">
+              Land OS Platform
+            </span>
+          </div>
         </div>
 
-        <div>
-          <p className="text-[10px] font-bold uppercase tracking-wider text-[#0284C7] px-3 mb-2 flex items-center gap-1.5">
-            <span className="w-1.5 h-1.5 rounded-full bg-[#EA580C]"></span>
-            <span>Workspaces</span>
+        {/* Navigation Modules */}
+        <div className="space-y-1">
+          <p className="text-[10px] font-extrabold uppercase tracking-[0.14em] text-slate-400 px-3 mb-2">
+            Workspaces
           </p>
 
-          <div className="space-y-1.5">
+          <div className="space-y-1">
             {visibleWorkspaces.map((w) => {
               const Icon = w.icon;
               const isActive = activeTab === w.id;
+
               return (
                 <button
                   key={w.id}
                   onClick={() => setActiveTab(w.id)}
-                  className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-left transition-all cursor-pointer ${
+                  className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-2xl text-left transition-all cursor-pointer group ${
                     isActive
-                      ? 'bg-[#EA580C] text-white border border-[#C2410C] shadow-md font-extrabold'
-                      : 'text-[#475569] hover:text-[#0F172A] hover:bg-[#E0F2FE]'
+                      ? 'bg-[#0B132B] text-white shadow-soft font-bold'
+                      : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100/70 font-semibold'
                   }`}
                 >
-                  <div className={`p-1.5 rounded-lg shrink-0 ${isActive ? 'bg-[#9A3412] text-white' : 'bg-[#F0F7FF] text-[#0284C7]'}`}>
-                    <Icon className="w-4 h-4" />
+                  <div className="flex items-center gap-3 min-w-0">
+                    <div
+                      className={`p-1.5 rounded-xl transition-all ${
+                        isActive
+                          ? 'bg-white/15 text-white'
+                          : 'bg-slate-100 text-slate-500 group-hover:text-indigo-600 group-hover:bg-indigo-50'
+                      }`}
+                    >
+                      <Icon className="w-4 h-4" />
+                    </div>
+                    <span className="text-xs tracking-tight truncate">{w.name}</span>
                   </div>
-                  <p className={`text-xs font-extrabold ${isActive ? 'text-white' : 'text-[#0F172A]'}`}>{w.name}</p>
+
+                  {w.badge && (
+                    <span
+                      className={`text-[9px] font-extrabold uppercase px-2 py-0.5 rounded-full ${
+                        isActive
+                          ? 'bg-white/20 text-white'
+                          : 'bg-indigo-50 text-indigo-600 border border-indigo-100'
+                      }`}
+                    >
+                      {w.badge}
+                    </span>
+                  )}
                 </button>
               );
             })}
           </div>
+        </div>
+      </div>
+
+      {/* Footer Role & Environment Badge */}
+      <div className="pt-4 border-t border-slate-100 space-y-2">
+        <div className="p-3 rounded-2xl bg-gradient-to-br from-[#F4F1FF] to-[#EAF0FF] border border-indigo-100/80">
+          <div className="flex items-center justify-between">
+            <span className="text-[10px] font-extrabold uppercase text-indigo-900/70">
+              Active Tier
+            </span>
+            <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+          </div>
+          <p className="text-xs font-black text-indigo-950 mt-0.5 truncate">
+            {activeRole === 'NATIONAL_EXECUTIVE' && '🏛️ Sovereign Admin'}
+            {activeRole === 'FIELD_ACQUISITION' && '📐 Operations CALA'}
+            {activeRole === 'AUDIT_CITIZEN' && '🛡️ Public Vigilance'}
+          </p>
         </div>
       </div>
     </aside>

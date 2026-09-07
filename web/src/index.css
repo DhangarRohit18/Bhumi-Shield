@@ -1,12 +1,31 @@
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&family=Outfit:wght@400;500;600;700;800;900&display=swap');
 @import "tailwindcss";
-@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&display=swap');
 
 @layer base {
   body {
-    background-color: #F0F7FF;
-    color: #0F172A;
-    font-family: 'Outfit', system-ui, -apple-system, sans-serif;
+    background-color: #FAF8F5;
+    color: #0B132B;
+    font-family: 'Plus Jakarta Sans', 'Outfit', system-ui, -apple-system, sans-serif;
     -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
 }
 
+/* Custom Oxland-inspired utilities */
+.bg-brand-gradient {
+  background: linear-gradient(135deg, #4F46E5 0%, #7C3AED 50%, #2563EB 100%);
+}
+
+.text-gradient {
+  background: linear-gradient(135deg, #4F46E5 0%, #7C3AED 60%, #EA580C 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.shadow-soft {
+  box-shadow: 0 10px 30px -10px rgba(79, 70, 229, 0.12), 0 4px 12px -4px rgba(0, 0, 0, 0.05);
+}
+
+.shadow-float {
+  box-shadow: 0 20px 40px -15px rgba(79, 70, 229, 0.22), 0 8px 16px -6px rgba(0, 0, 0, 0.08);
+}

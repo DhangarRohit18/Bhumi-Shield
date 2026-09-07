@@ -58,7 +58,7 @@ export const App: React.FC = () => {
 
   // 2. Once authenticated, render Authorized Workspace
   return (
-    <div className="flex h-screen bg-[#F0F7FF] text-[#0F172A] overflow-hidden font-sans">
+    <div className="flex h-screen bg-[#FAF8F5] text-[#0B132B] overflow-hidden font-sans">
       <Sidebar
         activeTab={activeTab}
         setActiveTab={setActiveTab}
@@ -66,16 +66,16 @@ export const App: React.FC = () => {
         handleSeed={handleSeed}
       />
 
-      <div className="flex-1 flex flex-col min-w-0 overflow-hidden bg-[#F0F7FF]">
+      <div className="flex-1 flex flex-col min-w-0 overflow-hidden bg-[#FAF8F5]">
         <Header onLogout={handleLogout} />
 
         {seedNotification && (
-          <div className="bg-[#E0F2FE] border-b border-[#BAE6FD] px-6 py-2 text-xs font-bold text-[#0369A1] flex items-center justify-between shadow-sm">
+          <div className="bg-gradient-to-r from-[#EEF2FF] to-[#FAF5FF] border-b border-indigo-100 px-6 py-2 text-xs font-bold text-indigo-900 flex items-center justify-between shadow-xs">
             <span>{seedNotification}</span>
           </div>
         )}
 
-        <main className="flex-1 overflow-y-auto bg-[#F0F7FF] p-4">
+        <main className="flex-1 overflow-y-auto bg-[#FAF8F5] p-4 sm:p-6">
           {activeTab === 'command_center' && <CommandCenter />}
           {activeTab === 'corridor_readiness' && <CorridorReadinessWorkspace />}
           {activeTab === 'digital_twin' && <ProjectDigitalTwin />}
