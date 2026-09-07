@@ -261,3 +261,52 @@ export function calculateFairnessIndex(
 
   return { score, riskLevel, explanation };
 }
+
+/**
+ * FIELD VERIFICATION CONFIDENCE CALCULATOR
+ * Evaluates field evidence completeness, GPS proximity, checklist status, and observation severity.
+ */
+export function calculateFieldVerificationConfidence(params: {
+  checklistCompletedCount: number;
+  totalChecklistCount: number;
+  hasGeotaggedPhoto: boolean;
+  gpsAccuracyMeters: number;
+  isGpsWithinParcel: boolean;
+  observationsCount: number;
+  criticalMismatchCount: number;
+}): { score: number; rating: 'HIGH' | 'MODERATE' | 'LOW'; reasons: string[] } {
+  let score = 100;
+  const reasons: string[] = [];
+
+  const checklistPct = params.totalChecklistCount > 0 ? (params.checklistCompletedCount / params.totalChecklistCount) : 1;
+  if (checklistPct < 0.8) {
+    const penalty = Math.round((1 - checklistPct) * 30);
+    score -= penalty;
+    reasons.push(`Incomplete verification checklist (${params.checklistCompletedCount}/${params.totalChecklistCount} items verified)`);
+  }
+
+  if (!params.hasGeotaggedPhoto) {
+    score -= 25;
+    reasons.push('Missing mandatory geotagged photo evidence of boundary pillars');
+  }
+
+  if (!params.isGpsWithinParcel) {
+    score -= 30;
+    reasons.push(`Operator GPS fix was outside cadastral boundary (${params.gpsAccuracyMeters.toFixed(1)}m precision)`);
+  } else if (params.gpsAccuracyMeters > 15) {
+    score -= 10;
+    reasons.push(`Sub-optimal GPS accuracy (${params.gpsAccuracyMeters.toFixed(1)}m > 15m threshold)`);
+  }
+
+  if (params.criticalMismatchCount > 0) {
+    score -= params.criticalMismatchCount * 20;
+    reasons.push(`${params.criticalMismatchCount} critical spatial/ownership mismatches flagged on-site`);
+  }
+
+  score = Math.max(10, Math.min(100, Math.round(score)));
+  let rating: 'HIGH' | 'MODERATE' | 'LOW' = 'HIGH';
+  if (score < 50) rating = 'LOW';
+  else if (score < 80) rating = 'MODERATE';
+
+  return { score, rating, reasons };
+}

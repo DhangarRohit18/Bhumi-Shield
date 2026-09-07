@@ -256,15 +256,85 @@ export interface Grievance extends BaseEntity {
 }
 
 // 19. field_visits
+export type FieldVerificationStatus =
+  | 'ASSIGNED'
+  | 'ACCEPTED'
+  | 'TRAVELING'
+  | 'ON_SITE'
+  | 'VERIFICATION_IN_PROGRESS'
+  | 'EVIDENCE_PENDING'
+  | 'SUBMITTED'
+  | 'SYNC_PENDING'
+  | 'SYNCED'
+  | 'REVIEW_REQUIRED'
+  | 'VERIFIED'
+  | 'REJECTED'
+  | 'REVISIT_REQUIRED';
+
+export interface FieldObservation {
+  id?: string;
+  type:
+    | 'OWNER_MISMATCH'
+    | 'OCCUPANCY_MISMATCH'
+    | 'AREA_MISMATCH'
+    | 'BOUNDARY_MISMATCH'
+    | 'RIGHTS_MISMATCH'
+    | 'DOCUMENT_MISMATCH'
+    | 'STRUCTURE_FOUND'
+    | 'ENCROACHMENT_FOUND'
+    | 'UTILITY_FOUND'
+    | 'ACCESS_ISSUE'
+    | 'OTHER';
+  description: string;
+  expectedValue: string;
+  actualValue: string;
+  severity: 'INFO' | 'WARNING' | 'CRITICAL';
+  gpsCoordinates?: { lat: number; lng: number; accuracyMeters: number };
+  evidenceIds: string[];
+  operatorUid: string;
+  timestamp: number;
+}
+
+export interface FieldChecklistResult {
+  ulpinVerified: boolean;
+  surveyGatVerified: boolean;
+  hissaVerified: boolean;
+  ownershipChecked: boolean;
+  jointHoldersChecked: boolean;
+  occupancyChecked: boolean;
+  areaChecked: boolean;
+  boundaryChecked: boolean;
+  accessChecked: boolean;
+  structuresChecked: boolean;
+  utilitiesChecked: boolean;
+  encroachmentChecked: boolean;
+  rightsClaimsChecked: boolean;
+  disputesChecked: boolean;
+  documentsChecked: boolean;
+  evidenceComplete: boolean;
+}
+
 export interface FieldVisit extends BaseEntity {
   projectId: string;
   villageId: string;
   parcelIds: string[];
+  ulpinList?: string[];
   scheduledDate: string;
   supervisorId: string;
   fieldOfficerIds: string[];
   purpose: 'GROUND_VERIFICATION' | 'OBJECTION_HEARING' | 'BOUNDARY_DEMARCATION' | 'VALUATION_SURVEY';
   status: 'SCHEDULED' | 'IN_PROGRESS' | 'COMPLETED' | 'CANCELLED';
+  verificationStatus?: FieldVerificationStatus;
+  checklist?: FieldChecklistResult;
+  observations?: FieldObservation[];
+  verificationConfidenceScore?: number; // 0 - 100
+  supervisorReview?: {
+    reviewedByUid: string;
+    reviewedByName: string;
+    decision: 'APPROVE' | 'REJECT' | 'REQUEST_CLARIFICATION' | 'REQUEST_REVISIT';
+    remarks: string;
+    reviewedAt: number;
+  };
   completionReport?: string;
 }
 
@@ -272,8 +342,10 @@ export interface FieldVisit extends BaseEntity {
 export interface FieldEvidence extends BaseEntity {
   projectId: string;
   parcelId: string;
+  ulpin?: string;
   visitId?: string;
-  evidenceType: 'PHOTO_GEOTAGGED' | 'DRONE_ORTHOPHOTO' | 'VIDEO_WALKTHROUGH' | 'WITNESS_STATEMENT_AUDIO';
+  caseId?: string;
+  evidenceType: 'PHOTO_GEOTAGGED' | 'DRONE_ORTHOPHOTO' | 'VIDEO_WALKTHROUGH' | 'WITNESS_STATEMENT_AUDIO' | 'DOCUMENT_SCAN';
   downloadUrl: string;
   gpsCoordinates: { lat: number; lng: number; altitude?: number };
   accuracyMeters: number;

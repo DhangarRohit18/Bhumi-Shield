@@ -21,6 +21,8 @@ import {
   officerWorkloadService,
   compensationFairnessService,
   ocrExtractionService,
+  fieldVisitService,
+  fieldEvidenceService,
 } from '../services/entities.service';
 import { auditService } from '../services/audit.service';
 import { calculateOfficerWorkloadScore, calculateFairnessIndex } from './intelligenceCalculations';
@@ -807,7 +809,125 @@ export async function seedBhumiShieldDemoData(logCallback?: (msg: string) => voi
     humanVerified: false
   }, 'ocr-palghar-02');
 
-  // 16. Audit Log Chronicle
+  // 16. Field Reality Verification Visits & Ground Evidence
+  log('Seeding General-Purpose Field Operator Verification Records...');
+  await fieldVisitService.create({
+    projectId: proj1Id,
+    villageId: 'vil-manikpur',
+    parcelIds: ['pcl-pal-0142'],
+    ulpinList: ['ULPIN-MH-142A1-2026'],
+    scheduledDate: '2026-09-07',
+    supervisorId: 'user-cala-palghar',
+    fieldOfficerIds: ['off-mh-palghar-01'],
+    purpose: 'GROUND_VERIFICATION',
+    status: 'COMPLETED',
+    verificationStatus: 'VERIFIED',
+    verificationConfidenceScore: 96,
+    checklist: {
+      ulpinVerified: true,
+      surveyGatVerified: true,
+      hissaVerified: true,
+      ownershipChecked: true,
+      jointHoldersChecked: true,
+      occupancyChecked: true,
+      areaChecked: true,
+      boundaryChecked: true,
+      accessChecked: true,
+      structuresChecked: true,
+      utilitiesChecked: true,
+      encroachmentChecked: true,
+      rightsClaimsChecked: true,
+      disputesChecked: true,
+      documentsChecked: true,
+      evidenceComplete: true,
+    },
+    observations: [],
+    supervisorReview: {
+      reviewedByUid: 'user-cala-palghar',
+      reviewedByName: 'Shri Sanjay V. Patil (CALA & SDO)',
+      decision: 'APPROVE',
+      remarks: 'DGPS boundary pillars match authoritative 7/12 land record. 100% boundary coherence confirmed.',
+      reviewedAt: Date.now() - 86400000,
+    },
+    completionReport: 'Ground verification complete for Khasra 142/A-1. All 4 boundary pillars locked within ±1.4 cm RTK accuracy.',
+  }, 'visit-palghar-0142');
+
+  await fieldEvidenceService.create({
+    projectId: proj1Id,
+    parcelId: 'pcl-pal-0142',
+    ulpin: 'ULPIN-MH-142A1-2026',
+    visitId: 'visit-palghar-0142',
+    caseId: 'CASE-PAL-142',
+    evidenceType: 'PHOTO_GEOTAGGED',
+    downloadUrl: '/bhumi-shield-ar-sentinel-v1.0.apk',
+    gpsCoordinates: { lat: 19.6967, lng: 72.7699, altitude: 14.2 },
+    accuracyMeters: 1.4,
+    capturedByOfficerName: 'Ramesh V. More (Field Operator)',
+    capturedByOfficerUid: 'off-mh-palghar-01',
+    tamperProofHash: 'SHA256:7f83b1657ff1fc53b92dc18148a1d65dfc2d4b1fa3d677284addd200126d9069',
+    notes: 'North-East demarcation pillar installed and verified with landowner Smt. Anusaya Patil present.',
+  }, 'evid-palghar-0142');
+
+  // Mismatch / Review-Required Field Verification Case
+  await fieldVisitService.create({
+    projectId: proj1Id,
+    villageId: 'vil-kelve',
+    parcelIds: ['pcl-pal-0143'],
+    ulpinList: ['ULPIN-MH-1432B-2026'],
+    scheduledDate: '2026-09-08',
+    supervisorId: 'user-cala-palghar',
+    fieldOfficerIds: ['off-mh-palghar-02'],
+    purpose: 'BOUNDARY_DEMARCATION',
+    status: 'IN_PROGRESS',
+    verificationStatus: 'REVIEW_REQUIRED',
+    verificationConfidenceScore: 48,
+    checklist: {
+      ulpinVerified: true,
+      surveyGatVerified: true,
+      hissaVerified: true,
+      ownershipChecked: false,
+      jointHoldersChecked: false,
+      occupancyChecked: false,
+      areaChecked: true,
+      boundaryChecked: false,
+      accessChecked: true,
+      structuresChecked: false,
+      utilitiesChecked: true,
+      encroachmentChecked: false,
+      rightsClaimsChecked: false,
+      disputesChecked: false,
+      documentsChecked: true,
+      evidenceComplete: false,
+    },
+    observations: [
+      {
+        id: 'obs-01',
+        type: 'STRUCTURE_FOUND',
+        description: 'Unrecorded tin shed dwelling erected post-Section 11 notification.',
+        expectedValue: 'Vacant Residential Land',
+        actualValue: '1x Tin Shed (Commercial tea stall)',
+        severity: 'CRITICAL',
+        gpsCoordinates: { lat: 19.6200, lng: 72.7400, accuracyMeters: 2.1 },
+        evidenceIds: ['evid-palghar-0143'],
+        operatorUid: 'off-mh-palghar-02',
+        timestamp: Date.now() - 3600000,
+      },
+      {
+        id: 'obs-02',
+        type: 'OWNER_MISMATCH',
+        description: 'Occupant claimed unregistered succession partition not entered in revenue records.',
+        expectedValue: 'Shri Keshav Patil (Single Holder)',
+        actualValue: '3x Legal Heirs in physical occupation',
+        severity: 'WARNING',
+        evidenceIds: ['evid-palghar-0143'],
+        operatorUid: 'off-mh-palghar-02',
+        timestamp: Date.now() - 3400000,
+      }
+    ],
+    completionReport: 'Ground reality mismatch identified. Encroachment and succession partition disputes require SDM review before award decree.',
+  }, 'visit-palghar-0143');
+
+  // 17. Audit Log Chronicle
   log('Recording Immutable Audit Trail for National Command Center...');
   await auditService.logAction({
     targetCollection: 'system',
