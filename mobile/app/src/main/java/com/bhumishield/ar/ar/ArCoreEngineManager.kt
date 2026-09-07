@@ -411,7 +411,16 @@ class ArCoreEngineManager : ArEngineManager {
             currentState.alignmentStatus == AlignmentStatus.CALIBRATING_REFERENCE -> "CALIBRATING... Tap physical reference point on detected surface."
             currentState.alignmentStatus == AlignmentStatus.READY -> "✓ Boundary calibrated and ready in AR viewport."
             currentState.alignmentStatus == AlignmentStatus.REFERENCE_CALIBRATED -> "✓ REFERENCE CALIBRATED. Tap Calibrate Orientation."
-            totalAnchors > 0 -> "Marker placed"
+            activeAnchor?.trackingState == TrackingState.TRACKING -> {
+                val camPose = frame.camera.pose
+                val ancPose = activeAnchor!!.pose
+                val dx = camPose.tx() - ancPose.tx()
+                val dy = camPose.ty() - ancPose.ty()
+                val dz = camPose.tz() - ancPose.tz()
+                val distance = kotlin.math.sqrt(dx * dx + dy * dy + dz * dz)
+                "Marker placed: %.2f m away".format(distance)
+            }
+            calibrationAnchor?.trackingState == TrackingState.TRACKING -> "Reference marker placed"
             planeCount > 0 -> "Surface detected — tap to place marker."
             else -> "Move your phone slowly to detect a surface."
         }
