@@ -1,5 +1,5 @@
 import React from 'react';
-import { Shield, LogOut } from 'lucide-react';
+import { LogOut } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { UserRole } from '../types';
 
@@ -19,16 +19,7 @@ export const Header: React.FC<HeaderProps> = ({ onLogout }) => {
   return (
     <header className="flex flex-col sticky top-0 z-50 shadow-sm font-sans bg-white/95 backdrop-blur-md border-b border-[#BAE6FD]/60">
       {/* Main Clean Government Navbar */}
-      <div className="px-6 py-3 flex flex-col md:flex-row md:items-center justify-between gap-3">
-        <div className="flex items-center gap-3">
-          <div className="p-2 rounded-xl bg-[#EA580C] text-white shadow-md flex items-center justify-center">
-            <Shield className="w-5 h-5 text-white" />
-          </div>
-          <h1 className="font-black text-lg tracking-tight text-[#0F172A]">
-            BHUMI-SHIELD
-          </h1>
-        </div>
-
+      <div className="px-6 py-2.5 flex items-center justify-end gap-3">
         <div className="flex items-center gap-3">
           {/* Clean Role Selector */}
           <div className="flex items-center gap-1.5 bg-[#F0F7FF] border border-[#BAE6FD] rounded-xl px-2.5 py-1.5 shadow-sm">

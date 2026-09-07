@@ -75,17 +75,12 @@ export const Sidebar: React.FC<SidebarProps> = ({
       <div className="space-y-4">
         {/* Brand Header */}
         <div className="flex items-center gap-2.5 px-2 pb-2 border-b border-[#BAE6FD]/40">
-          <div className="w-9 h-9 rounded-xl bg-[#EA580C] text-white shadow-sm flex items-center justify-center shrink-0">
-            <Shield className="w-5 h-5 text-white stroke-[2.5]" />
+          <div className="w-8 h-8 rounded-xl bg-[#EA580C] text-white shadow-sm flex items-center justify-center shrink-0">
+            <Shield className="w-4 h-4 text-white stroke-[2.5]" />
           </div>
-          <div className="flex flex-col">
-            <span className="font-black text-sm tracking-tight text-[#0F172A] leading-none">
-              BHUMI-
-            </span>
-            <span className="font-black text-sm tracking-tight text-[#0F172A] leading-none mt-0.5">
-              SHIELD
-            </span>
-          </div>
+          <span className="font-black text-sm tracking-tight text-[#0F172A] whitespace-nowrap">
+            BHUMI-SHIELD
+          </span>
         </div>
 
         <div>
