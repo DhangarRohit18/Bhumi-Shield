@@ -5,7 +5,6 @@ import {
   departmentService,
   stateService,
   districtService,
-  iotDeviceService,
   userService,
 } from '../../services/entities.service';
 import { auditService } from '../../services/audit.service';
@@ -216,57 +215,7 @@ const DEFAULT_DEPARTMENTS = [
   },
 ];
 
-// Rich IoT Pillars & DGPS Sensors
-const DEFAULT_IOT_PILLARS = [
-  {
-    id: 'iot-dev-901',
-    deviceId: 'IOT-PIL-MH-PLG-0901',
-    deviceType: 'BOUNDARY_INTRUSION_SENSOR',
-    location: { lat: 19.6967, lng: 72.7699 },
-    khasraNo: 'Khasra #142/A-1 (Manikpur)',
-    batteryPercentage: 96,
-    firmwareVersion: 'v2.4.1-bhumi-dgps',
-    status: 'ONLINE',
-    precision: '±1.4 cm RTK Fixed',
-    lastHeartbeat: Date.now() - 120000,
-  },
-  {
-    id: 'iot-dev-902',
-    deviceId: 'IOT-PIL-MH-PLG-0902',
-    deviceType: 'GROUND_STABILITY_MONITOR',
-    location: { lat: 19.6982, lng: 72.7712 },
-    khasraNo: 'Khasra #143/2-B (Kelve)',
-    batteryPercentage: 92,
-    firmwareVersion: 'v2.4.1-insar-tilt',
-    status: 'ONLINE',
-    precision: '±0.2 mm/yr Tilt Coherence',
-    lastHeartbeat: Date.now() - 340000,
-  },
-  {
-    id: 'iot-dev-903',
-    deviceId: 'IOT-PIL-UP-VNS-4401',
-    deviceType: 'DGPS_SMART_PILLAR',
-    location: { lat: 25.3176, lng: 82.9739 },
-    khasraNo: 'Khasra #881/P-4 (Rohania)',
-    batteryPercentage: 88,
-    firmwareVersion: 'v2.3.8-lorawan-solar',
-    status: 'ONLINE',
-    precision: '±1.8 cm RTK Fixed',
-    lastHeartbeat: Date.now() - 600000,
-  },
-  {
-    id: 'iot-dev-904',
-    deviceId: 'IOT-PIL-MH-THN-0412',
-    deviceType: 'OPTICAL_ENCROACHMENT_BARRIER',
-    location: { lat: 19.2183, lng: 72.9781 },
-    khasraNo: 'Khasra #512/3 (Thane Spur)',
-    batteryPercentage: 94,
-    firmwareVersion: 'v2.4.0-ai-vision',
-    status: 'ONLINE',
-    precision: 'LiDAR + Camera Tripwire',
-    lastHeartbeat: Date.now() - 180000,
-  },
-];
+
 
 // Rich Immutable Audit Log Chronicle
 const DEFAULT_AUDIT_LOGS = [
@@ -324,7 +273,6 @@ export const AdministrationWorkspace: React.FC = () => {
   const { data: rawDepts } = useFirestoreCollection(departmentService);
   const { data: rawStates } = useFirestoreCollection(stateService);
   const { data: rawDistricts } = useFirestoreCollection(districtService);
-  const { data: rawIoTDevices } = useFirestoreCollection(iotDeviceService);
   const { data: rawAuditLogs } = useFirestoreCollection(auditService);
   const { data: rawUsers } = useFirestoreCollection(userService);
 
@@ -338,11 +286,6 @@ export const AdministrationWorkspace: React.FC = () => {
     if (rawDepts && rawDepts.length > 0) return rawDepts;
     return DEFAULT_DEPARTMENTS;
   }, [rawDepts]);
-
-  const iotList = useMemo(() => {
-    if (rawIoTDevices && rawIoTDevices.length > 0) return rawIoTDevices;
-    return DEFAULT_IOT_PILLARS;
-  }, [rawIoTDevices]);
 
   const auditList = useMemo(() => {
     if (rawAuditLogs && rawAuditLogs.length > 0) return rawAuditLogs;
