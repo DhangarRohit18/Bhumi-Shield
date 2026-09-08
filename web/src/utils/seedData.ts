@@ -24,6 +24,7 @@ import {
   fieldVisitService,
   fieldEvidenceService,
   farmerService,
+  documentService,
 } from '../services/entities.service';
 import { auditService } from '../services/audit.service';
 import { calculateOfficerWorkloadScore, calculateFairnessIndex } from './intelligenceCalculations';
@@ -770,6 +771,30 @@ export async function seedBhumiShieldDemoData(logCallback?: (msg: string) => voi
     aiExplanation: fairness2.explanation,
     riskLevel: fairness2.riskLevel,
   }, 'fairness-palghar-02');
+
+  // 14.5 Statutory Documents & Gazettes
+  log('Seeding Statutory Gazette Documents...');
+  await documentService.create({
+    projectId: proj1Id,
+    title: 'Section 19(1) Final Declaration Gazette - Palghar District',
+    documentType: 'GAZETTE_SEC_19',
+    currentVersionNo: 1,
+    currentDownloadUrl: 'https://bhumishield.gov.in/gazettes/sec19_palghar_2026.pdf',
+    fileSizeBytes: 2840120,
+    sha256Checksum: 'SHA256_e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855',
+    isDeleted: false,
+  }, 'doc-gazette-sec19-palghar');
+
+  await documentService.create({
+    projectId: proj1Id,
+    title: 'SIA Final Report - High Speed Rail Package 3',
+    documentType: 'SIA_REPORT',
+    currentVersionNo: 2,
+    currentDownloadUrl: 'https://bhumishield.gov.in/reports/sia_nhsrcl_pkg3_v2.pdf',
+    fileSizeBytes: 14501230,
+    sha256Checksum: 'SHA256_8d969eef6ecad3c29a3a629280e686cf0c3f5d5a86aff3ca12020c923adc6c92',
+    isDeleted: false,
+  }, 'doc-sia-pkg3');
 
   // 15. OCR & NLP Document Extraction Pipeline
   log('Seeding OCR/NLP Document Extractions...');

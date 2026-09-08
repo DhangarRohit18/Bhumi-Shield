@@ -499,8 +499,35 @@ export const KrishiSathiWorkspace: React.FC = () => {
               </tr>
             </thead>
             <tbody className="divide-y divide-[#E2E8F0]">
-              {filteredFarmers.map((farmer) => (
-                <tr key={farmer.id} className="hover:bg-transparent transition-colors">
+              {filteredFarmers.length === 0 ? (
+                <tr>
+                  <td colSpan={7} className="p-10 text-center bg-[#FAF8F5]">
+                    <div className="max-w-md mx-auto space-y-3">
+                      <div className="w-12 h-12 rounded-2xl bg-indigo-50 text-indigo-600 border border-indigo-100 flex items-center justify-center mx-auto text-2xl">
+                        🌾
+                      </div>
+                      <div className="space-y-1">
+                        <h4 className="font-extrabold text-sm text-[#0B132B]">No Landholder Records Found</h4>
+                        <p className="text-xs text-slate-500 leading-relaxed">
+                          Your sandbox database is ready. Tap below to instantly populate 10 comprehensive landholder records across Maharashtra, Gujarat, UP & Rajasthan.
+                        </p>
+                      </div>
+                      <div className="pt-2">
+                        <button
+                          onClick={handleTriggerSeed}
+                          disabled={isSeeding}
+                          className="px-5 py-2.5 rounded-xl bg-brand-gradient hover:bg-[#3730A3] text-white text-xs font-extrabold shadow-soft hover:shadow-float transition-all cursor-pointer inline-flex items-center gap-2"
+                        >
+                          <Sparkles className={`w-4 h-4 ${isSeeding ? 'animate-spin' : ''}`} />
+                          <span>{isSeeding ? 'Seeding 10 Farmer Records...' : '🌱 Seed All 10 Landholder Records'}</span>
+                        </button>
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+              ) : (
+                filteredFarmers.map((farmer) => (
+                  <tr key={farmer.id} className="hover:bg-transparent transition-colors">
                   <td className="p-3 pl-4">
                     <div className="flex items-center gap-2.5">
                       <div className="w-8 h-8 rounded-2xl bg-[#ECFDF5] text-[#059669] flex items-center justify-center font-extrabold text-xs shrink-0 border border-[#A7F3D0]">
@@ -602,7 +629,7 @@ export const KrishiSathiWorkspace: React.FC = () => {
                     </div>
                   </td>
                 </tr>
-              ))}
+              )))}
             </tbody>
           </table>
         </div>
