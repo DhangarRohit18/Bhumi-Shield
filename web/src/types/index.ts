@@ -248,11 +248,21 @@ export interface Grievance extends BaseEntity {
   category: 'COMPENSATION_DELAY' | 'INCORRECT_SURVEY' | 'RR_BENEFIT_MISSING' | 'ILLEGAL_POSSESSION';
   subject: string;
   description: string;
-  assignedOfficerId?: string;
-  assignedOfficerName?: string;
-  status: 'OPEN' | 'INVESTIGATING' | 'ESCALATED' | 'RESOLVED' | 'CLOSED';
-  resolutionNotes?: string;
-  slaDeadline: string;
+  assignedOfficerId: string;
+  status: 'OPEN' | 'IN_PROGRESS' | 'RESOLVED' | 'CLOSED_UNRESOLVED';
+  resolutionRemarks?: string;
+  resolvedAt?: number;
+}
+
+// 19. structure_assets
+export interface StructureAsset extends BaseEntity {
+  projectId: string;
+  parcelId: string;
+  farmerName: string;
+  structureType: 'PUCCA_HOUSE' | 'KUTCHA_HOUSE' | 'COMMERCIAL_SHED' | 'TUBEWELL';
+  builtUpAreaSqFt: number;
+  assessedValueINR: number;
+  photoUrl?: string;
 }
 
 // 19. field_visits

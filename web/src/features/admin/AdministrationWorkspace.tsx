@@ -423,7 +423,7 @@ export const AdministrationWorkspace: React.FC = () => {
             { id: 'roles', name: 'Statutory RBAC Matrix', icon: KeyRound, count: 3 },
             { id: 'depts', name: 'Acquisition Authorities', icon: Building2, count: deptsList.length },
             { id: 'sla', name: 'RFCTLARR Timelines', icon: Clock, count: 5 },
-            { id: 'assets', name: 'DGPS & IoT Pillars', icon: Radio, count: iotList.length },
+
             { id: 'audit', name: 'SHA-256 Ledger', icon: History, count: auditList.length },
             { id: 'health', name: 'System Resilience', icon: Activity, count: '100%' },
           ].map((tab) => {
@@ -666,48 +666,6 @@ export const AdministrationWorkspace: React.FC = () => {
           </div>
         )}
 
-        {/* TAB 5: DGPS & IOT PILLARS */}
-        {activeTab === 'assets' && (
-          <div className="p-5 rounded-2xl bg-white border border-[#E2E8F0] shadow-soft space-y-4 ">
-            <div className="flex justify-between items-center border-b border-[#E2E8F0] pb-3">
-              <div>
-                <h3 className="text-sm font-extrabold text-[#0B132B]">
-                  DGPS Boundary Pillars, IoT Sentinels & Ground Geofence Registry
-                </h3>
-                <p className="text-[11px] text-slate-500">
-                  Encrypted hardware pillars with RTK millimeter fix, tamper accelerometers, and solar battery telemetry.
-                </p>
-              </div>
-              <span className="text-xs font-extrabold text-[#059669] bg-[#ECFDF5] px-3 py-1 rounded-full border border-[#A7F3D0]">
-                {iotList.length} Online Pillars
-              </span>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-              {iotList.map((d: any) => (
-                <div key={d.id} className="p-4 rounded-xl bg-transparent border border-[#E2E8F0] space-y-2.5 text-xs">
-                  <div className="flex justify-between items-center">
-                    <span className="font-mono text-xs text-[#0B132B] font-extrabold">{d.deviceId}</span>
-                    <span className="px-2 py-0.5 rounded text-[9px] font-extrabold bg-[#ECFDF5] text-[#047857]">
-                      {d.status}
-                    </span>
-                  </div>
-                  
-                  <div className="space-y-1 text-[11px] text-[#475569]">
-                    <p className="font-extrabold text-[#0B132B]">{d.khasraNo || 'Alignment Boundary'}</p>
-                    <p className="text-[10px] text-slate-500">Type: {d.deviceType}</p>
-                    <p className="text-[10px] text-indigo-600 font-mono">Precision: {d.precision || '±1.5 cm RTK'}</p>
-                  </div>
-
-                  <div className="pt-2 border-t border-[#E2E8F0] flex justify-between items-center text-[10px] font-mono text-slate-500">
-                    <span>🔋 Battery: {d.batteryPercentage}%</span>
-                    <span>{d.firmwareVersion || 'v2.4-ESP32'}</span>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
 
         {/* TAB 6: CRYPTOGRAPHIC AUDIT LEDGER */}
         {activeTab === 'audit' && (

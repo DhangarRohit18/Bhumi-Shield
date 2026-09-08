@@ -59,22 +59,89 @@ class HomeScreen extends StatelessWidget {
               'View 7/12 records, ULPIN & compensations',
               () => Navigator.push(context, MaterialPageRoute(builder: (_) => const LandholderDirectoryScreen())),
             ),
+            _buildCard(
+              context,
+              '🔲 QR Digital Passport Scanner',
+              'Instant Google Lens & camera QR lookup',
+              () => Navigator.push(context, MaterialPageRoute(builder: (_) => const QrScannerScreen())),
+            ),
+            _buildCard(
+              context,
+              '📐 AR Demarcation HUD',
+              'Real-time 3D camera boundary pillars',
+              () => Navigator.push(context, MaterialPageRoute(builder: (_) => const ArDemarcationScreen())),
+              isDark: true,
+            ),
           ],
         ),
       ),
     );
   }
 
-  Widget _buildCard(BuildContext context, String title, String subtitle, VoidCallback onTap) {
+  Widget _buildCard(BuildContext context, String title, String subtitle, VoidCallback onTap, {bool isDark = false}) {
     return Card(
       margin: const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
-      color: Colors.white,
-      elevation: 2,
+      color: isDark ? const Color(0xFF0B132B) : Colors.white,
+      elevation: isDark ? 4 : 2,
       child: ListTile(
-        title: Text(title, style: const TextStyle(fontWeight: FontWeight.bold)),
-        subtitle: Text(subtitle, style: const TextStyle(fontSize: 12)),
-        trailing: const Icon(Icons.arrow_forward_ios, size: 16),
+        title: Text(title, style: TextStyle(fontWeight: FontWeight.bold, color: isDark ? Colors.white : Colors.black)),
+        subtitle: Text(subtitle, style: TextStyle(fontSize: 12, color: isDark ? const Color(0xFFA0AEC0) : Colors.grey)),
+        trailing: Icon(Icons.arrow_forward_ios, size: 16, color: isDark ? Colors.white54 : Colors.black54),
         onTap: onTap,
+      ),
+    );
+  }
+}
+
+class QrScannerScreen extends StatelessWidget {
+  const QrScannerScreen({super.key});
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text('QR Passport Scanner'), backgroundColor: Colors.white),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Icon(Icons.qr_code_scanner, size: 100, color: Color(0xFF4F46E5)),
+            const SizedBox(height: 20),
+            const Text('Camera Access Required', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+            const SizedBox(height: 8),
+            const Text('Scan Landholder QR Passport to retrieve records.', style: TextStyle(color: Colors.grey)),
+            const SizedBox(height: 30),
+            ElevatedButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('Go Back'),
+            )
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class ArDemarcationScreen extends StatelessWidget {
+  const ArDemarcationScreen({super.key});
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text('AR Demarcation HUD'), backgroundColor: const Color(0xFF0B132B), foregroundColor: Colors.white),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Icon(Icons.view_in_ar, size: 100, color: Color(0xFF059669)),
+            const SizedBox(height: 20),
+            const Text('ARCore Initialization Pending', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+            const SizedBox(height: 8),
+            const Text('Point camera at field boundaries to view DGPS pillars.', style: TextStyle(color: Colors.grey)),
+            const SizedBox(height: 30),
+            ElevatedButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('Go Back'),
+            )
+          ],
+        ),
       ),
     );
   }
