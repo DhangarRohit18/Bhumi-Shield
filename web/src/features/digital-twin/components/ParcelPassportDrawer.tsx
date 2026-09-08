@@ -145,6 +145,27 @@ export const ParcelPassportDrawer: React.FC<ParcelPassportDrawerProps> = ({
           </p>
         </div>
 
+        {/* Dynamic Digital Passport QR Code for Google Lens */}
+        <div className="p-4 rounded-xl border border-indigo-100 bg-gradient-to-tr from-white to-indigo-50 shadow-sm flex flex-col items-center text-center space-y-3">
+          <div className="space-y-1">
+            <h4 className="font-extrabold text-sm text-[#0B132B]">Real-Time Digital Passport</h4>
+            <p className="text-[10px] text-slate-500 font-medium">
+              Scan this QR with Google Lens or any scanner to view live beneficiary & compensation details instantly.
+            </p>
+          </div>
+          <div className="p-2 bg-white rounded-xl shadow-soft border border-slate-200 inline-block">
+            <img 
+              src={`https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=${encodeURIComponent(window.location.origin + '/passport/' + parcel.id)}`} 
+              alt="Digital Passport QR Code"
+              className="w-32 h-32"
+              loading="lazy"
+            />
+          </div>
+          <div className="pt-1 flex items-center justify-center gap-1 text-[9px] font-extrabold uppercase text-indigo-600 tracking-wider">
+            <CheckCircle2 className="w-3 h-3" /> Encrypted Public Gateway
+          </div>
+        </div>
+
         {/* Ownership & Physical Survey Breakdown */}
         <div className="p-3.5 rounded-xl bg-transparent border border-[#E2E8F0] space-y-2">
           <h4 className="font-extrabold text-[11px] uppercase tracking-wider text-slate-500">

@@ -11,6 +11,7 @@ import { AdministrationWorkspace } from './features/admin/AdministrationWorkspac
 import { KrishiSathiWorkspace } from './features/krishi-sathi/KrishiSathiWorkspace';
 import { LoginScreen } from './features/auth/LoginScreen';
 import { BhumiPolicyCopilot } from './components/BhumiPolicyCopilot';
+import { PublicPassportView } from './features/public/PublicPassportView';
 import { UserRole } from './types';
 
 export const App: React.FC = () => {
@@ -19,6 +20,13 @@ export const App: React.FC = () => {
   const [activeTab, setActiveTab] = useState<MainWorkspaceId>('command_center');
   const [seeding, setSeeding] = useState<boolean>(false);
   const [seedNotification, setSeedNotification] = useState<string | null>(null);
+
+  // 0. Handle Public Routes before checking Auth
+  const urlPath = window.location.pathname;
+  if (urlPath.startsWith('/passport/')) {
+    const parcelId = urlPath.split('/passport/')[1];
+    return <PublicPassportView parcelId={parcelId} />;
+  }
 
   const handleLoginSuccess = (role: UserRole) => {
     setIsAuthenticated(true);

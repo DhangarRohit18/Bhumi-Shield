@@ -257,31 +257,7 @@ export const GISCommandMap: React.FC<MapProps> = ({
         )}
       </div>
 
-      {/* Top Right High-Risk Triage Overlay */}
-      {topRiskParcels.length > 0 && (
-        <div className="absolute top-3 right-3 z-[1000] bg-white/80 backdrop-blur-xl border border-[#E2E8F0] rounded-xl p-2.5 shadow-float hidden md:block max-w-xs">
-          <p className="text-[10px] font-extrabold uppercase tracking-wider text-slate-500 flex items-center gap-1 mb-1.5">
-            <AlertCircle className="w-3.5 h-3.5 text-[#DC2626]" /> Critical Delay Hotspots
-          </p>
-          <div className="space-y-1">
-            {topRiskParcels.map((m) => (
-              <div
-                key={m.parcelId}
-                onClick={() => {
-                  const p = parcels.find((item) => item.id === m.parcelId);
-                  if (p) handleMarkerClick(p);
-                }}
-                className="p-1.5 rounded-2xl bg-transparent hover:bg-[#EEF2FF] border border-[#E2E8F0] hover:border-[#FDBA74] flex items-center justify-between cursor-pointer transition-all text-xs"
-              >
-                <span className="font-extrabold text-[#0B132B]">Khasra #{m.khasraNo}</span>
-                <span className="font-mono font-extrabold text-[#DC2626] text-[10px]">
-                  {m.delayRiskScore}% Risk
-                </span>
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
+
 
       {/* Leaflet Map Canvas with dynamic radar styling */}
       <div className={`w-full h-full relative transition-all duration-700 ${
