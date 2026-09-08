@@ -12,6 +12,7 @@ import { KrishiSathiWorkspace } from './features/krishi-sathi/KrishiSathiWorkspa
 import { LoginScreen } from './features/auth/LoginScreen';
 import { BhumiPolicyCopilot } from './components/BhumiPolicyCopilot';
 import { PublicPassportView } from './features/public/PublicPassportView';
+import { projectService } from './services/entities.service';
 import { UserRole } from './types';
 
 export const App: React.FC = () => {
@@ -20,6 +21,17 @@ export const App: React.FC = () => {
   const [activeTab, setActiveTab] = useState<MainWorkspaceId>('command_center');
   const [seeding, setSeeding] = useState<boolean>(false);
   const [seedNotification, setSeedNotification] = useState<string | null>(null);
+
+  // Auto-seed demo dataset if database is empty on initial load
+  React.useEffect(() => {
+    const unsubscribe = projectService.subscribe((projects) => {
+      if (projects.length === 0) {
+        console.log('[AUTO-SEED] Empty database detected. Seeding full dataset...');
+        seedBhumiShieldDemoData().catch(console.error);
+      }
+    });
+    return () => unsubscribe();
+  }, []);
 
   // 0. Handle Public Routes before checking Auth
   const urlPath = window.location.pathname;
