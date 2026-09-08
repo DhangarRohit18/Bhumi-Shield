@@ -82,11 +82,11 @@ export const App: React.FC = () => {
         <main className="flex-1 overflow-y-auto bg-[#FAF8F5]">
           {(activeTab === 'command_center' || activeTab === 'public_projects') && <CommandCenter />}
           {(activeTab === 'gis_heatmap') && <CorridorReadinessWorkspace />}
-          {(activeTab === 'digital_twin' || activeTab === 'projects' || activeTab === 'compensation_rr' || activeTab === 'parcel_verification' || activeTab === 'compensation' || activeTab === 'rr' || activeTab === 'parcel_passport') && <ProjectDigitalTwin />}
-          {(activeTab === 'interventions' || activeTab === 'workload' || activeTab === 'approvals' || activeTab === 'my_tasks') && <OperationsIntelligenceCenter />}
-          {(activeTab === 'reports' || activeTab === 'administration' || activeTab === 'audit' || activeTab === 'iot') && <AdministrationWorkspace />}
+          {(activeTab === 'digital_twin' || activeTab === 'parcel_passport') && <ProjectDigitalTwin />}
+          {(activeTab === 'interventions' || activeTab === 'my_tasks') && <OperationsIntelligenceCenter />}
+          {(activeTab === 'administration' || activeTab === 'audit') && <AdministrationWorkspace />}
           {(activeTab === 'qr_ar' || activeTab === 'grievances') && <KrishiSathiWorkspace />}
-          {(activeTab === 'evidence' || activeTab === 'field_visits') && <StructuralValuationsWorkspace />}
+          {(activeTab === 'evidence') && <StructuralValuationsWorkspace />}
         </main>
       </div>
 

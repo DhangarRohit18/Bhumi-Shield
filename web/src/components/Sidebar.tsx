@@ -9,9 +9,8 @@ import { useAuth } from '../contexts/AuthContext';
 import { UserRole } from '../types';
 
 export type MainWorkspaceId =
-  | 'command_center' | 'digital_twin' | 'gis_heatmap' | 'interventions' | 'workload' | 'approvals' | 'projects' | 'compensation_rr' | 'reports' | 'administration' | 'audit'
-  | 'my_tasks' | 'field_visits' | 'parcel_verification' | 'qr_ar' | 'evidence' | 'compensation' | 'rr' | 'grievances' | 'iot' | 'sync'
-  | 'public_projects' | 'parcel_passport';
+  | 'command_center' | 'digital_twin' | 'gis_heatmap' | 'interventions' | 'administration' | 'audit'
+  | 'my_tasks' | 'qr_ar' | 'evidence' | 'public_projects' | 'parcel_passport' | 'grievances';
 
 interface SidebarProps {
   activeTab: MainWorkspaceId;
@@ -20,10 +19,10 @@ interface SidebarProps {
 
 const ROLE_WORKSPACE_PERMISSIONS: Record<UserRole, MainWorkspaceId[]> = {
   'NATIONAL_EXECUTIVE': [
-    'command_center', 'digital_twin', 'gis_heatmap', 'interventions', 'workload', 'approvals', 'projects', 'compensation_rr', 'reports', 'administration', 'audit'
+    'command_center', 'gis_heatmap', 'digital_twin', 'interventions', 'administration'
   ],
   'FIELD_ACQUISITION': [
-    'my_tasks', 'digital_twin', 'field_visits', 'parcel_verification', 'qr_ar', 'evidence', 'compensation', 'rr', 'grievances', 'iot', 'sync'
+    'my_tasks', 'digital_twin', 'evidence', 'qr_ar'
   ],
   'AUDIT_CITIZEN': [
     'public_projects', 'parcel_passport', 'grievances', 'audit'
@@ -35,23 +34,12 @@ const WORKSPACE_CONFIG: Record<MainWorkspaceId, { name: string, icon: any, badge
   digital_twin: { name: 'Digital Twin', icon: Cpu },
   gis_heatmap: { name: 'GIS / Heatmap', icon: Map, badge: 'AI' },
   interventions: { name: 'Interventions', icon: Brain },
-  workload: { name: 'Workload', icon: Activity },
-  approvals: { name: 'Approvals', icon: CheckCircle },
-  projects: { name: 'Projects', icon: Folder },
-  compensation_rr: { name: 'Compensation & R&R', icon: IndianRupee },
-  reports: { name: 'Reports', icon: PieChart },
   administration: { name: 'Administration', icon: Settings },
   audit: { name: 'Audit', icon: Shield },
   my_tasks: { name: 'My Tasks', icon: List },
-  field_visits: { name: 'Field Visits', icon: MapPin },
-  parcel_verification: { name: 'Parcel Verification', icon: CheckCircle },
   qr_ar: { name: 'QR / AR', icon: Scan },
   evidence: { name: 'Evidence', icon: Camera },
-  compensation: { name: 'Compensation', icon: IndianRupee },
-  rr: { name: 'R&R', icon: Home },
   grievances: { name: 'Grievances', icon: MessageSquare },
-  iot: { name: 'IoT', icon: Wifi },
-  sync: { name: 'Sync', icon: RefreshCw },
   public_projects: { name: 'Public Projects', icon: Globe },
   parcel_passport: { name: 'Parcel Passport', icon: FileText }
 };
