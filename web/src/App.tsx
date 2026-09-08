@@ -47,7 +47,7 @@ export const App: React.FC = () => {
     if (role === 'FIELD_ACQUISITION') {
       setActiveTab('digital_twin');
     } else if (role === 'AUDIT_CITIZEN') {
-      setActiveTab('admin');
+      setActiveTab('krishi_sathi');
     } else {
       setActiveTab('command_center');
     }

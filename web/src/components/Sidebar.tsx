@@ -28,9 +28,25 @@ interface SidebarProps {
 
 // Statutory RBAC Permission Matrix for Workspace Access
 const ROLE_WORKSPACE_PERMISSIONS: Record<UserRole, MainWorkspaceId[]> = {
-  'NATIONAL_EXECUTIVE': ['command_center', 'corridor_readiness', 'digital_twin', 'ops_intelligence', 'admin', 'krishi_sathi', 'structural_valuations'],
-  'FIELD_ACQUISITION': ['corridor_readiness', 'digital_twin', 'ops_intelligence', 'krishi_sathi', 'structural_valuations'],
-  'AUDIT_CITIZEN': ['command_center', 'corridor_readiness', 'digital_twin', 'admin', 'structural_valuations'],
+  'NATIONAL_EXECUTIVE': [
+    'command_center',
+    'corridor_readiness',
+    'digital_twin',
+    'ops_intelligence',
+    'admin',
+    'structural_valuations'
+  ],
+  'FIELD_ACQUISITION': [
+    'digital_twin',
+    'structural_valuations',
+    'krishi_sathi',
+    'corridor_readiness'
+  ],
+  'AUDIT_CITIZEN': [
+    'krishi_sathi',
+    'structural_valuations',
+    'admin'
+  ],
 };
 
 export const Sidebar: React.FC<SidebarProps> = ({
@@ -40,6 +56,12 @@ export const Sidebar: React.FC<SidebarProps> = ({
   const { activeRole } = useAuth();
 
   const allowedWorkspaces = ROLE_WORKSPACE_PERMISSIONS[activeRole] || ['command_center'];
+
+  React.useEffect(() => {
+    if (!allowedWorkspaces.includes(activeTab)) {
+      setActiveTab(allowedWorkspaces[0]);
+    }
+  }, [activeRole, activeTab, allowedWorkspaces, setActiveTab]);
 
   const allWorkspaces: {
     id: MainWorkspaceId;
