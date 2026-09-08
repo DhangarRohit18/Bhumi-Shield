@@ -2,21 +2,12 @@ import { useState, useEffect } from 'react';
 import { FirestoreGenericService } from '../services/firestoreGeneric.service';
 import { BaseEntity } from '../types';
 import { QueryConstraint } from 'firebase/firestore';
-import {
-  FALLBACK_STATES,
-  FALLBACK_DISTRICTS,
-  FALLBACK_PROJECTS,
-  FALLBACK_VILLAGES,
-  FALLBACK_PARCELS,
-  FALLBACK_FARMERS,
-  FALLBACK_BOTTLENECKS,
-  FALLBACK_OFFICER_WORKLOADS,
-  FALLBACK_INTERVENTIONS,
-  FALLBACK_WORKFLOW_EVENTS,
-  FALLBACK_COMPENSATION,
-  FALLBACK_DOCUMENTS,
-  FALLBACK_LEGAL_CASES,
-  FALLBACK_PREDICTIONS,
+import { 
+  FALLBACK_STATES, FALLBACK_DISTRICTS, FALLBACK_PROJECTS, FALLBACK_VILLAGES, 
+  FALLBACK_PARCELS, FALLBACK_FARMERS, FALLBACK_AWARDS, FALLBACK_CORRIDORS,
+  FALLBACK_BOTTLENECKS, FALLBACK_INTERVENTIONS, FALLBACK_WORKLOADS,
+  FALLBACK_EVENTS, FALLBACK_DOCUMENTS, FALLBACK_LEGAL_CASES, FALLBACK_PREDICTIONS,
+  FALLBACK_STRUCTURAL_ASSETS
 } from '../utils/staticFallbackData';
 
 const FALLBACK_MAP: Record<string, any[]> = {
@@ -26,14 +17,16 @@ const FALLBACK_MAP: Record<string, any[]> = {
   'villages': FALLBACK_VILLAGES,
   'parcels': FALLBACK_PARCELS,
   'farmers': FALLBACK_FARMERS,
+  'compensation_awards': FALLBACK_AWARDS,
+  'corridor_segments': FALLBACK_CORRIDORS,
   'bottlenecks': FALLBACK_BOTTLENECKS,
-  'officer_workloads': FALLBACK_OFFICER_WORKLOADS,       // ← fixed key
   'interventions': FALLBACK_INTERVENTIONS,
-  'workflow_events': FALLBACK_WORKFLOW_EVENTS,
-  'compensation': FALLBACK_COMPENSATION,
+  'officer_workloads': FALLBACK_WORKLOADS,
+  'workflow_events': FALLBACK_EVENTS,
   'documents': FALLBACK_DOCUMENTS,
   'legal_cases': FALLBACK_LEGAL_CASES,
   'predictions': FALLBACK_PREDICTIONS,
+  'structural_assets': FALLBACK_STRUCTURAL_ASSETS
 };
 
 export function useFirestoreCollection<T extends BaseEntity>(

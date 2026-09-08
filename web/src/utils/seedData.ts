@@ -1490,6 +1490,38 @@ export async function seedBhumiShieldDemoData(logCallback?: (msg: string) => voi
   }, 'farmer-palghar-010');
 
 
+  // 17.5. Structural Assets
+  log('Seeding Structural Valuation Assets...');
+  await structureAssetService.create({
+    projectId: proj1Id,
+    parcelId: 'ULPIN-RJ-1192J-2026',
+    farmerName: 'Shri Jagdishprasad R. Sharma',
+    structureType: 'PUCCA_HOUSE',
+    builtUpAreaSqFt: 1200,
+    assessedValueINR: 1800000,
+    isDeleted: false,
+  }, 'sa-1');
+
+  await structureAssetService.create({
+    projectId: proj1Id,
+    parcelId: 'ULPIN-UP-7124K-2026',
+    farmerName: 'Shri Suresh Chandra Verma',
+    structureType: 'TUBEWELL',
+    builtUpAreaSqFt: 150,
+    assessedValueINR: 75000,
+    isDeleted: false,
+  }, 'sa-2');
+
+  await structureAssetService.create({
+    projectId: proj1Id,
+    parcelId: 'ULPIN-MH-142A1-2026',
+    farmerName: 'Shri Dattatray B. Patil',
+    structureType: 'KUTCHA_HOUSE',
+    builtUpAreaSqFt: 850,
+    assessedValueINR: 680000,
+    isDeleted: false,
+  }, 'sa-3');
+
   // 18. Audit Log Chronicle
   log('Recording Immutable Audit Trail for National Command Center...');
   await auditService.logAction({
@@ -1499,7 +1531,7 @@ export async function seedBhumiShieldDemoData(logCallback?: (msg: string) => voi
     actorId: 'sys-national-controller',
     actorName: 'National Command Center Orchestrator',
     actorRole: 'NATIONAL_EXECUTIVE',
-    diffPayload: { status: 'SYNCHRONIZED', totalStrategicCorridors: 3, statesActive: 5, totalFarmersSeeded: 10 },
+    diffPayload: { status: 'SYNCHRONIZED', totalStrategicCorridors: 3, statesActive: 5, totalFarmersSeeded: 10, structuresSeeded: 3 },
   });
 
   log('BHUMI-SHIELD National Command Center & Krishi Sathi dataset successfully seeded!');
