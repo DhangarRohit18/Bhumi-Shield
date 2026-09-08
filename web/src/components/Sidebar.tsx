@@ -7,6 +7,7 @@ import {
   Shield,
   Sprout,
   Sparkles,
+  Home,
 } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { UserRole } from '../types';
@@ -17,7 +18,8 @@ export type MainWorkspaceId =
   | 'digital_twin'
   | 'ops_intelligence'
   | 'admin'
-  | 'krishi_sathi';
+  | 'krishi_sathi'
+  | 'structural_valuations';
 
 interface SidebarProps {
   activeTab: MainWorkspaceId;
@@ -26,8 +28,8 @@ interface SidebarProps {
 
 // Statutory RBAC Permission Matrix for Workspace Access
 const ROLE_WORKSPACE_PERMISSIONS: Record<UserRole, MainWorkspaceId[]> = {
-  'NATIONAL_EXECUTIVE': ['command_center', 'corridor_readiness', 'digital_twin', 'ops_intelligence', 'admin', 'krishi_sathi'],
-  'FIELD_ACQUISITION': ['corridor_readiness', 'digital_twin', 'ops_intelligence', 'krishi_sathi'],
+  'NATIONAL_EXECUTIVE': ['command_center', 'corridor_readiness', 'digital_twin', 'ops_intelligence', 'admin', 'krishi_sathi', 'structural_valuations'],
+  'FIELD_ACQUISITION': ['corridor_readiness', 'digital_twin', 'ops_intelligence', 'krishi_sathi', 'structural_valuations'],
   'AUDIT_CITIZEN': ['command_center', 'corridor_readiness', 'digital_twin', 'admin'],
 };
 
@@ -76,6 +78,11 @@ export const Sidebar: React.FC<SidebarProps> = ({
       name: 'Krishi Sathi',
       badge: 'AR',
       icon: Sprout,
+    },
+    {
+      id: 'structural_valuations',
+      name: 'Land with House',
+      icon: Home,
     },
   ];
 

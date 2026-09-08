@@ -25,6 +25,7 @@ import {
   fieldEvidenceService,
   farmerService,
   documentService,
+  structureAssetService,
 } from '../services/entities.service';
 import { auditService } from '../services/audit.service';
 import { calculateOfficerWorkloadScore, calculateFairnessIndex } from './intelligenceCalculations';
@@ -868,6 +869,26 @@ export async function seedBhumiShieldDemoData(logCallback?: (msg: string) => voi
     calculatedWorkloadScore: calculateOfficerWorkloadScore(41, 11, 4.8, 35),
     isAvailable: false,
   }, 'off-up-varanasi-01');
+
+  // 15.7 Structural Assets (Land with House)
+  log('Seeding Structural Asset Data...');
+  await structureAssetService.create({
+    projectId: proj1Id,
+    parcelId: 'pcl-mum-0012',
+    farmerName: 'Shri Eknath M. Patil',
+    structureType: 'PUCCA_HOUSE',
+    builtUpAreaSqFt: 1200,
+    assessedValueINR: 1800000, // 1200 * 1500
+  }, 'structure-mum-001');
+
+  await structureAssetService.create({
+    projectId: proj1Id,
+    parcelId: 'ULPIN-MH-983UM-2026',
+    farmerName: 'Smt. Parvatibai Tukaram Gavit',
+    structureType: 'KUTCHA_HOUSE',
+    builtUpAreaSqFt: 600,
+    assessedValueINR: 480000, // 600 * 800
+  }, 'structure-pal-002');
 
   // 16. Field Reality Verification Visits & Ground Evidence
   log('Seeding General-Purpose Field Operator Verification Records...');

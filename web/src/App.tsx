@@ -9,6 +9,7 @@ import { ProjectDigitalTwin } from './features/digital-twin/ProjectDigitalTwin';
 import { OperationsIntelligenceCenter } from './features/operations-intelligence/OperationsIntelligenceCenter';
 import { AdministrationWorkspace } from './features/admin/AdministrationWorkspace';
 import { KrishiSathiWorkspace } from './features/krishi-sathi/KrishiSathiWorkspace';
+import { StructuralValuationsWorkspace } from './features/structural-valuations/StructuralValuationsWorkspace';
 import { LoginScreen } from './features/auth/LoginScreen';
 import { BhumiPolicyCopilot } from './components/BhumiPolicyCopilot';
 import { PublicPassportView } from './features/public/PublicPassportView';
@@ -85,6 +86,7 @@ export const App: React.FC = () => {
           {activeTab === 'ops_intelligence' && <OperationsIntelligenceCenter />}
           {activeTab === 'admin' && <AdministrationWorkspace />}
           {activeTab === 'krishi_sathi' && <KrishiSathiWorkspace />}
+          {activeTab === 'structural_valuations' && <StructuralValuationsWorkspace />}
         </main>
       </div>
 

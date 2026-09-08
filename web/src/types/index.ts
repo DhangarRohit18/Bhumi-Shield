@@ -775,3 +775,14 @@ export interface CorridorReadinessProject {
   zoom: number;
   segments: CorridorSegment[];
 }
+
+// 19. structure_assets
+export interface StructureAsset extends BaseEntity {
+  projectId: string;
+  parcelId: string;
+  farmerName: string;
+  structureType: 'PUCCA_HOUSE' | 'KUTCHA_HOUSE' | 'COMMERCIAL_SHED' | 'TUBEWELL';
+  builtUpAreaSqFt: number;
+  assessedValueINR: number;
+  photoUrl?: string;
+}

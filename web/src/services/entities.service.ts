@@ -36,6 +36,7 @@ import {
   OCRExtractionJob,
   AuditLogEntry,
   FarmerRecord,
+  StructureAsset,
 } from '../types';
 
 export const userService = new FirestoreGenericService<UserProfile>('users');
@@ -58,6 +59,7 @@ export const legalCaseService = new FirestoreGenericService<LegalCase>('legal_ca
 export const grievanceService = new FirestoreGenericService<Grievance>('grievances');
 export const fieldVisitService = new FirestoreGenericService<FieldVisit>('field_visits');
 export const fieldEvidenceService = new FirestoreGenericService<FieldEvidence>('field_evidence');
+export const structureAssetService = new FirestoreGenericService<StructureAsset>('structure_assets');
 export const qrAssetService = new FirestoreGenericService<QRAsset>('qr_assets');
 export const iotDeviceService = new FirestoreGenericService<IoTDevice>('iot_devices');
 export const iotEventService = new FirestoreGenericService<IoTEvent>('iot_events');
