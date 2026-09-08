@@ -1,13 +1,37 @@
-﻿import { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { FirestoreGenericService } from '../services/firestoreGeneric.service';
 import { BaseEntity } from '../types';
 import { QueryConstraint } from 'firebase/firestore';
+import {
+  FALLBACK_STATES,
+  FALLBACK_DISTRICTS,
+  FALLBACK_PROJECTS,
+  FALLBACK_VILLAGES,
+  FALLBACK_PARCELS,
+  FALLBACK_FARMERS,
+  FALLBACK_BOTTLENECKS,
+  FALLBACK_OFFICER_WORKLOADS
+} from '../utils/staticFallbackData';
+
+const FALLBACK_MAP: Record<string, any[]> = {
+  'states': FALLBACK_STATES,
+  'districts': FALLBACK_DISTRICTS,
+  'projects': FALLBACK_PROJECTS,
+  'villages': FALLBACK_VILLAGES,
+  'parcels': FALLBACK_PARCELS,
+  'farmers': FALLBACK_FARMERS,
+  'bottlenecks': FALLBACK_BOTTLENECKS,
+  'officer_workload_scores': FALLBACK_OFFICER_WORKLOADS
+};
 
 export function useFirestoreCollection<T extends BaseEntity>(
   service: FirestoreGenericService<T>,
   constraints: QueryConstraint[] = []
 ) {
-  const [data, setData] = useState<T[]>([]);
+  const collectionName = (service as any).collectionName || '';
+  const fallbackList = (FALLBACK_MAP[collectionName] as T[]) || [];
+
+  const [data, setData] = useState<T[]>(fallbackList);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<Error | null>(null);
 
@@ -15,18 +39,24 @@ export function useFirestoreCollection<T extends BaseEntity>(
     setLoading(true);
     const unsubscribe = service.subscribe(
       (items) => {
-        setData(items);
+        if (items && items.length > 0) {
+          setData(items);
+        } else {
+          setData(fallbackList);
+        }
         setLoading(false);
       },
       (err) => {
+        console.warn(`[Firestore Hook Warning] ${collectionName} subscription failed. Using fallback dataset.`, err);
         setError(err);
+        setData(fallbackList);
         setLoading(false);
       },
       constraints
     );
 
     return () => unsubscribe();
-  }, [service]);
+  }, [service, collectionName]);
 
   return { data, loading, error };
 }
