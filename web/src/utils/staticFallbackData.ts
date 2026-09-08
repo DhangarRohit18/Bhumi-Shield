@@ -59,12 +59,6 @@ export const FALLBACK_VILLAGES: Village[] = [
   { id: "vil-rohania", projectId: "proj-eastern-dfc", districtId: "dist-varanasi", name: "Rohania", censusCode: "VIL-UP-10901", totalParcelsCount: 64, createdAt: ts, updatedAt: ts },
 ];
 
-export const FALLBACK_STRUCTURAL_ASSETS: any[] = [
-  { id: 'sa-1', projectId: 'proj-bullet-train-sec-3', parcelId: 'ULPIN-RJ-1192J-2026', farmerName: 'Shri Jagdishprasad R. Sharma', structureType: 'PUCCA_HOUSE', builtUpAreaSqFt: 1200, assessedValueINR: 1800000, isDeleted: false },
-  { id: 'sa-2', projectId: 'proj-bullet-train-sec-3', parcelId: 'ULPIN-UP-7124K-2026', farmerName: 'Shri Suresh Chandra Verma', structureType: 'TUBEWELL', builtUpAreaSqFt: 150, assessedValueINR: 75000, isDeleted: false },
-  { id: 'sa-3', projectId: 'proj-bullet-train-sec-3', parcelId: 'ULPIN-MH-142A1-2026', farmerName: 'Shri Dattatray B. Patil', structureType: 'KUTCHA_HOUSE', builtUpAreaSqFt: 850, assessedValueINR: 680000, isDeleted: false }
-];
-
 // ─── PARCELS ──────────────────────────────────────────────────────────────────
 export const FALLBACK_PARCELS: Parcel[] = [
   {
@@ -381,5 +375,9 @@ export const FALLBACK_FARMERS: FarmerRecord[] = [
     qrPasscode: "QR-KS-UP-55AK", arVerificationStatus: "VERIFIED", createdAt: ts, updatedAt: ts,
   },
 ];
-e x p o r t   c o n s t   F A L L B A C K _ S T R U C T U R A L _ A S S E T S :   a n y [ ]   =   [   {   i d :   ' s a - 1 ' ,   p r o j e c t I d :   ' p r o j - b u l l e t - t r a i n - s e c - 3 ' ,   p a r c e l I d :   ' U L P I N - R J - 1 1 9 2 J - 2 0 2 6 ' ,   f a r m e r N a m e :   ' S h r i   J a g d i s h p r a s a d   R .   S h a r m a ' ,   s t r u c t u r e T y p e :   ' P U C C A _ H O U S E ' ,   b u i l t U p A r e a S q F t :   1 2 0 0 ,   a s s e s s e d V a l u e I N R :   1 8 0 0 0 0 0 ,   i s D e l e t e d :   f a l s e   } ,   {   i d :   ' s a - 2 ' ,   p r o j e c t I d :   ' p r o j - b u l l e t - t r a i n - s e c - 3 ' ,   p a r c e l I d :   ' U L P I N - U P - 7 1 2 4 K - 2 0 2 6 ' ,   f a r m e r N a m e :   ' S h r i   S u r e s h   C h a n d r a   V e r m a ' ,   s t r u c t u r e T y p e :   ' T U B E W E L L ' ,   b u i l t U p A r e a S q F t :   1 5 0 ,   a s s e s s e d V a l u e I N R :   7 5 0 0 0 ,   i s D e l e t e d :   f a l s e   } ,   {   i d :   ' s a - 3 ' ,   p r o j e c t I d :   ' p r o j - b u l l e t - t r a i n - s e c - 3 ' ,   p a r c e l I d :   ' U L P I N - M H - 1 4 2 A 1 - 2 0 2 6 ' ,   f a r m e r N a m e :   ' S h r i   D a t t a t r a y   B .   P a t i l ' ,   s t r u c t u r e T y p e :   ' K U T C H A _ H O U S E ' ,   b u i l t U p A r e a S q F t :   8 5 0 ,   a s s e s s e d V a l u e I N R :   6 8 0 0 0 0 ,   i s D e l e t e d :   f a l s e   }   ] ;  
- 
+
+export const FALLBACK_STRUCTURAL_ASSETS: any[] = [
+  { id: 'sa-1', projectId: 'proj-bullet-train-sec-3', parcelId: 'ULPIN-RJ-1192J-2026', farmerName: 'Shri Jagdishprasad R. Sharma', structureType: 'PUCCA_HOUSE', builtUpAreaSqFt: 1200, assessedValueINR: 1800000, isDeleted: false },
+  { id: 'sa-2', projectId: 'proj-bullet-train-sec-3', parcelId: 'ULPIN-UP-7124K-2026', farmerName: 'Shri Suresh Chandra Verma', structureType: 'TUBEWELL', builtUpAreaSqFt: 150, assessedValueINR: 75000, isDeleted: false },
+  { id: 'sa-3', projectId: 'proj-bullet-train-sec-3', parcelId: 'ULPIN-MH-142A1-2026', farmerName: 'Shri Dattatray B. Patil', structureType: 'KUTCHA_HOUSE', builtUpAreaSqFt: 850, assessedValueINR: 680000, isDeleted: false }
+];
