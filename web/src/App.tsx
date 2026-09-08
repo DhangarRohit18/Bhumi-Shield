@@ -82,8 +82,6 @@ export const App: React.FC = () => {
       <Sidebar
         activeTab={activeTab}
         setActiveTab={setActiveTab}
-        seeding={seeding}
-        handleSeed={handleSeed}
       />
 
       <div className="flex-1 flex flex-col min-w-0 overflow-hidden bg-[#FAF8F5]">

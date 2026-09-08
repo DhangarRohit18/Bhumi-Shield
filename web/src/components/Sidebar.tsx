@@ -22,8 +22,6 @@ export type MainWorkspaceId =
 interface SidebarProps {
   activeTab: MainWorkspaceId;
   setActiveTab: (t: MainWorkspaceId) => void;
-  seeding?: boolean;
-  handleSeed?: () => void;
 }
 
 // Statutory RBAC Permission Matrix for Workspace Access
@@ -36,8 +34,6 @@ const ROLE_WORKSPACE_PERMISSIONS: Record<UserRole, MainWorkspaceId[]> = {
 export const Sidebar: React.FC<SidebarProps> = ({
   activeTab,
   setActiveTab,
-  seeding,
-  handleSeed,
 }) => {
   const { activeRole } = useAuth();
 
