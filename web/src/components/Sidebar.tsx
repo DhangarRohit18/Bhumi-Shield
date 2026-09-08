@@ -30,7 +30,7 @@ interface SidebarProps {
 const ROLE_WORKSPACE_PERMISSIONS: Record<UserRole, MainWorkspaceId[]> = {
   'NATIONAL_EXECUTIVE': ['command_center', 'corridor_readiness', 'digital_twin', 'ops_intelligence', 'admin', 'krishi_sathi', 'structural_valuations'],
   'FIELD_ACQUISITION': ['corridor_readiness', 'digital_twin', 'ops_intelligence', 'krishi_sathi', 'structural_valuations'],
-  'AUDIT_CITIZEN': ['command_center', 'corridor_readiness', 'digital_twin', 'admin'],
+  'AUDIT_CITIZEN': ['command_center', 'corridor_readiness', 'digital_twin', 'admin', 'krishi_sathi', 'structural_valuations'],
 };
 
 export const Sidebar: React.FC<SidebarProps> = ({
@@ -81,7 +81,8 @@ export const Sidebar: React.FC<SidebarProps> = ({
     },
     {
       id: 'structural_valuations',
-      name: 'Land with House',
+      name: 'Land with Property',
+      badge: 'BSR',
       icon: Home,
     },
   ];
