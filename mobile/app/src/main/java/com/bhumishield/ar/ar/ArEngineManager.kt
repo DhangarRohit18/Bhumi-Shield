@@ -44,7 +44,11 @@ data class ArEngineState(
     val selectedParcel: Parcel? = null,
     val alignmentStatus: AlignmentStatus = AlignmentStatus.NOT_CALIBRATED,
     val headingOffsetDegrees: Float = 0.0f,
-    val isBoundaryReady: Boolean = false
+    val isBoundaryReady: Boolean = false,
+
+    // AR Measurement State
+    val polygonDistances: List<Float> = emptyList(),
+    val totalPerimeter: Float = 0.0f
 )
 
 /**

@@ -129,6 +129,29 @@ fun ArBottomControlPanel(
                 )
             }
 
+            // AR Measurements Display
+            if (arState.polygonDistances.isNotEmpty()) {
+                Spacer(modifier = Modifier.height(4.dp))
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(
+                        text = "Edges: " + arState.polygonDistances.joinToString(" • ") { "%.1fm".format(it) },
+                        fontSize = 9.sp,
+                        color = Color(0xFFA5B4FC), // Indigo-200
+                        fontWeight = FontWeight.Medium
+                    )
+                    Text(
+                        text = "Perimeter: %.1fm".format(arState.totalPerimeter),
+                        fontSize = 10.sp,
+                        color = Color(0xFF818CF8), // Indigo-400
+                        fontWeight = FontWeight.Bold
+                    )
+                }
+            }
+
             Spacer(modifier = Modifier.height(6.dp))
 
             // Action Bar

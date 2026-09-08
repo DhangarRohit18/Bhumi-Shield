@@ -34,7 +34,7 @@ class ArCoreEngineManager : ArEngineManager {
 
     private var session: Session? = null
     private var currentFrame: Frame? = null
-    private var activeAnchor: Anchor? = null        // Phase 1 Test Pillar Anchor
+    private val activeAnchors = mutableListOf<Anchor>()     // Phase 1 Test Pillars / AR Measurement Points
     private var calibrationAnchor: Anchor? = null   // Phase 2 Parcel Reference Calibration Anchor
     private var planeFindingMode = Config.PlaneFindingMode.HORIZONTAL
 
@@ -46,7 +46,7 @@ class ArCoreEngineManager : ArEngineManager {
     private val mainHandler = Handler(Looper.getMainLooper())
 
     fun getSession(): Session? = session
-    fun getActiveAnchors(): List<Anchor> = activeAnchor?.let { listOf(it) } ?: emptyList()
+    fun getActiveAnchors(): List<Anchor> = activeAnchors
     override fun getCalibrationAnchor(): Anchor? = calibrationAnchor
 
     override fun checkAvailability(context: Context) {
@@ -92,7 +92,7 @@ class ArCoreEngineManager : ArEngineManager {
             _state.update {
                 it.copy(
                     trackingStatus = TrackingStatus.TRACKING,
-                    instructionText = if (activeAnchor != null || calibrationAnchor != null)
+                    instructionText = if (activeAnchors.isNotEmpty() || calibrationAnchor != null)
                         "Tracking active" else "Move your phone slowly to detect a surface.",
                     errorMessage = null
                 )
@@ -153,8 +153,8 @@ class ArCoreEngineManager : ArEngineManager {
     }
 
     override fun clearAnchors() {
-        activeAnchor?.detach()
-        activeAnchor = null
+        activeAnchors.forEach { it.detach() }
+        activeAnchors.clear()
         _state.update {
             it.copy(
                 anchorsCount = if (calibrationAnchor != null) 1 else 0,
@@ -239,7 +239,7 @@ class ArCoreEngineManager : ArEngineManager {
                 alignmentStatus = AlignmentStatus.NOT_CALIBRATED,
                 headingOffsetDegrees = 0.0f,
                 isBoundaryReady = false,
-                anchorsCount = if (activeAnchor != null) 1 else 0,
+                anchorsCount = activeAnchors.size,
                 instructionText = "Alignment cleared.",
                 errorMessage = null
             )
@@ -354,22 +354,26 @@ class ArCoreEngineManager : ArEngineManager {
                         _state.update {
                             it.copy(
                                 alignmentStatus = AlignmentStatus.REFERENCE_CALIBRATED,
-                                anchorsCount = (if (activeAnchor != null) 1 else 0) + 1,
+                                anchorsCount = activeAnchors.size + 1,
                                 instructionText = "✓ REFERENCE CALIBRATED. Next: Calibrate Orientation.",
                                 errorMessage = null
                             )
                         }
                     }
                 } else {
-                    activeAnchor?.detach()
-                    activeAnchor = newAnchor
+                    if (activeAnchors.size >= 4) {
+                        // Clear the oldest or all to start a new polygon. We'll clear all for a fresh start.
+                        activeAnchors.forEach { it.detach() }
+                        activeAnchors.clear()
+                    }
+                    activeAnchors.add(newAnchor)
                     AppLogger.i("New ARCore Test Pillar Anchor created at pose: ${newAnchor.pose}")
 
                     mainHandler.post {
                         _state.update {
                             it.copy(
-                                anchorsCount = (if (calibrationAnchor != null) 1 else 0) + 1,
-                                instructionText = "Marker placed"
+                                anchorsCount = (if (calibrationAnchor != null) 1 else 0) + activeAnchors.size,
+                                instructionText = "Marker placed (${activeAnchors.size}/4)"
                             )
                         }
                     }
@@ -402,7 +406,7 @@ class ArCoreEngineManager : ArEngineManager {
         val planeCount = activePlanes.size
 
         var totalAnchors = 0
-        if (activeAnchor?.trackingState == TrackingState.TRACKING) totalAnchors++
+        totalAnchors += activeAnchors.count { it.trackingState == TrackingState.TRACKING }
         if (calibrationAnchor?.trackingState == TrackingState.TRACKING) totalAnchors++
 
         val currentState = _state.value
@@ -411,19 +415,44 @@ class ArCoreEngineManager : ArEngineManager {
             currentState.alignmentStatus == AlignmentStatus.CALIBRATING_REFERENCE -> "CALIBRATING... Tap physical reference point on detected surface."
             currentState.alignmentStatus == AlignmentStatus.READY -> "✓ Boundary calibrated and ready in AR viewport."
             currentState.alignmentStatus == AlignmentStatus.REFERENCE_CALIBRATED -> "✓ REFERENCE CALIBRATED. Tap Calibrate Orientation."
-            activeAnchor?.trackingState == TrackingState.TRACKING -> {
-                val camPose = frame.camera.pose
-                val ancPose = activeAnchor!!.pose
-                val dx = camPose.tx() - ancPose.tx()
-                val dy = camPose.ty() - ancPose.ty()
-                val dz = camPose.tz() - ancPose.tz()
-                val distance = kotlin.math.sqrt(dx * dx + dy * dy + dz * dz)
-                "Marker placed: %.2f m away".format(distance)
+            activeAnchors.isNotEmpty() -> {
+                "Marker placed (${activeAnchors.size}/4). Total Perimeter: %.1fm".format(_state.value.totalPerimeter)
             }
             calibrationAnchor?.trackingState == TrackingState.TRACKING -> "Reference marker placed"
             planeCount > 0 -> "Surface detected — tap to place marker."
             else -> "Move your phone slowly to detect a surface."
         }
+
+        val distances = mutableListOf<Float>()
+        var perimeter = 0f
+        
+        // Only consider tracking anchors
+        val validAnchors = activeAnchors.filter { it.trackingState == TrackingState.TRACKING }
+        if (validAnchors.size > 1) {
+            for (i in 0 until validAnchors.size - 1) {
+                val pose1 = validAnchors[i].pose
+                val pose2 = validAnchors[i+1].pose
+                val dx = pose1.tx() - pose2.tx()
+                val dy = pose1.ty() - pose2.ty()
+                val dz = pose1.tz() - pose2.tz()
+                val dist = kotlin.math.sqrt(dx * dx + dy * dy + dz * dz)
+                distances.add(dist)
+                perimeter += dist
+            }
+            // If 4 anchors are placed, close the polygon loop
+            if (validAnchors.size == 4) {
+                val pose1 = validAnchors[3].pose
+                val pose2 = validAnchors[0].pose
+                val dx = pose1.tx() - pose2.tx()
+                val dy = pose1.ty() - pose2.ty()
+                val dz = pose1.tz() - pose2.tz()
+                val dist = kotlin.math.sqrt(dx * dx + dy * dy + dz * dz)
+                distances.add(dist)
+                perimeter += dist
+            }
+        }
+
+        totalAnchors += validAnchors.size
 
         mainHandler.post {
             _state.update {
@@ -431,7 +460,9 @@ class ArCoreEngineManager : ArEngineManager {
                     trackingStatus = trackingStatus,
                     detectedPlanesCount = planeCount,
                     anchorsCount = totalAnchors,
-                    instructionText = instruction
+                    instructionText = instruction,
+                    polygonDistances = distances,
+                    totalPerimeter = perimeter
                 )
             }
         }
