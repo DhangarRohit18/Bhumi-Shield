@@ -54,19 +54,19 @@ export const CorridorMapViewer: React.FC<CorridorMapViewerProps> = ({
   const isRailway = project.code.includes('CR') || project.code.includes('DFCCIL') || project.code.includes('MAHSR') || project.name.toLowerCase().includes('railway') || project.name.toLowerCase().includes('train');
 
   return (
-    <div className="relative w-full h-[560px] rounded-2xl overflow-hidden border border-slate-200/80 shadow-soft bg-white font-sans">
+    <div className="relative w-full h-[560px] rounded-2xl overflow-hidden border border-slate-200/80 shadow-soft bg-white ">
       {/* Top Left Floating Legend, Basemap Switcher & Pan-India View */}
-      <div className="absolute top-3 left-3 z-[1000] bg-white/95 backdrop-blur-md border border-slate-200/90 rounded-2xl p-3.5 shadow-float space-y-2.5 max-w-[360px]">
+      <div className="absolute top-3 left-3 z-[1000] bg-white/80 backdrop-blur-xl border border-slate-200/90 rounded-2xl p-3.5 shadow-float space-y-2.5 max-w-[360px]">
         <div className="flex items-center justify-between border-b border-slate-100 pb-2 gap-2">
           <div className="flex items-center gap-2">
-            <div className="p-1 rounded-lg bg-indigo-600 text-white shadow-2xs">
+            <div className="p-1 rounded-2xl bg-indigo-600 text-white shadow-2xs">
               {isRailway ? <Train className="w-3.5 h-3.5" /> : <Activity className="w-3.5 h-3.5" />}
             </div>
             <div>
-              <span className="text-xs font-black text-[#0B132B] uppercase tracking-wider block leading-tight">
+              <span className="text-xs font-extrabold text-[#0B132B] uppercase tracking-wider block leading-tight">
                 {isRailway ? 'Rail Corridor GIS' : 'Corridor Readiness GIS'}
               </span>
-              <span className="text-[9px] font-bold text-slate-500 font-mono">
+              <span className="text-[9px] font-extrabold text-slate-500 font-mono">
                 {project.state} • {project.totalLengthKm} km
               </span>
             </div>
@@ -90,10 +90,10 @@ export const CorridorMapViewer: React.FC<CorridorMapViewerProps> = ({
         <div className="grid grid-cols-3 gap-1 bg-slate-100 p-1 rounded-xl">
           <button
             onClick={() => setBasemap('TERRAIN')}
-            className={`px-2 py-1 rounded-lg text-[10px] font-extrabold flex items-center justify-center gap-1 transition-all cursor-pointer ${
+            className={`px-2 py-1 rounded-2xl text-[10px] font-extrabold flex items-center justify-center gap-1 transition-all cursor-pointer ${
               basemap === 'TERRAIN'
-                ? 'bg-white text-emerald-800 shadow-2xs font-black'
-                : 'text-slate-600 hover:text-slate-900'
+                ? 'bg-white text-emerald-800 shadow-2xs font-extrabold'
+                : 'text-slate-600 hover:text-[#0B132B]'
             }`}
           >
             <Mountain className="w-3 h-3 text-emerald-600" />
@@ -102,10 +102,10 @@ export const CorridorMapViewer: React.FC<CorridorMapViewerProps> = ({
 
           <button
             onClick={() => setBasemap('SATELLITE')}
-            className={`px-2 py-1 rounded-lg text-[10px] font-extrabold flex items-center justify-center gap-1 transition-all cursor-pointer ${
+            className={`px-2 py-1 rounded-2xl text-[10px] font-extrabold flex items-center justify-center gap-1 transition-all cursor-pointer ${
               basemap === 'SATELLITE'
-                ? 'bg-white text-indigo-800 shadow-2xs font-black'
-                : 'text-slate-600 hover:text-slate-900'
+                ? 'bg-white text-indigo-800 shadow-2xs font-extrabold'
+                : 'text-slate-600 hover:text-[#0B132B]'
             }`}
           >
             <Satellite className="w-3 h-3 text-indigo-600" />
@@ -114,10 +114,10 @@ export const CorridorMapViewer: React.FC<CorridorMapViewerProps> = ({
 
           <button
             onClick={() => setBasemap('OPTICAL')}
-            className={`px-2 py-1 rounded-lg text-[10px] font-extrabold flex items-center justify-center gap-1 transition-all cursor-pointer ${
+            className={`px-2 py-1 rounded-2xl text-[10px] font-extrabold flex items-center justify-center gap-1 transition-all cursor-pointer ${
               basemap === 'OPTICAL'
-                ? 'bg-white text-blue-800 shadow-2xs font-black'
-                : 'text-slate-600 hover:text-slate-900'
+                ? 'bg-white text-blue-800 shadow-2xs font-extrabold'
+                : 'text-slate-600 hover:text-[#0B132B]'
             }`}
           >
             <MapIcon className="w-3 h-3 text-blue-600" />
@@ -126,7 +126,7 @@ export const CorridorMapViewer: React.FC<CorridorMapViewerProps> = ({
         </div>
 
         {/* Legend Grid */}
-        <div className="grid grid-cols-2 gap-1.5 text-[10px] font-bold pt-0.5">
+        <div className="grid grid-cols-2 gap-1.5 text-[10px] font-extrabold pt-0.5">
           <div className="flex items-center gap-1.5 text-emerald-700">
             <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 shrink-0"></span>
             <span>🟢 Cleared ({project.clearedKm} km)</span>
@@ -153,11 +153,11 @@ export const CorridorMapViewer: React.FC<CorridorMapViewerProps> = ({
           <div className="flex items-center justify-between border-b border-white/10 pb-1.5">
             <div className="flex items-center gap-1.5">
               <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping" />
-              <span className="text-[10px] font-black uppercase text-emerald-400 tracking-wider">
+              <span className="text-[10px] font-extrabold uppercase text-emerald-400 tracking-wider">
                 {isRailway ? 'Live Track Telemetry' : 'Live Earthwork Telemetry'}
               </span>
             </div>
-            <span className="text-[9px] font-mono text-cyan-300 font-bold bg-white/10 px-1.5 py-0.5 rounded">
+            <span className="text-[9px] font-mono text-cyan-300 font-extrabold bg-white/10 px-1.5 py-0.5 rounded">
               DGPS RTK LIVE
             </span>
           </div>
@@ -165,11 +165,11 @@ export const CorridorMapViewer: React.FC<CorridorMapViewerProps> = ({
           <div className="space-y-1 text-[11px] font-medium text-slate-200">
             <div className="flex justify-between">
               <span className="text-slate-400">Track Formation Rate:</span>
-              <span className="font-mono font-black text-white">180 m / day</span>
+              <span className="font-mono font-extrabold text-white">180 m / day</span>
             </div>
             <div className="flex justify-between">
               <span className="text-slate-400">Balaghat Mountain Ridge:</span>
-              <span className="font-mono font-bold text-amber-300">680m ASL (1:100 Gradient)</span>
+              <span className="font-mono font-extrabold text-amber-300">680m ASL (1:100 Gradient)</span>
             </div>
             <div className="flex justify-between">
               <span className="text-slate-400">Active Machine:</span>
@@ -180,16 +180,16 @@ export const CorridorMapViewer: React.FC<CorridorMapViewerProps> = ({
 
         {/* Selected Segment Badge */}
         {selectedSegment && (
-          <div className="bg-white/95 backdrop-blur-md border border-indigo-500/80 rounded-2xl p-3 shadow-float animate-in fade-in">
+          <div className="bg-white/80 backdrop-blur-xl border border-indigo-500/80 rounded-2xl p-3 shadow-float animate-in fade-in">
             <div className="flex items-center justify-between gap-2 mb-1">
-              <span className="text-[10px] font-mono font-black text-indigo-600 uppercase tracking-wider">
+              <span className="text-[10px] font-mono font-extrabold text-indigo-600 uppercase tracking-wider">
                 Active Focus
               </span>
-              <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-indigo-50 text-indigo-800 border border-indigo-200">
+              <span className="text-[10px] font-extrabold px-2 py-0.5 rounded-full bg-indigo-50 text-indigo-800 border border-indigo-200">
                 Score: {selectedSegment.readinessScore}/100
               </span>
             </div>
-            <h4 className="text-xs font-black text-[#0B132B] leading-tight line-clamp-1">
+            <h4 className="text-xs font-extrabold text-[#0B132B] leading-tight line-clamp-1">
               {selectedSegment.segmentName}
             </h4>
             <p className="text-[10px] text-slate-500 mt-0.5 truncate">
@@ -264,9 +264,9 @@ export const CorridorMapViewer: React.FC<CorridorMapViewerProps> = ({
                 }}
               >
                 <Tooltip sticky>
-                  <div className="p-1 text-xs font-sans">
-                    <strong className="font-extrabold text-[#0F172A] block">{otherProj.name}</strong>
-                    <span className="text-[10px] text-[#0284C7] font-bold">{otherProj.totalLengthKm} km • Click to Switch</span>
+                  <div className="p-1 text-xs ">
+                    <strong className="font-extrabold text-[#0B132B] block">{otherProj.name}</strong>
+                    <span className="text-[10px] text-[#4F46E5] font-extrabold">{otherProj.totalLengthKm} km • Click to Switch</span>
                   </div>
                 </Tooltip>
               </Polyline>
@@ -276,7 +276,7 @@ export const CorridorMapViewer: React.FC<CorridorMapViewerProps> = ({
                 center={otherProj.center}
                 radius={5}
                 pathOptions={{
-                  color: '#0F172A',
+                  color: '#0B132B',
                   fillColor: '#38BDF8',
                   fillOpacity: 0.9,
                   weight: 1.5,
@@ -304,7 +304,7 @@ export const CorridorMapViewer: React.FC<CorridorMapViewerProps> = ({
                 <Polyline
                   positions={seg.coordinates}
                   pathOptions={{
-                    color: '#EA580C',
+                    color: '#4F46E5',
                     weight: 12,
                     opacity: 0.5,
                   }}
@@ -325,9 +325,9 @@ export const CorridorMapViewer: React.FC<CorridorMapViewerProps> = ({
                 }}
               >
                 <Tooltip sticky>
-                  <div className="p-1 text-xs font-sans">
-                    <strong className="font-extrabold text-[#0F172A] block">{seg.segmentName}</strong>
-                    <span className="text-[10px] text-[#64748B]">{seg.villageName} • Readiness {seg.readinessScore}/100</span>
+                  <div className="p-1 text-xs ">
+                    <strong className="font-extrabold text-[#0B132B] block">{seg.segmentName}</strong>
+                    <span className="text-[10px] text-slate-500">{seg.villageName} • Readiness {seg.readinessScore}/100</span>
                   </div>
                 </Tooltip>
               </Polyline>
@@ -337,7 +337,7 @@ export const CorridorMapViewer: React.FC<CorridorMapViewerProps> = ({
                 center={seg.center}
                 radius={isSelected ? 9 : 7}
                 pathOptions={{
-                  color: isSelected ? '#EA580C' : '#FFFFFF',
+                  color: isSelected ? '#4F46E5' : '#FFFFFF',
                   fillColor: config.polylineColor,
                   fillOpacity: 1,
                   weight: 2.5,
@@ -347,17 +347,17 @@ export const CorridorMapViewer: React.FC<CorridorMapViewerProps> = ({
                 }}
               >
                 <Popup>
-                  <div className="p-2 text-xs font-sans space-y-1.5 min-w-[220px]">
+                  <div className="p-2 text-xs  space-y-1.5 min-w-[220px]">
                     <div className="flex items-center justify-between border-b pb-1">
-                      <span className="font-extrabold text-[#0F172A]">{seg.villageName}</span>
-                      <span className="font-mono font-bold text-[10px] text-[#EA580C]">{seg.readinessScore}/100</span>
+                      <span className="font-extrabold text-[#0B132B]">{seg.villageName}</span>
+                      <span className="font-mono font-extrabold text-[10px] text-indigo-600">{seg.readinessScore}/100</span>
                     </div>
                     <p className="text-[11px] text-[#475569]">{seg.keyImpediment}</p>
-                    <div className="flex justify-between items-center pt-1 border-t text-[10px] text-[#0284C7] font-bold">
+                    <div className="flex justify-between items-center pt-1 border-t text-[10px] text-[#4F46E5] font-extrabold">
                       <span>{seg.affectedLandholdersCount} Landholders</span>
                       <button
                         onClick={() => onSelectSegment(seg)}
-                        className="text-[#EA580C] underline font-bold cursor-pointer"
+                        className="text-indigo-600 underline font-extrabold cursor-pointer"
                       >
                         Inspect Details →
                       </button>

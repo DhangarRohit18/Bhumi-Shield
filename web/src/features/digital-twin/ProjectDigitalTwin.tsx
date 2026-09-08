@@ -127,7 +127,7 @@ export const ProjectDigitalTwin: React.FC = () => {
   };
 
   return (
-    <div className="flex flex-col min-h-screen bg-[#F8FAFC] text-[#0F172A]">
+    <div className="flex flex-col min-h-screen bg-transparent text-[#0B132B]">
       <TwinHeader
         project={activeProject}
         projects={allProjects}
@@ -177,7 +177,7 @@ export const ProjectDigitalTwin: React.FC = () => {
           <div className="space-y-4">
             <div className="flex justify-between items-center">
               <div>
-                <h2 className="text-sm font-bold text-[#2D2823]">Bhumi-Chakra: Spatial Sentinel & Corridor Bounds</h2>
+                <h2 className="text-sm font-extrabold text-[#2D2823]">Bhumi-Chakra: Spatial Sentinel & Corridor Bounds</h2>
                 <p className="text-xs text-[#786C5E]">Interactive GIS geometry, surveyed plot polygons & boundary telemetry</p>
               </div>
             </div>

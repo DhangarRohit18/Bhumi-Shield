@@ -72,17 +72,17 @@ export const DelayFactorBreakdown: React.FC<DelayFactorBreakdownProps> = ({
   ];
 
   return (
-    <div className="bg-white rounded-2xl p-5 border border-[#BAE6FD]/80 shadow-sm space-y-4 font-sans">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-[#BAE6FD]/40 pb-3">
+    <div className="bg-white rounded-2xl p-5 border border-slate-200/80/80 shadow-soft space-y-4 ">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-200/80/40 pb-3">
         <div className="flex items-center gap-2">
-          <div className="p-2 rounded-xl bg-[#EA580C] text-white shadow-sm">
+          <div className="p-2 rounded-xl bg-brand-gradient text-white shadow-soft">
             <HelpCircle className="w-5 h-5 text-white" />
           </div>
           <div>
-            <h3 className="text-sm font-black text-[#0F172A] tracking-tight">
+            <h3 className="text-sm font-extrabold text-[#0B132B] tracking-tight">
               Why is this Corridor Delayed?
             </h3>
-            <p className="text-xs text-[#64748B]">
+            <p className="text-xs text-slate-500">
               Root-cause social consent, legal & administrative bottleneck breakdown
             </p>
           </div>
@@ -93,12 +93,12 @@ export const DelayFactorBreakdown: React.FC<DelayFactorBreakdownProps> = ({
           {activeFactorFilter !== 'ALL' && (
             <button
               onClick={() => onSelectFactor('ALL')}
-              className="text-[11px] font-bold text-[#EA580C] hover:underline bg-[#FFF7ED] px-2.5 py-1 rounded-lg border border-[#FFEDD5] cursor-pointer"
+              className="text-[11px] font-extrabold text-indigo-600 hover:underline bg-[#EEF2FF] px-2.5 py-1 rounded-2xl border border-[#E0E7FF] cursor-pointer"
             >
               Clear Factor Filter ✕
             </button>
           )}
-          <span className="text-[11px] font-bold px-2.5 py-1 rounded-lg bg-[#F0F7FF] text-[#0284C7] border border-[#BAE6FD]">
+          <span className="text-[11px] font-extrabold px-2.5 py-1 rounded-2xl bg-transparent text-[#4F46E5] border border-slate-200/80">
             {project.totalLengthKm - project.clearedKm} km Total Constraints
           </span>
         </div>
@@ -106,9 +106,9 @@ export const DelayFactorBreakdown: React.FC<DelayFactorBreakdownProps> = ({
 
       {/* Multi-segment Combined Progress Ribbon */}
       <div className="space-y-1.5">
-        <div className="flex justify-between text-[11px] font-bold text-[#64748B]">
+        <div className="flex justify-between text-[11px] font-extrabold text-slate-500">
           <span>Corridor Delay Attribution Matrix</span>
-          <span className="text-[#0F172A] font-extrabold">100% Impact Share</span>
+          <span className="text-[#0B132B] font-extrabold">100% Impact Share</span>
         </div>
         <div className="w-full h-3.5 rounded-full bg-slate-100 flex overflow-hidden p-0.5 border border-slate-200">
           {factors.map((f) => (
@@ -135,24 +135,24 @@ export const DelayFactorBreakdown: React.FC<DelayFactorBreakdownProps> = ({
               onClick={() => onSelectFactor(isSelected ? 'ALL' : f.id)}
               className={`p-3 rounded-xl text-left border transition-all cursor-pointer flex flex-col justify-between ${
                 isSelected
-                  ? 'ring-2 ring-[#EA580C] border-[#EA580C] bg-[#FFF7ED] shadow-sm scale-[1.02]'
-                  : 'bg-[#F8FAFC] border-slate-200 hover:border-[#BAE6FD] hover:bg-white'
+                  ? 'ring-2 ring-[#4F46E5] border-[#4F46E5] bg-[#EEF2FF] shadow-soft scale-[1.02]'
+                  : 'bg-transparent border-slate-200 hover:border-slate-200/80 hover:bg-white'
               }`}
             >
               <div>
                 <div className="flex items-center justify-between mb-1.5">
-                  <div className={`p-1.5 rounded-lg border ${f.colorClass}`}>
+                  <div className={`p-1.5 rounded-2xl border ${f.colorClass}`}>
                     <Icon className="w-3.5 h-3.5" />
                   </div>
-                  <span className="text-sm font-black text-[#0F172A] font-mono">
+                  <span className="text-sm font-extrabold text-[#0B132B] font-mono">
                     {f.percentage}%
                   </span>
                 </div>
-                <h4 className="text-xs font-bold text-[#0F172A] leading-tight line-clamp-2">
+                <h4 className="text-xs font-extrabold text-[#0B132B] leading-tight line-clamp-2">
                   {f.label}
                 </h4>
               </div>
-              <p className="text-[10px] text-[#64748B] mt-2 line-clamp-2 leading-relaxed">
+              <p className="text-[10px] text-slate-500 mt-2 line-clamp-2 leading-relaxed">
                 {f.description}
               </p>
             </button>

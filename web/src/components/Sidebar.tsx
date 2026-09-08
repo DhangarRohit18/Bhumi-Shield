@@ -97,7 +97,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
                 BHUMI-SHIELD
               </span>
             </div>
-            <span className="text-[10px] font-bold text-indigo-600/90 block leading-tight">
+            <span className="text-[10px] font-extrabold text-indigo-600/90 block leading-tight">
               Land OS Platform
             </span>
           </div>
@@ -120,8 +120,8 @@ export const Sidebar: React.FC<SidebarProps> = ({
                   onClick={() => setActiveTab(w.id)}
                   className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-2xl text-left transition-all cursor-pointer group ${
                     isActive
-                      ? 'bg-[#0B132B] text-white shadow-soft font-bold'
-                      : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100/70 font-semibold'
+                      ? 'bg-[#0B132B] text-white shadow-soft font-extrabold'
+                      : 'text-slate-600 hover:text-[#0B132B] hover:bg-slate-100/70 font-extrabold'
                   }`}
                 >
                   <div className="flex items-center gap-3 min-w-0">
@@ -164,7 +164,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
             </span>
             <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
           </div>
-          <p className="text-xs font-black text-indigo-950 mt-0.5 truncate">
+          <p className="text-xs font-extrabold text-indigo-950 mt-0.5 truncate">
             {activeRole === 'NATIONAL_EXECUTIVE' && '🏛️ Sovereign Admin'}
             {activeRole === 'FIELD_ACQUISITION' && '📐 Operations CALA'}
             {activeRole === 'AUDIT_CITIZEN' && '🛡️ Public Vigilance'}

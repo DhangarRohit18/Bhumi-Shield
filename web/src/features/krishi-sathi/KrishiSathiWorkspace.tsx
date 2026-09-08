@@ -77,7 +77,7 @@ const MapAreaSelector: React.FC<{
         <Polygon
           positions={polygonPoints}
           pathOptions={{
-            color: '#EA580C',
+            color: '#4F46E5',
             fillColor: '#F97316',
             fillOpacity: 0.4,
             weight: 2,
@@ -361,15 +361,15 @@ export const KrishiSathiWorkspace: React.FC = () => {
 
   if (!isAuthorized) {
     return (
-      <div className="flex flex-col items-center justify-center min-h-[60vh] p-8 text-center bg-white rounded-2xl border border-[#BAE6FD] shadow-sm font-sans space-y-4">
+      <div className="flex flex-col items-center justify-center min-h-[60vh] p-8 text-center bg-white rounded-2xl border border-slate-200/80 shadow-soft  space-y-4">
         <div className="w-16 h-16 rounded-2xl bg-[#FEF2F2] border border-[#FECACA] flex items-center justify-center text-[#DC2626]">
           <ShieldCheck className="w-8 h-8 text-[#DC2626]" />
         </div>
         <div className="space-y-1 max-w-md">
-          <h2 className="text-base font-extrabold text-[#0F172A]">
+          <h2 className="text-base font-extrabold text-[#0B132B]">
             Restricted Clearance: Admin & Data Acquisition Only
           </h2>
-          <p className="text-xs text-[#64748B]">
+          <p className="text-xs text-slate-500">
             Krishi Sathi Cadastral intelligence, direct 7/12 land registration, and AR demarcation are restricted exclusively to National & District Administrators and Ground Data Acquisition Officers under the RFCTLARR statutory clearance framework.
           </p>
         </div>
@@ -378,22 +378,22 @@ export const KrishiSathiWorkspace: React.FC = () => {
   }
 
   return (
-    <div className="space-y-4 font-sans">
+    <div className="space-y-4 ">
 
 
       {/* Header Bar */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-3 bg-white p-4 rounded-2xl border border-[#BAE6FD] shadow-sm">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-3 bg-white p-4 rounded-2xl border border-slate-200/80 shadow-soft">
         <div>
           <div className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-xl bg-[#EA580C] text-white flex items-center justify-center font-bold text-sm shadow-sm">
+            <div className="w-8 h-8 rounded-xl bg-brand-gradient text-white flex items-center justify-center font-extrabold text-sm shadow-soft">
               <Sprout className="w-4 h-4 text-white" />
             </div>
-            <h1 className="text-lg font-black text-[#0F172A] tracking-tight">Krishi Sathi</h1>
-            <span className="px-2 py-0.5 rounded-full text-[10px] font-extrabold bg-[#FFF7ED] text-[#EA580C] border border-[#FFEDD5]">
+            <h1 className="text-lg font-extrabold text-[#0B132B] tracking-tight">Krishi Sathi</h1>
+            <span className="px-2 py-0.5 rounded-full text-[10px] font-extrabold bg-[#EEF2FF] text-indigo-600 border border-[#E0E7FF]">
               Farmer Land & AR Spatial Hub
             </span>
           </div>
-          <p className="text-xs text-[#64748B] mt-0.5">
+          <p className="text-xs text-slate-500 mt-0.5">
             Cadastral 7/12 Land Records, Direct PFMS Compensation & Centimeter-Level AR Verification
           </p>
         </div>
@@ -401,7 +401,7 @@ export const KrishiSathiWorkspace: React.FC = () => {
         {/* Real-time Admin Onboarding Button */}
         <button
           onClick={() => setModalOpen(true)}
-          className="flex items-center gap-2 px-4 py-2 rounded-xl bg-[#EA580C] hover:bg-[#C2410C] text-white text-xs font-black shadow-sm transition-all cursor-pointer"
+          className="flex items-center gap-2 px-4 py-2 rounded-xl bg-brand-gradient hover:bg-[#3730A3] text-white text-xs font-extrabold shadow-soft transition-all cursor-pointer"
         >
           <PlusCircle className="w-4 h-4" />
           <span>Register New Farmer & Land Record</span>
@@ -410,33 +410,33 @@ export const KrishiSathiWorkspace: React.FC = () => {
 
       {/* Aggregate KPI Summary Cards */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-        <div className="p-4 rounded-2xl bg-white border border-[#BAE6FD] shadow-sm space-y-1">
-          <span className="text-[10px] font-extrabold uppercase tracking-wider text-[#64748B]">Registered Farmers</span>
-          <p className="text-xl font-black text-[#0F172A]">{totalFarmers}</p>
-          <p className="text-[10px] text-[#059669] font-semibold">Across 4 Strategic States</p>
+        <div className="p-4 rounded-2xl bg-white border border-slate-200/80 shadow-soft space-y-1">
+          <span className="text-[10px] font-extrabold uppercase tracking-wider text-slate-500">Registered Farmers</span>
+          <p className="text-xl font-extrabold text-[#0B132B]">{totalFarmers}</p>
+          <p className="text-[10px] text-[#059669] font-extrabold">Across 4 Strategic States</p>
         </div>
 
-        <div className="p-4 rounded-2xl bg-white border border-[#BAE6FD] shadow-sm space-y-1">
-          <span className="text-[10px] font-extrabold uppercase tracking-wider text-[#64748B]">Total Acquired Area</span>
-          <p className="text-xl font-black text-[#EA580C]">{totalAcquiredAcres.toFixed(1)} <span className="text-xs font-normal">Acres</span></p>
-          <p className="text-[10px] text-[#64748B]">Statutory Sec 19 Alignment</p>
+        <div className="p-4 rounded-2xl bg-white border border-slate-200/80 shadow-soft space-y-1">
+          <span className="text-[10px] font-extrabold uppercase tracking-wider text-slate-500">Total Acquired Area</span>
+          <p className="text-xl font-extrabold text-indigo-600">{totalAcquiredAcres.toFixed(1)} <span className="text-xs font-normal">Acres</span></p>
+          <p className="text-[10px] text-slate-500">Statutory Sec 19 Alignment</p>
         </div>
 
-        <div className="p-4 rounded-2xl bg-white border border-[#BAE6FD] shadow-sm space-y-1">
-          <span className="text-[10px] font-extrabold uppercase tracking-wider text-[#64748B]">Direct PFMS Disbursed</span>
-          <p className="text-xl font-black text-[#059669]">₹{(totalDisbursedINR / 10000000).toFixed(2)} <span className="text-xs font-normal">Cr</span></p>
-          <p className="text-[10px] text-[#059669] font-semibold">100% Solatium Credited</p>
+        <div className="p-4 rounded-2xl bg-white border border-slate-200/80 shadow-soft space-y-1">
+          <span className="text-[10px] font-extrabold uppercase tracking-wider text-slate-500">Direct PFMS Disbursed</span>
+          <p className="text-xl font-extrabold text-[#059669]">₹{(totalDisbursedINR / 10000000).toFixed(2)} <span className="text-xs font-normal">Cr</span></p>
+          <p className="text-[10px] text-[#059669] font-extrabold">100% Solatium Credited</p>
         </div>
 
-        <div className="p-4 rounded-2xl bg-white border border-[#BAE6FD] shadow-sm space-y-1">
-          <span className="text-[10px] font-extrabold uppercase tracking-wider text-[#64748B]">AR Ground Coherence</span>
-          <p className="text-xl font-black text-[#0284C7]">{totalFarmers > 0 ? ((verifiedCount / totalFarmers) * 100).toFixed(0) : 0}%</p>
-          <p className="text-[10px] text-[#0284C7] font-semibold">{verifiedCount} of {totalFarmers} AR Verified</p>
+        <div className="p-4 rounded-2xl bg-white border border-slate-200/80 shadow-soft space-y-1">
+          <span className="text-[10px] font-extrabold uppercase tracking-wider text-slate-500">AR Ground Coherence</span>
+          <p className="text-xl font-extrabold text-[#4F46E5]">{totalFarmers > 0 ? ((verifiedCount / totalFarmers) * 100).toFixed(0) : 0}%</p>
+          <p className="text-[10px] text-[#4F46E5] font-extrabold">{verifiedCount} of {totalFarmers} AR Verified</p>
         </div>
       </div>
 
       {/* Filter & Search Bar */}
-      <div className="flex flex-col md:flex-row items-center gap-3 bg-white p-3 rounded-2xl border border-[#BAE6FD] shadow-sm">
+      <div className="flex flex-col md:flex-row items-center gap-3 bg-white p-3 rounded-2xl border border-slate-200/80 shadow-soft">
         <div className="relative flex-1 w-full">
           <Search className="w-4 h-4 text-[#94A3B8] absolute left-3 top-2.5" />
           <input
@@ -444,7 +444,7 @@ export const KrishiSathiWorkspace: React.FC = () => {
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Search by Farmer Name, Survey/Gat No, ULPIN, Village or District..."
-            className="w-full bg-[#F8FAFC] border border-[#CBD5E1] rounded-xl pl-9 pr-3 py-2 text-xs text-[#0F172A] focus:outline-none focus:border-[#EA580C]"
+            className="w-full bg-transparent border border-[#CBD5E1] rounded-xl pl-9 pr-3 py-2 text-xs text-[#0B132B] focus:outline-none focus:border-[#4F46E5]"
           />
         </div>
 
@@ -452,7 +452,7 @@ export const KrishiSathiWorkspace: React.FC = () => {
           <select
             value={selectedState}
             onChange={(e) => setSelectedState(e.target.value)}
-            className="bg-[#F8FAFC] border border-[#CBD5E1] rounded-xl px-3 py-2 text-xs font-bold text-[#0F172A] focus:outline-none focus:border-[#EA580C] cursor-pointer"
+            className="bg-transparent border border-[#CBD5E1] rounded-xl px-3 py-2 text-xs font-extrabold text-[#0B132B] focus:outline-none focus:border-[#4F46E5] cursor-pointer"
           >
             <option value="ALL">All States</option>
             <option value="Maharashtra">Maharashtra</option>
@@ -464,7 +464,7 @@ export const KrishiSathiWorkspace: React.FC = () => {
           <select
             value={selectedStatus}
             onChange={(e) => setSelectedStatus(e.target.value)}
-            className="bg-[#F8FAFC] border border-[#CBD5E1] rounded-xl px-3 py-2 text-xs font-bold text-[#0F172A] focus:outline-none focus:border-[#EA580C] cursor-pointer"
+            className="bg-transparent border border-[#CBD5E1] rounded-xl px-3 py-2 text-xs font-extrabold text-[#0B132B] focus:outline-none focus:border-[#4F46E5] cursor-pointer"
           >
             <option value="ALL">All AR Statuses</option>
             <option value="VERIFIED">AR Verified</option>
@@ -475,19 +475,19 @@ export const KrishiSathiWorkspace: React.FC = () => {
       </div>
 
       {/* Farmers Land Record Directory Table */}
-      <div className="bg-white rounded-2xl border border-[#BAE6FD] shadow-sm overflow-hidden">
-        <div className="p-4 border-b border-[#E2E8F0] flex justify-between items-center bg-[#F8FAFC]">
-          <h3 className="font-extrabold text-xs text-[#0F172A] uppercase tracking-wider flex items-center gap-1.5">
-            <Users className="w-3.5 h-3.5 text-[#0284C7]" />
+      <div className="bg-white rounded-2xl border border-slate-200/80 shadow-soft overflow-hidden">
+        <div className="p-4 border-b border-[#E2E8F0] flex justify-between items-center bg-transparent">
+          <h3 className="font-extrabold text-xs text-[#0B132B] uppercase tracking-wider flex items-center gap-1.5">
+            <Users className="w-3.5 h-3.5 text-[#4F46E5]" />
             <span>Landholder Records Directory ({filteredFarmers.length})</span>
           </h3>
-          <span className="text-[11px] text-[#64748B]">Real-Time Synchronized</span>
+          <span className="text-[11px] text-slate-500">Real-Time Synchronized</span>
         </div>
 
         <div className="overflow-x-auto">
           <table className="w-full text-left border-collapse text-xs">
             <thead>
-              <tr className="border-b border-[#E2E8F0] bg-[#F1F5F9]/50 text-[#64748B] font-bold text-[11px]">
+              <tr className="border-b border-[#E2E8F0] bg-[#F1F5F9]/50 text-slate-500 font-extrabold text-[11px]">
                 <th className="p-3 pl-4">Farmer / Landowner</th>
                 <th className="p-3">Cadastral Reference & ULPIN</th>
                 <th className="p-3">Location & Village</th>
@@ -499,43 +499,43 @@ export const KrishiSathiWorkspace: React.FC = () => {
             </thead>
             <tbody className="divide-y divide-[#E2E8F0]">
               {filteredFarmers.map((farmer) => (
-                <tr key={farmer.id} className="hover:bg-[#F8FAFC] transition-colors">
+                <tr key={farmer.id} className="hover:bg-transparent transition-colors">
                   <td className="p-3 pl-4">
                     <div className="flex items-center gap-2.5">
-                      <div className="w-8 h-8 rounded-lg bg-[#ECFDF5] text-[#059669] flex items-center justify-center font-bold text-xs shrink-0 border border-[#A7F3D0]">
+                      <div className="w-8 h-8 rounded-2xl bg-[#ECFDF5] text-[#059669] flex items-center justify-center font-extrabold text-xs shrink-0 border border-[#A7F3D0]">
                         🌾
                       </div>
                       <div>
-                        <p className="font-black text-[#0F172A] text-xs">{farmer.farmerName}</p>
-                        <p className="text-[10px] text-[#64748B]">{farmer.contactNumber}</p>
+                        <p className="font-extrabold text-[#0B132B] text-xs">{farmer.farmerName}</p>
+                        <p className="text-[10px] text-slate-500">{farmer.contactNumber}</p>
                       </div>
                     </div>
                   </td>
 
                   <td className="p-3 font-mono">
-                    <span className="text-[11px] font-extrabold text-[#EA580C] bg-[#FFF7ED] px-1.5 py-0.5 rounded border border-[#FFEDD5]">
+                    <span className="text-[11px] font-extrabold text-indigo-600 bg-[#EEF2FF] px-1.5 py-0.5 rounded border border-[#E0E7FF]">
                       {farmer.ulpin}
                     </span>
-                    <p className="text-[10px] text-[#64748B] mt-0.5">
+                    <p className="text-[10px] text-slate-500 mt-0.5">
                       Survey: <strong>{farmer.surveyGatNumber}</strong> • {farmer.hissaNumber}
                     </p>
                   </td>
 
                   <td className="p-3">
-                    <p className="font-bold text-[#0F172A]">{farmer.village}</p>
-                    <p className="text-[10px] text-[#64748B]">{farmer.district}, {farmer.state}</p>
+                    <p className="font-extrabold text-[#0B132B]">{farmer.village}</p>
+                    <p className="text-[10px] text-slate-500">{farmer.district}, {farmer.state}</p>
                   </td>
 
                   <td className="p-3">
-                    <p className="font-bold text-[#0F172A]">{farmer.totalLandAreaAcres} Acres</p>
+                    <p className="font-extrabold text-[#0B132B]">{farmer.totalLandAreaAcres} Acres</p>
                     <p className="text-[10px] text-[#059669] font-medium">Acquired: {farmer.acquiredAreaAcres} Ac</p>
                   </td>
 
                   <td className="p-3 font-mono">
-                    <span className="font-extrabold text-[#0F172A]">
+                    <span className="font-extrabold text-[#0B132B]">
                       ₹{(farmer.totalCompensationINR / 100000).toFixed(1)} L
                     </span>
-                    <p className="text-[9px] text-[#64748B]">{farmer.disbursementStatus}</p>
+                    <p className="text-[9px] text-slate-500">{farmer.disbursementStatus}</p>
                   </td>
 
                   <td className="p-3">
@@ -572,17 +572,17 @@ export const KrishiSathiWorkspace: React.FC = () => {
                       {/* Option 1: View Detailed Farmer Profile */}
                       <button
                         onClick={() => setInspectingFarmer(farmer)}
-                        className="px-2.5 py-1.5 rounded-xl bg-[#F1F5F9] hover:bg-[#E2E8F0] text-[#0F172A] text-xs font-bold flex items-center gap-1 transition-all cursor-pointer"
+                        className="px-2.5 py-1.5 rounded-xl bg-[#F1F5F9] hover:bg-[#E2E8F0] text-[#0B132B] text-xs font-extrabold flex items-center gap-1 transition-all cursor-pointer"
                         title="View Detailed Farmer Profile & 7/12"
                       >
-                        <FileText className="w-3.5 h-3.5 text-[#0284C7]" />
+                        <FileText className="w-3.5 h-3.5 text-[#4F46E5]" />
                         <span>Details</span>
                       </button>
 
                       {/* Option 2: Visualise Land Area */}
                       <button
                         onClick={() => setVisualizingFarmer(farmer)}
-                        className="px-2.5 py-1.5 rounded-xl bg-[#EA580C] hover:bg-[#C2410C] text-white text-xs font-bold flex items-center gap-1 shadow-xs transition-all cursor-pointer"
+                        className="px-2.5 py-1.5 rounded-xl bg-brand-gradient hover:bg-[#3730A3] text-white text-xs font-extrabold flex items-center gap-1 shadow-xs transition-all cursor-pointer"
                         title="Visualise Land Area in 2D/3D Map"
                       >
                         <MapIcon className="w-3.5 h-3.5 text-white" />
@@ -623,20 +623,20 @@ export const KrishiSathiWorkspace: React.FC = () => {
 
       {/* Real-Time Admin Registration Modal */}
       {modalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-xs p-4 font-sans">
-          <div className="w-full max-w-2xl bg-white rounded-2xl shadow-2xl border border-[#BAE6FD] overflow-hidden flex flex-col max-h-[90vh]">
-            <div className="p-4 bg-gradient-to-r from-[#FFF7ED] to-white border-b border-[#E2E8F0] flex items-center justify-between">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-xs p-4 ">
+          <div className="w-full max-w-2xl bg-white rounded-2xl shadow-2xl border border-slate-200/80 overflow-hidden flex flex-col max-h-[90vh]">
+            <div className="p-4 bg-gradient-to-r from-[#EEF2FF] to-white border-b border-[#E2E8F0] flex items-center justify-between">
               <div className="flex items-center gap-2">
-                <div className="w-8 h-8 rounded-xl bg-[#EA580C] text-white flex items-center justify-center font-bold text-sm">
+                <div className="w-8 h-8 rounded-xl bg-brand-gradient text-white flex items-center justify-center font-extrabold text-sm">
                   🌾
                 </div>
-                <h3 className="font-extrabold text-sm text-[#0F172A]">
+                <h3 className="font-extrabold text-sm text-[#0B132B]">
                   Register New Farmer & Land Record (Real-Time)
                 </h3>
               </div>
               <button
                 onClick={() => setModalOpen(false)}
-                className="text-[#64748B] hover:text-[#0F172A] cursor-pointer"
+                className="text-slate-500 hover:text-[#0B132B] cursor-pointer"
               >
                 <X className="w-5 h-5" />
               </button>
@@ -646,15 +646,15 @@ export const KrishiSathiWorkspace: React.FC = () => {
               {/* Interactive Map Area Selector Component */}
               <div className="space-y-1.5">
                 <div className="flex items-center justify-between">
-                  <span className="font-extrabold text-xs text-[#0F172A] flex items-center gap-1.5">
-                    <Crosshair className="w-3.5 h-3.5 text-[#EA580C]" />
+                  <span className="font-extrabold text-xs text-[#0B132B] flex items-center gap-1.5">
+                    <Crosshair className="w-3.5 h-3.5 text-indigo-600" />
                     <span>Select Boundary Points on Map ({drawnPolygon.length} Corners Placed)</span>
                   </span>
                   <div className="flex items-center gap-2">
                     <button
                       type="button"
                       onClick={() => setModalMapMode(modalMapMode === 'SATELLITE' ? 'STREET' : 'SATELLITE')}
-                      className="px-2 py-1 rounded-lg bg-[#F1F5F9] text-[10px] font-bold text-[#0F172A] border border-[#CBD5E1] cursor-pointer"
+                      className="px-2 py-1 rounded-2xl bg-[#F1F5F9] text-[10px] font-extrabold text-[#0B132B] border border-[#CBD5E1] cursor-pointer"
                     >
                       {modalMapMode === 'SATELLITE' ? '🗺️ Street Map' : '🛰️ Satellite'}
                     </button>
@@ -662,7 +662,7 @@ export const KrishiSathiWorkspace: React.FC = () => {
                       <button
                         type="button"
                         onClick={handleClearMapPoints}
-                        className="px-2 py-1 rounded-lg bg-[#FEF2F2] text-[10px] font-bold text-[#DC2626] border border-[#FECACA] flex items-center gap-1 cursor-pointer"
+                        className="px-2 py-1 rounded-2xl bg-[#FEF2F2] text-[10px] font-extrabold text-[#DC2626] border border-[#FECACA] flex items-center gap-1 cursor-pointer"
                       >
                         <Trash2 className="w-3 h-3" />
                         <span>Clear</span>
@@ -697,14 +697,14 @@ export const KrishiSathiWorkspace: React.FC = () => {
                     />
                   </MapContainer>
 
-                  <div className="absolute bottom-2 left-2 z-[1000] bg-[#0F172A]/90 backdrop-blur-xs px-2.5 py-1.5 rounded-lg text-[10px] text-white font-medium border border-[#334155] shadow-lg flex items-center gap-3">
+                  <div className="absolute bottom-2 left-2 z-[1000] bg-[#0B132B]/90 backdrop-blur-xs px-2.5 py-1.5 rounded-2xl text-[10px] text-white font-medium border border-[#334155] shadow-lg flex items-center gap-3">
                     <span className="flex items-center gap-1 text-[#94A3B8]">
                       💡 Click on map to drop corners
                     </span>
                     {drawnPolygon.length >= 3 && (
                       <div className="flex items-center gap-2 pl-2 border-l border-[#475569]">
-                        <span className="text-[#38BDF8] font-bold">⚡ Auto-Calculated Area:</span>
-                        <span className="bg-[#059669] px-2 py-0.5 rounded font-mono font-black text-[#ECFDF5]">
+                        <span className="text-[#38BDF8] font-extrabold">⚡ Auto-Calculated Area:</span>
+                        <span className="bg-[#059669] px-2 py-0.5 rounded font-mono font-extrabold text-[#ECFDF5]">
                           {calculateGeodesicArea(drawnPolygon).acres} Acres
                         </span>
                         <span className="text-[#94A3B8] font-mono text-[9px]">
@@ -719,34 +719,34 @@ export const KrishiSathiWorkspace: React.FC = () => {
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-[#64748B] font-bold mb-1">Farmer / Landowner Name *</label>
+                  <label className="block text-slate-500 font-extrabold mb-1">Farmer / Landowner Name *</label>
                   <input
                     required
                     type="text"
                     value={formName}
                     onChange={(e) => setFormName(e.target.value)}
                     placeholder="e.g. Shri Baburao M. Patil"
-                    className="w-full bg-[#F8FAFC] border border-[#CBD5E1] rounded-xl px-3 py-2 text-xs text-[#0F172A] focus:outline-none focus:border-[#EA580C]"
+                    className="w-full bg-transparent border border-[#CBD5E1] rounded-xl px-3 py-2 text-xs text-[#0B132B] focus:outline-none focus:border-[#4F46E5]"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-[#64748B] font-bold mb-1">Contact Phone Number</label>
+                  <label className="block text-slate-500 font-extrabold mb-1">Contact Phone Number</label>
                   <input
                     type="text"
                     value={formContact}
                     onChange={(e) => setFormContact(e.target.value)}
                     placeholder="+91 98XXX XXXXX"
-                    className="w-full bg-[#F8FAFC] border border-[#CBD5E1] rounded-xl px-3 py-2 text-xs text-[#0F172A] focus:outline-none focus:border-[#EA580C]"
+                    className="w-full bg-transparent border border-[#CBD5E1] rounded-xl px-3 py-2 text-xs text-[#0B132B] focus:outline-none focus:border-[#4F46E5]"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-[#64748B] font-bold mb-1">State *</label>
+                  <label className="block text-slate-500 font-extrabold mb-1">State *</label>
                   <select
                     value={formState}
                     onChange={(e) => setFormState(e.target.value)}
-                    className="w-full bg-[#F8FAFC] border border-[#CBD5E1] rounded-xl px-3 py-2 text-xs font-bold text-[#0F172A] focus:outline-none focus:border-[#EA580C]"
+                    className="w-full bg-transparent border border-[#CBD5E1] rounded-xl px-3 py-2 text-xs font-extrabold text-[#0B132B] focus:outline-none focus:border-[#4F46E5]"
                   >
                     <option value="Maharashtra">Maharashtra</option>
                     <option value="Gujarat">Gujarat</option>
@@ -756,66 +756,66 @@ export const KrishiSathiWorkspace: React.FC = () => {
                 </div>
 
                 <div>
-                  <label className="block text-[#64748B] font-bold mb-1">District *</label>
+                  <label className="block text-slate-500 font-extrabold mb-1">District *</label>
                   <input
                     required
                     type="text"
                     value={formDistrict}
                     onChange={(e) => setFormDistrict(e.target.value)}
                     placeholder="e.g. Palghar"
-                    className="w-full bg-[#F8FAFC] border border-[#CBD5E1] rounded-xl px-3 py-2 text-xs text-[#0F172A] focus:outline-none focus:border-[#EA580C]"
+                    className="w-full bg-transparent border border-[#CBD5E1] rounded-xl px-3 py-2 text-xs text-[#0B132B] focus:outline-none focus:border-[#4F46E5]"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-[#64748B] font-bold mb-1">Taluka / Tehsil</label>
+                  <label className="block text-slate-500 font-extrabold mb-1">Taluka / Tehsil</label>
                   <input
                     type="text"
                     value={formTehsil}
                     onChange={(e) => setFormTehsil(e.target.value)}
                     placeholder="e.g. Palghar"
-                    className="w-full bg-[#F8FAFC] border border-[#CBD5E1] rounded-xl px-3 py-2 text-xs text-[#0F172A] focus:outline-none focus:border-[#EA580C]"
+                    className="w-full bg-transparent border border-[#CBD5E1] rounded-xl px-3 py-2 text-xs text-[#0B132B] focus:outline-none focus:border-[#4F46E5]"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-[#64748B] font-bold mb-1">Revenue Village *</label>
+                  <label className="block text-slate-500 font-extrabold mb-1">Revenue Village *</label>
                   <input
                     required
                     type="text"
                     value={formVillage}
                     onChange={(e) => setFormVillage(e.target.value)}
                     placeholder="e.g. Manikpur"
-                    className="w-full bg-[#F8FAFC] border border-[#CBD5E1] rounded-xl px-3 py-2 text-xs text-[#0F172A] focus:outline-none focus:border-[#EA580C]"
+                    className="w-full bg-transparent border border-[#CBD5E1] rounded-xl px-3 py-2 text-xs text-[#0B132B] focus:outline-none focus:border-[#4F46E5]"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-[#64748B] font-bold mb-1">Survey / Gat Number *</label>
+                  <label className="block text-slate-500 font-extrabold mb-1">Survey / Gat Number *</label>
                   <input
                     required
                     type="text"
                     value={formSurvey}
                     onChange={(e) => setFormSurvey(e.target.value)}
                     placeholder="e.g. 145/2-A"
-                    className="w-full bg-[#F8FAFC] border border-[#CBD5E1] rounded-xl px-3 py-2 text-xs font-mono text-[#0F172A] focus:outline-none focus:border-[#EA580C]"
+                    className="w-full bg-transparent border border-[#CBD5E1] rounded-xl px-3 py-2 text-xs font-mono text-[#0B132B] focus:outline-none focus:border-[#4F46E5]"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-[#64748B] font-bold mb-1">Hissa / Sub-Division</label>
+                  <label className="block text-slate-500 font-extrabold mb-1">Hissa / Sub-Division</label>
                   <input
                     type="text"
                     value={formHissa}
                     onChange={(e) => setFormHissa(e.target.value)}
                     placeholder="e.g. Hissa-1"
-                    className="w-full bg-[#F8FAFC] border border-[#CBD5E1] rounded-xl px-3 py-2 text-xs font-mono text-[#0F172A] focus:outline-none focus:border-[#EA580C]"
+                    className="w-full bg-transparent border border-[#CBD5E1] rounded-xl px-3 py-2 text-xs font-mono text-[#0B132B] focus:outline-none focus:border-[#4F46E5]"
                   />
                 </div>
 
                 <div>
                   <div className="flex items-center justify-between mb-1">
-                    <label className="text-[#64748B] font-bold">Total Holding (Acres) *</label>
+                    <label className="text-slate-500 font-extrabold">Total Holding (Acres) *</label>
                     {drawnPolygon.length >= 3 && (
                       <span className="text-[9px] font-extrabold text-[#059669] bg-[#ECFDF5] px-1.5 py-0.2 rounded border border-[#A7F3D0]">
                         ⚡ Auto-Calculated
@@ -828,13 +828,13 @@ export const KrishiSathiWorkspace: React.FC = () => {
                     step="0.01"
                     value={formTotalAcres}
                     onChange={(e) => setFormTotalAcres(e.target.value)}
-                    className="w-full bg-[#F8FAFC] border border-[#CBD5E1] rounded-xl px-3 py-2 text-xs text-[#0F172A] focus:outline-none focus:border-[#EA580C] font-mono font-bold"
+                    className="w-full bg-transparent border border-[#CBD5E1] rounded-xl px-3 py-2 text-xs text-[#0B132B] focus:outline-none focus:border-[#4F46E5] font-mono font-extrabold"
                   />
                 </div>
 
                 <div>
                   <div className="flex items-center justify-between mb-1">
-                    <label className="text-[#64748B] font-bold">Acquired Area (Acres) *</label>
+                    <label className="text-slate-500 font-extrabold">Acquired Area (Acres) *</label>
                     {drawnPolygon.length >= 3 && (
                       <span className="text-[9px] font-extrabold text-[#059669] bg-[#ECFDF5] px-1.5 py-0.2 rounded border border-[#A7F3D0]">
                         ⚡ Auto-Calculated
@@ -847,17 +847,17 @@ export const KrishiSathiWorkspace: React.FC = () => {
                     step="0.01"
                     value={formAcquiredAcres}
                     onChange={(e) => setFormAcquiredAcres(e.target.value)}
-                    className="w-full bg-[#F8FAFC] border border-[#CBD5E1] rounded-xl px-3 py-2 text-xs text-[#0F172A] focus:outline-none focus:border-[#EA580C] font-mono font-bold"
+                    className="w-full bg-transparent border border-[#CBD5E1] rounded-xl px-3 py-2 text-xs text-[#0B132B] focus:outline-none focus:border-[#4F46E5] font-mono font-extrabold"
                   />
                 </div>
 
 
                 <div>
-                  <label className="block text-[#64748B] font-bold mb-1">Land Classification</label>
+                  <label className="block text-slate-500 font-extrabold mb-1">Land Classification</label>
                   <select
                     value={formClassification}
                     onChange={(e) => setFormClassification(e.target.value as any)}
-                    className="w-full bg-[#F8FAFC] border border-[#CBD5E1] rounded-xl px-3 py-2 text-xs font-bold text-[#0F172A] focus:outline-none focus:border-[#EA580C]"
+                    className="w-full bg-transparent border border-[#CBD5E1] rounded-xl px-3 py-2 text-xs font-extrabold text-[#0B132B] focus:outline-none focus:border-[#4F46E5]"
                   >
                     <option value="Agricultural">Agricultural</option>
                     <option value="Commercial">Commercial</option>
@@ -868,32 +868,32 @@ export const KrishiSathiWorkspace: React.FC = () => {
                 </div>
 
                 <div>
-                  <label className="block text-[#64748B] font-bold mb-1">Base Market Valuation (INR)</label>
+                  <label className="block text-slate-500 font-extrabold mb-1">Base Market Valuation (INR)</label>
                   <input
                     type="number"
                     value={formValuation}
                     onChange={(e) => setFormValuation(e.target.value)}
-                    className="w-full bg-[#F8FAFC] border border-[#CBD5E1] rounded-xl px-3 py-2 text-xs font-mono text-[#0F172A] focus:outline-none focus:border-[#EA580C]"
+                    className="w-full bg-transparent border border-[#CBD5E1] rounded-xl px-3 py-2 text-xs font-mono text-[#0B132B] focus:outline-none focus:border-[#4F46E5]"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-[#64748B] font-bold mb-1">Center GPS Lat</label>
+                  <label className="block text-slate-500 font-extrabold mb-1">Center GPS Lat</label>
                   <input
                     type="text"
                     value={formLat}
                     onChange={(e) => setFormLat(e.target.value)}
-                    className="w-full bg-[#F8FAFC] border border-[#CBD5E1] rounded-xl px-3 py-2 text-xs font-mono text-[#0F172A] focus:outline-none focus:border-[#EA580C]"
+                    className="w-full bg-transparent border border-[#CBD5E1] rounded-xl px-3 py-2 text-xs font-mono text-[#0B132B] focus:outline-none focus:border-[#4F46E5]"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-[#64748B] font-bold mb-1">Center GPS Lng</label>
+                  <label className="block text-slate-500 font-extrabold mb-1">Center GPS Lng</label>
                   <input
                     type="text"
                     value={formLng}
                     onChange={(e) => setFormLng(e.target.value)}
-                    className="w-full bg-[#F8FAFC] border border-[#CBD5E1] rounded-xl px-3 py-2 text-xs font-mono text-[#0F172A] focus:outline-none focus:border-[#EA580C]"
+                    className="w-full bg-transparent border border-[#CBD5E1] rounded-xl px-3 py-2 text-xs font-mono text-[#0B132B] focus:outline-none focus:border-[#4F46E5]"
                   />
                 </div>
               </div>
@@ -902,14 +902,14 @@ export const KrishiSathiWorkspace: React.FC = () => {
                 <button
                   type="button"
                   onClick={() => setModalOpen(false)}
-                  className="px-4 py-2 rounded-xl text-xs font-bold text-[#64748B] hover:bg-[#F8FAFC] cursor-pointer"
+                  className="px-4 py-2 rounded-xl text-xs font-extrabold text-slate-500 hover:bg-transparent cursor-pointer"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
                   disabled={saving}
-                  className="px-4 py-2 rounded-xl text-xs font-bold bg-[#EA580C] text-white hover:bg-[#C2410C] cursor-pointer disabled:opacity-50"
+                  className="px-4 py-2 rounded-xl text-xs font-extrabold bg-brand-gradient text-white hover:bg-[#3730A3] cursor-pointer disabled:opacity-50"
                 >
                   {saving ? 'Registering & Generating ULPIN...' : 'Register Farmer & Plot'}
                 </button>

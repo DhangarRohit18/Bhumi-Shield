@@ -67,7 +67,7 @@ export const TwinNavigation: React.FC<TwinNavProps> = ({
   const visibleTabs = allTabs.filter((t) => allowedTabs.includes(t.id));
 
   return (
-    <div className="bg-white/95 backdrop-blur-md border-b border-[#BAE6FD]/60 px-4 py-1.5 font-sans overflow-x-auto">
+    <div className="bg-white/80 backdrop-blur-xl border-b border-slate-200/80 px-4 py-1.5  overflow-x-auto">
       <div className="flex items-center gap-1.5 min-w-max">
         {visibleTabs.map((t) => {
           const Icon = t.icon;
@@ -76,18 +76,18 @@ export const TwinNavigation: React.FC<TwinNavProps> = ({
             <button
               key={t.id}
               onClick={() => onTabChange(t.id)}
-              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-2xl text-xs font-extrabold transition-all cursor-pointer ${
                 isActive
-                  ? 'bg-[#0F172A] text-white shadow-sm'
-                  : 'text-[#0369A1] hover:text-[#0F172A] hover:bg-[#E0F2FE]'
+                  ? 'bg-[#0B132B] text-white shadow-soft'
+                  : 'text-indigo-600 hover:text-[#0B132B] hover:bg-indigo-50'
               }`}
             >
-              <Icon className={`w-3.5 h-3.5 ${isActive ? 'text-[#EA580C]' : 'text-[#0284C7]'}`} />
+              <Icon className={`w-3.5 h-3.5 ${isActive ? 'text-indigo-600' : 'text-[#4F46E5]'}`} />
               <span>{t.name}</span>
               {t.count !== undefined && (
                 <span
-                  className={`text-[10px] px-1.5 py-0.2 rounded-full font-mono font-bold ${
-                    isActive ? 'bg-[#EA580C] text-white' : 'bg-[#E0F2FE] text-[#0369A1]'
+                  className={`text-[10px] px-1.5 py-0.2 rounded-full font-mono font-extrabold ${
+                    isActive ? 'bg-brand-gradient text-white' : 'bg-indigo-50 text-indigo-600'
                   }`}
                 >
                   {t.count}

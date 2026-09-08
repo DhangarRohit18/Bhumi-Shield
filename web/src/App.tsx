@@ -58,7 +58,7 @@ export const App: React.FC = () => {
 
   // 2. Once authenticated, render Authorized Workspace
   return (
-    <div className="flex h-screen bg-[#FAF8F5] text-[#0B132B] overflow-hidden font-sans">
+    <div className="flex h-screen bg-[#FAF8F5] text-[#0B132B] overflow-hidden ">
       <Sidebar
         activeTab={activeTab}
         setActiveTab={setActiveTab}
@@ -75,7 +75,7 @@ export const App: React.FC = () => {
           </div>
         )}
 
-        <main className="flex-1 overflow-y-auto bg-[#FAF8F5] p-4 sm:p-6">
+        <main className="flex-1 overflow-y-auto bg-[#FAF8F5]">
           {activeTab === 'command_center' && <CommandCenter />}
           {activeTab === 'corridor_readiness' && <CorridorReadinessWorkspace />}
           {activeTab === 'digital_twin' && <ProjectDigitalTwin />}

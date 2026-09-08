@@ -62,18 +62,18 @@ export const FarmerLandVisualizer: React.FC<FarmerLandVisualizerProps> = ({
     : 72.7699;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-xs p-3 md:p-6 font-sans animate-in fade-in duration-200">
-      <div className="w-full h-full max-w-6xl bg-[#0F172A] rounded-2xl overflow-hidden shadow-2xl border border-[#334155] flex flex-col">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-xs p-3 md:p-6  animate-in fade-in duration-200">
+      <div className="w-full h-full max-w-6xl bg-[#0B132B] rounded-2xl overflow-hidden shadow-2xl border border-[#334155] flex flex-col">
         {/* Top Floating Control Bar */}
-        <div className="px-5 py-3.5 bg-[#0F172A]/90 border-b border-[#334155] flex flex-wrap items-center justify-between gap-3 shrink-0">
+        <div className="px-5 py-3.5 bg-[#0B132B]/90 border-b border-[#334155] flex flex-wrap items-center justify-between gap-3 shrink-0">
           <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-xl bg-[#EA580C] text-white flex items-center justify-center font-black shadow-sm text-sm">
+            <div className="w-9 h-9 rounded-xl bg-brand-gradient text-white flex items-center justify-center font-extrabold shadow-soft text-sm">
               🛰️
             </div>
             <div>
               <div className="flex items-center gap-2">
                 <h3 className="font-extrabold text-sm text-white">{farmer.farmerName}</h3>
-                <span className="font-mono text-[10px] font-black text-[#F97316] bg-[#7C2D12]/40 px-2 py-0.5 rounded border border-[#EA580C]/40">
+                <span className="font-mono text-[10px] font-extrabold text-[#F97316] bg-[#7C2D12]/40 px-2 py-0.5 rounded border border-[#4F46E5]/40">
                   {farmer.ulpin}
                 </span>
                 <span className="font-mono text-[10px] text-[#94A3B8]">
@@ -83,7 +83,7 @@ export const FarmerLandVisualizer: React.FC<FarmerLandVisualizerProps> = ({
               <p className="text-[11px] text-[#94A3B8] flex items-center gap-2 mt-0.5">
                 <span>Holding: <strong className="text-white">{farmer.totalLandAreaAcres} Acres</strong></span>
                 <span>•</span>
-                <span>Acquired: <strong className="text-[#EA580C]">{farmer.acquiredAreaAcres} Acres</strong></span>
+                <span>Acquired: <strong className="text-indigo-600">{farmer.acquiredAreaAcres} Acres</strong></span>
                 <span>•</span>
                 <span>Classification: <strong className="text-white">{farmer.landClassification}</strong></span>
               </p>
@@ -95,9 +95,9 @@ export const FarmerLandVisualizer: React.FC<FarmerLandVisualizerProps> = ({
             <div className="flex items-center bg-[#1E293B] p-1 rounded-xl border border-[#334155]">
               <button
                 onClick={() => setMapLayer('SATELLITE')}
-                className={`px-3 py-1 rounded-lg text-xs font-bold transition-all cursor-pointer ${
+                className={`px-3 py-1 rounded-2xl text-xs font-extrabold transition-all cursor-pointer ${
                   mapLayer === 'SATELLITE'
-                    ? 'bg-[#EA580C] text-white shadow-xs'
+                    ? 'bg-brand-gradient text-white shadow-xs'
                     : 'text-[#94A3B8] hover:text-white'
                 }`}
               >
@@ -105,9 +105,9 @@ export const FarmerLandVisualizer: React.FC<FarmerLandVisualizerProps> = ({
               </button>
               <button
                 onClick={() => setMapLayer('STREET')}
-                className={`px-3 py-1 rounded-lg text-xs font-bold transition-all cursor-pointer ${
+                className={`px-3 py-1 rounded-2xl text-xs font-extrabold transition-all cursor-pointer ${
                   mapLayer === 'STREET'
-                    ? 'bg-[#EA580C] text-white shadow-xs'
+                    ? 'bg-brand-gradient text-white shadow-xs'
                     : 'text-[#94A3B8] hover:text-white'
                 }`}
               >
@@ -118,7 +118,7 @@ export const FarmerLandVisualizer: React.FC<FarmerLandVisualizerProps> = ({
             {/* AR Sentinel HUD Toggle */}
             <button
               onClick={() => setShowArHud(!showArHud)}
-              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold border transition-all cursor-pointer ${
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-extrabold border transition-all cursor-pointer ${
                 showArHud
                   ? 'bg-[#059669]/20 text-[#34D399] border-[#059669]'
                   : 'bg-[#1E293B] text-[#94A3B8] border-[#334155] hover:text-white'
@@ -131,7 +131,7 @@ export const FarmerLandVisualizer: React.FC<FarmerLandVisualizerProps> = ({
             {/* View Profile details */}
             <button
               onClick={() => onOpenDetails(farmer)}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold bg-[#1E293B] hover:bg-[#334155] text-white border border-[#334155] cursor-pointer"
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-extrabold bg-[#1E293B] hover:bg-[#334155] text-white border border-[#334155] cursor-pointer"
             >
               <FileText className="w-3.5 h-3.5 text-[#38BDF8]" />
               <span>7/12 Profile</span>
@@ -152,7 +152,7 @@ export const FarmerLandVisualizer: React.FC<FarmerLandVisualizerProps> = ({
           <MapContainer
             center={[centerLat, centerLng]}
             zoom={17}
-            style={{ width: '100%', height: '100%', background: '#0F172A' }}
+            style={{ width: '100%', height: '100%', background: '#0B132B' }}
             zoomControl={false}
           >
             {mapLayer === 'SATELLITE' ? (
@@ -175,7 +175,7 @@ export const FarmerLandVisualizer: React.FC<FarmerLandVisualizerProps> = ({
             <Polygon
               positions={polygonPositions}
               pathOptions={{
-                color: farmer.arVerificationStatus === 'FLAGGED_MISMATCH' ? '#EF4444' : '#EA580C',
+                color: farmer.arVerificationStatus === 'FLAGGED_MISMATCH' ? '#EF4444' : '#4F46E5',
                 fillColor: farmer.arVerificationStatus === 'FLAGGED_MISMATCH' ? '#EF4444' : '#F97316',
                 fillOpacity: 0.35,
                 weight: 3,
@@ -183,10 +183,10 @@ export const FarmerLandVisualizer: React.FC<FarmerLandVisualizerProps> = ({
               }}
             >
               <Popup>
-                <div className="p-1 font-sans text-xs">
-                  <strong className="text-[#0F172A]">{farmer.farmerName}</strong>
-                  <p className="text-[10px] text-[#64748B] font-mono">{farmer.ulpin}</p>
-                  <p className="text-[10px] font-bold text-[#EA580C] mt-1">Area: {farmer.totalLandAreaAcres} Acres</p>
+                <div className="p-1  text-xs">
+                  <strong className="text-[#0B132B]">{farmer.farmerName}</strong>
+                  <p className="text-[10px] text-slate-500 font-mono">{farmer.ulpin}</p>
+                  <p className="text-[10px] font-extrabold text-indigo-600 mt-1">Area: {farmer.totalLandAreaAcres} Acres</p>
                 </div>
               </Popup>
             </Polygon>
@@ -208,10 +208,10 @@ export const FarmerLandVisualizer: React.FC<FarmerLandVisualizerProps> = ({
                 }}
               >
                 <Popup>
-                  <div className="p-1 font-sans text-xs">
-                    <strong className="text-[#0F172A] font-mono">{pillar.pillarId}</strong>
-                    <p className="text-[10px] text-[#059669] font-bold">RTK Accuracy: ±{pillar.rtkAccuracyCm} cm</p>
-                    <p className="text-[9px] text-[#64748B] font-mono">
+                  <div className="p-1  text-xs">
+                    <strong className="text-[#0B132B] font-mono">{pillar.pillarId}</strong>
+                    <p className="text-[10px] text-[#059669] font-extrabold">RTK Accuracy: ±{pillar.rtkAccuracyCm} cm</p>
+                    <p className="text-[9px] text-slate-500 font-mono">
                       Lat: {pillar.lat.toFixed(6)}, Lng: {pillar.lng.toFixed(6)}
                     </p>
                   </div>
@@ -222,7 +222,7 @@ export const FarmerLandVisualizer: React.FC<FarmerLandVisualizerProps> = ({
 
           {/* AR Sentinel Camera Preview HUD Overlay */}
           {showArHud && (
-            <div className="absolute top-4 left-4 z-[1000] w-72 bg-[#0F172A]/90 backdrop-blur-md rounded-2xl border border-[#334155] p-3.5 shadow-2xl text-white space-y-3 pointer-events-auto">
+            <div className="absolute top-4 left-4 z-[1000] w-72 bg-[#0B132B]/90 backdrop-blur-md rounded-2xl border border-[#334155] p-3.5 shadow-2xl text-white space-y-3 pointer-events-auto">
               <div className="flex items-center justify-between border-b border-[#334155] pb-2">
                 <span className="text-[10px] font-extrabold uppercase tracking-wider text-[#38BDF8] flex items-center gap-1.5">
                   <Smartphone className="w-3.5 h-3.5 text-[#38BDF8]" />
@@ -234,26 +234,26 @@ export const FarmerLandVisualizer: React.FC<FarmerLandVisualizerProps> = ({
               <div className="space-y-1.5 text-xs">
                 <div className="flex justify-between">
                   <span className="text-[#94A3B8]">DGPS RTK Fix:</span>
-                  <span className="font-mono font-bold text-[#34D399]">3D FIXED (±1.2 cm)</span>
+                  <span className="font-mono font-extrabold text-[#34D399]">3D FIXED (±1.2 cm)</span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-[#94A3B8]">Heading Offset:</span>
-                  <span className="font-mono font-bold text-white">342° NW</span>
+                  <span className="font-mono font-extrabold text-white">342° NW</span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-[#94A3B8]">Ground Coherence:</span>
-                  <span className={`font-mono font-bold ${farmer.arVerificationStatus === 'FLAGGED_MISMATCH' ? 'text-[#F87171]' : 'text-[#34D399]'}`}>
+                  <span className={`font-mono font-extrabold ${farmer.arVerificationStatus === 'FLAGGED_MISMATCH' ? 'text-[#F87171]' : 'text-[#34D399]'}`}>
                     {farmer.arVerificationStatus === 'FLAGGED_MISMATCH' ? '82.4% (Mismatch)' : '98.6% (Locked)'}
                   </span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-[#94A3B8]">QR Demarcation:</span>
-                  <span className="font-mono text-[#F97316] font-bold">{farmer.qrPasscode}</span>
+                  <span className="font-mono text-[#F97316] font-extrabold">{farmer.qrPasscode}</span>
                 </div>
               </div>
 
               <div className="p-2 rounded-xl bg-[#1E293B] border border-[#334155] text-[11px] text-[#CBD5E1]">
-                <p className="flex items-center gap-1 text-[#38BDF8] font-bold mb-0.5">
+                <p className="flex items-center gap-1 text-[#38BDF8] font-extrabold mb-0.5">
                   <Compass className="w-3 h-3" /> Corner Pillars Extruded
                 </p>
                 <p className="text-[10px] text-[#94A3B8] leading-tight">
@@ -264,15 +264,15 @@ export const FarmerLandVisualizer: React.FC<FarmerLandVisualizerProps> = ({
           )}
 
           {/* Bottom Right Geometry Card */}
-          <div className="absolute bottom-4 right-4 z-[1000] bg-[#0F172A]/90 backdrop-blur-md rounded-2xl border border-[#334155] p-3 shadow-2xl text-white flex items-center gap-4 pointer-events-auto">
+          <div className="absolute bottom-4 right-4 z-[1000] bg-[#0B132B]/90 backdrop-blur-md rounded-2xl border border-[#334155] p-3 shadow-2xl text-white flex items-center gap-4 pointer-events-auto">
             <div className="text-right">
-              <span className="text-[9px] uppercase font-bold text-[#94A3B8]">Total Perimeter</span>
+              <span className="text-[9px] uppercase font-extrabold text-[#94A3B8]">Total Perimeter</span>
               <p className="font-mono font-extrabold text-sm text-white">486.2 Meters</p>
             </div>
             <div className="h-8 w-px bg-[#334155]"></div>
             <div className="text-right">
-              <span className="text-[9px] uppercase font-bold text-[#94A3B8]">Acquisition Share</span>
-              <p className="font-mono font-extrabold text-sm text-[#EA580C]">
+              <span className="text-[9px] uppercase font-extrabold text-[#94A3B8]">Acquisition Share</span>
+              <p className="font-mono font-extrabold text-sm text-indigo-600">
                 {((farmer.acquiredAreaAcres / farmer.totalLandAreaAcres) * 100).toFixed(0)}% Acquired
               </p>
             </div>

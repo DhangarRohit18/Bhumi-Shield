@@ -72,22 +72,22 @@ export const TwinDocumentsTab: React.FC<{ documents: LegalDocument[]; projectId?
   };
 
   return (
-    <div className="space-y-4 font-sans">
+    <div className="space-y-4 ">
       <div className="flex justify-between items-center">
         <div>
-          <h2 className="text-base font-extrabold text-[#0F172A]">Statutory Gazette Orders & Legal Deeds</h2>
-          <p className="text-xs text-[#64748B] font-medium">Verifiable document repository with SHA-256 integrity checksums</p>
+          <h2 className="text-base font-extrabold text-[#0B132B]">Statutory Gazette Orders & Legal Deeds</h2>
+          <p className="text-xs text-slate-500 font-medium">Verifiable document repository with SHA-256 integrity checksums</p>
         </div>
         {canUploadDoc ? (
           <button
             onClick={() => setDocModalOpen(true)}
-            className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-[#EA580C] hover:bg-[#C2410C] text-white text-xs font-bold shadow-sm transition-all cursor-pointer"
+            className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-brand-gradient hover:bg-[#3730A3] text-white text-xs font-extrabold shadow-soft transition-all cursor-pointer"
           >
             <PlusCircle className="w-3.5 h-3.5" />
             <span>Upload Statutory Document</span>
           </button>
         ) : (
-          <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#F1F5F9] border border-[#CBD5E1] text-[11px] font-bold text-[#64748B]">
+          <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#F1F5F9] border border-[#CBD5E1] text-[11px] font-extrabold text-slate-500">
             <Lock className="w-3.5 h-3.5 text-[#94A3B8]" />
             <span>Upload Restricted</span>
           </div>
@@ -96,22 +96,22 @@ export const TwinDocumentsTab: React.FC<{ documents: LegalDocument[]; projectId?
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {documents.map((d) => (
-          <div key={d.id} className="p-5 rounded-2xl bg-white border border-[#E2E8F0] shadow-sm space-y-2">
+          <div key={d.id} className="p-5 rounded-2xl bg-white border border-[#E2E8F0] shadow-soft space-y-2">
             <div className="flex justify-between items-center text-xs">
-              <span className="font-mono text-[#0F172A] font-extrabold">{d.id}</span>
-              <span className="px-2.5 py-0.5 rounded-full text-[10px] bg-[#F1F5F9] text-[#0F172A] border border-[#CBD5E1] font-bold">
+              <span className="font-mono text-[#0B132B] font-extrabold">{d.id}</span>
+              <span className="px-2.5 py-0.5 rounded-full text-[10px] bg-[#F1F5F9] text-[#0B132B] border border-[#CBD5E1] font-extrabold">
                 {d.documentType}
               </span>
             </div>
-            <h3 className="text-sm font-bold text-[#0F172A]">{d.title}</h3>
-            <p className="text-xs text-[#64748B] font-medium">Version v{d.currentVersionNo} • File Size: {(d.fileSizeBytes / 1024 / 1024).toFixed(2)} MB</p>
-            <div className="flex justify-between items-center pt-2 border-t border-[#E2E8F0] text-[11px] text-[#64748B]">
-              <span>SHA-256: <strong className="text-[#0F172A] font-mono text-[10px]">{d.sha256Checksum.substring(0, 18)}...</strong></span>
+            <h3 className="text-sm font-extrabold text-[#0B132B]">{d.title}</h3>
+            <p className="text-xs text-slate-500 font-medium">Version v{d.currentVersionNo} • File Size: {(d.fileSizeBytes / 1024 / 1024).toFixed(2)} MB</p>
+            <div className="flex justify-between items-center pt-2 border-t border-[#E2E8F0] text-[11px] text-slate-500">
+              <span>SHA-256: <strong className="text-[#0B132B] font-mono text-[10px]">{d.sha256Checksum.substring(0, 18)}...</strong></span>
               <a
                 href={d.currentDownloadUrl}
                 target="_blank"
                 rel="noreferrer"
-                className="text-[#0F172A] font-extrabold hover:underline flex items-center gap-1"
+                className="text-[#0B132B] font-extrabold hover:underline flex items-center gap-1"
               >
                 <span>Download PDF</span>
                 <ExternalLink className="w-3 h-3" />
@@ -125,27 +125,27 @@ export const TwinDocumentsTab: React.FC<{ documents: LegalDocument[]; projectId?
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-xs p-4">
           <div className="w-full max-w-md bg-white rounded-2xl p-6 shadow-xl border border-[#E2E8F0] space-y-4">
             <div className="flex justify-between items-center border-b border-[#E2E8F0] pb-3">
-              <h3 className="text-sm font-extrabold text-[#0F172A]">Upload & Register Statutory Document</h3>
-              <button onClick={() => setDocModalOpen(false)} className="text-[#64748B] hover:text-[#0F172A] cursor-pointer"><X className="w-4 h-4" /></button>
+              <h3 className="text-sm font-extrabold text-[#0B132B]">Upload & Register Statutory Document</h3>
+              <button onClick={() => setDocModalOpen(false)} className="text-slate-500 hover:text-[#0B132B] cursor-pointer"><X className="w-4 h-4" /></button>
             </div>
             <form onSubmit={handleCreateDocument} className="space-y-3 text-xs">
               <div>
-                <label className="block text-[#64748B] font-bold mb-1">Document Title</label>
+                <label className="block text-slate-500 font-extrabold mb-1">Document Title</label>
                 <input
                   required
                   type="text"
                   value={title}
                   onChange={(e) => setTitle(e.target.value)}
                   placeholder="e.g. Section 19(1) Final Declaration Gazette"
-                  className="w-full bg-[#F8FAFC] border border-[#CBD5E1] rounded-xl px-3 py-2 text-xs text-[#0F172A] focus:outline-none focus:border-[#0F172A]"
+                  className="w-full bg-transparent border border-[#CBD5E1] rounded-xl px-3 py-2 text-xs text-[#0B132B] focus:outline-none focus:border-[#0B132B]"
                 />
               </div>
               <div>
-                <label className="block text-[#64748B] font-bold mb-1">Statutory Document Type</label>
+                <label className="block text-slate-500 font-extrabold mb-1">Statutory Document Type</label>
                 <select
                   value={docType}
                   onChange={(e) => setDocType(e.target.value as any)}
-                  className="w-full bg-[#F8FAFC] border border-[#CBD5E1] rounded-xl px-3 py-2 text-xs text-[#0F172A] focus:outline-none focus:border-[#0F172A]"
+                  className="w-full bg-transparent border border-[#CBD5E1] rounded-xl px-3 py-2 text-xs text-[#0B132B] focus:outline-none focus:border-[#0B132B]"
                 >
                   <option value="GAZETTE_SEC_11">Section 11 Preliminary Notification</option>
                   <option value="GAZETTE_SEC_19">Section 19 Conclusive Declaration</option>
@@ -154,26 +154,26 @@ export const TwinDocumentsTab: React.FC<{ documents: LegalDocument[]; projectId?
                 </select>
               </div>
               <div>
-                <label className="block text-[#64748B] font-bold mb-1">Gazette PDF URL / Storage Bucket Link</label>
+                <label className="block text-slate-500 font-extrabold mb-1">Gazette PDF URL / Storage Bucket Link</label>
                 <input
                   type="text"
                   value={downloadUrl}
                   onChange={(e) => setDownloadUrl(e.target.value)}
-                  className="w-full bg-[#F8FAFC] border border-[#CBD5E1] rounded-xl px-3 py-2 text-xs font-mono text-[#0F172A] focus:outline-none focus:border-[#0F172A]"
+                  className="w-full bg-transparent border border-[#CBD5E1] rounded-xl px-3 py-2 text-xs font-mono text-[#0B132B] focus:outline-none focus:border-[#0B132B]"
                 />
               </div>
               <div className="pt-2 flex justify-end gap-2">
                 <button
                   type="button"
                   onClick={() => setDocModalOpen(false)}
-                  className="px-4 py-2 rounded-xl text-xs font-bold text-[#64748B] hover:bg-[#F8FAFC] cursor-pointer"
+                  className="px-4 py-2 rounded-xl text-xs font-extrabold text-slate-500 hover:bg-transparent cursor-pointer"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
                   disabled={saving}
-                  className="px-4 py-2 rounded-xl text-xs font-bold bg-[#0F172A] text-white hover:bg-[#1E293B] cursor-pointer disabled:opacity-50"
+                  className="px-4 py-2 rounded-xl text-xs font-extrabold bg-[#0B132B] text-white hover:bg-[#1E293B] cursor-pointer disabled:opacity-50"
                 >
                   {saving ? 'Publishing...' : 'Register Gazette PDF'}
                 </button>
@@ -224,52 +224,52 @@ export const TwinCompensationTab: React.FC<{ compensations: CompensationAward[] 
   };
 
   return (
-    <div className="space-y-4 font-sans">
+    <div className="space-y-4 ">
       <div className="flex justify-between items-center">
         <div>
-          <h2 className="text-base font-extrabold text-[#0F172A]">Statutory Compensation & PFMS Direct Credit Ledger</h2>
-          <p className="text-xs text-[#64748B] font-medium">Basic market valuation + 100% Solatium (Sec 30) + Structural asset valuations</p>
+          <h2 className="text-base font-extrabold text-[#0B132B]">Statutory Compensation & PFMS Direct Credit Ledger</h2>
+          <p className="text-xs text-slate-500 font-medium">Basic market valuation + 100% Solatium (Sec 30) + Structural asset valuations</p>
         </div>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {compensations.map((c) => (
-          <div key={c.id} className="p-5 rounded-2xl bg-white border border-[#BAE6FD] shadow-sm space-y-4">
+          <div key={c.id} className="p-5 rounded-2xl bg-white border border-slate-200/80 shadow-soft space-y-4">
             <div className="flex justify-between items-center">
-              <span className="font-mono text-xs text-[#0F172A] font-extrabold">AWARD #{c.id}</span>
+              <span className="font-mono text-xs text-[#0B132B] font-extrabold">AWARD #{c.id}</span>
               <span
-                className={`px-2.5 py-0.5 rounded-full text-[10px] font-bold border ${
+                className={`px-2.5 py-0.5 rounded-full text-[10px] font-extrabold border ${
                   c.disbursementStatus === 'CREDITED'
                     ? 'bg-[#ECFDF5] text-[#047857] border-[#A7F3D0]'
-                    : 'bg-[#FFF7ED] text-[#EA580C] border-[#FFEDD5]'
+                    : 'bg-[#EEF2FF] text-indigo-600 border-[#E0E7FF]'
                 }`}
               >
                 {c.disbursementStatus}
               </span>
             </div>
 
-            <div className="p-3.5 bg-[#F0F7FF] rounded-xl border border-[#BAE6FD] space-y-2 text-xs">
-              <div className="flex justify-between"><span className="text-[#64748B]">Basic Land Valuation:</span><span className="font-mono text-[#0F172A]">₹{(c.basicLandValueINR / 100000).toFixed(2)} Lakhs</span></div>
-              <div className="flex justify-between"><span className="text-[#64748B]">100% Solatium (Sec 30):</span><span className="font-mono text-[#0F172A] font-extrabold">₹{(c.solatiumAmountINR / 100000).toFixed(2)} Lakhs</span></div>
-              <div className="flex justify-between"><span className="text-[#64748B]">Structural Assets (Trees/Wells):</span><span className="font-mono text-[#0F172A]">₹{(c.assetsValuationINR / 100000).toFixed(2)} Lakhs</span></div>
-              <div className="flex justify-between pt-2 border-t border-[#BAE6FD]/60 font-extrabold text-[#0F172A]">
+            <div className="p-3.5 bg-transparent rounded-xl border border-slate-200/80 space-y-2 text-xs">
+              <div className="flex justify-between"><span className="text-slate-500">Basic Land Valuation:</span><span className="font-mono text-[#0B132B]">₹{(c.basicLandValueINR / 100000).toFixed(2)} Lakhs</span></div>
+              <div className="flex justify-between"><span className="text-slate-500">100% Solatium (Sec 30):</span><span className="font-mono text-[#0B132B] font-extrabold">₹{(c.solatiumAmountINR / 100000).toFixed(2)} Lakhs</span></div>
+              <div className="flex justify-between"><span className="text-slate-500">Structural Assets (Trees/Wells):</span><span className="font-mono text-[#0B132B]">₹{(c.assetsValuationINR / 100000).toFixed(2)} Lakhs</span></div>
+              <div className="flex justify-between pt-2 border-t border-slate-200/80/60 font-extrabold text-[#0B132B]">
                 <span>Total Statutory Award:</span>
-                <span className="font-mono text-[#EA580C]">₹{(c.totalPayableINR / 100000).toFixed(2)} Lakhs</span>
+                <span className="font-mono text-indigo-600">₹{(c.totalPayableINR / 100000).toFixed(2)} Lakhs</span>
               </div>
             </div>
 
-            <div className="flex justify-between items-center text-[11px] text-[#64748B] pt-1 font-medium">
-              <span>PFMS UTR: <strong className="text-[#0F172A] font-mono">{c.utrTransactionRef}</strong></span>
+            <div className="flex justify-between items-center text-[11px] text-slate-500 pt-1 font-medium">
+              <span>PFMS UTR: <strong className="text-[#0B132B] font-mono">{c.utrTransactionRef}</strong></span>
               {canDisburse ? (
                 <button
                   onClick={() => toggleDisbursementStatus(c)}
                   disabled={updatingId === c.id}
-                  className="px-3 py-1.5 rounded-xl bg-[#EA580C] text-white hover:bg-[#C2410C] text-xs font-bold cursor-pointer disabled:opacity-50 shadow-xs transition-all"
+                  className="px-3 py-1.5 rounded-xl bg-brand-gradient text-white hover:bg-[#3730A3] text-xs font-extrabold cursor-pointer disabled:opacity-50 shadow-xs transition-all"
                 >
                   {c.disbursementStatus === 'CREDITED' ? 'Mark Pending' : 'Trigger PFMS Direct Credit'}
                 </button>
               ) : (
-                <div className="flex items-center gap-1 text-[10px] text-[#94A3B8] font-bold">
+                <div className="flex items-center gap-1 text-[10px] text-[#94A3B8] font-extrabold">
                   <Lock className="w-3 h-3 text-[#94A3B8]" />
                   <span>CALA / Admin Auth Required</span>
                 </div>
@@ -312,19 +312,19 @@ export const TwinRrTab: React.FC<{ rrCases: RRCase[]; projectId?: string }> = ({
   };
 
   return (
-    <div className="space-y-4 font-sans">
+    <div className="space-y-4 ">
       <div>
-        <h2 className="text-base font-extrabold text-[#0F172A]">Resettlement & Rehabilitation (R&R) Entitlements</h2>
-        <p className="text-xs text-[#64748B] font-medium">Constructed housing allotments, livelihood grants & family rehabilitations under Section 31</p>
+        <h2 className="text-base font-extrabold text-[#0B132B]">Resettlement & Rehabilitation (R&R) Entitlements</h2>
+        <p className="text-xs text-slate-500 font-medium">Constructed housing allotments, livelihood grants & family rehabilitations under Section 31</p>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {rrCases.map((r) => (
-          <div key={r.id} className="p-5 rounded-2xl bg-white border border-[#E2E8F0] shadow-sm space-y-3">
+          <div key={r.id} className="p-5 rounded-2xl bg-white border border-[#E2E8F0] shadow-soft space-y-3">
             <div className="flex justify-between items-center text-xs">
-              <span className="font-mono text-[#0F172A] font-extrabold">CASE #{r.id}</span>
+              <span className="font-mono text-[#0B132B] font-extrabold">CASE #{r.id}</span>
               <span
-                className={`px-2.5 py-0.5 rounded-full text-[10px] font-bold border ${
+                className={`px-2.5 py-0.5 rounded-full text-[10px] font-extrabold border ${
                   r.status === 'COMPLETED'
                     ? 'bg-[#ECFDF5] text-[#047857] border-[#A7F3D0]'
                     : 'bg-[#FFFBEB] text-[#B45309] border-[#FDE68A]'
@@ -333,14 +333,14 @@ export const TwinRrTab: React.FC<{ rrCases: RRCase[]; projectId?: string }> = ({
                 {r.status}
               </span>
             </div>
-            <h3 className="text-sm font-bold text-[#0F172A]">{r.entitlementType} - {r.allottedPlotLocation || 'Plot #28, R&R Sector 4'}</h3>
-            <p className="text-xs text-[#64748B] font-medium">Entitlement Type: <strong className="text-[#0F172A]">{r.entitlementType}</strong></p>
+            <h3 className="text-sm font-extrabold text-[#0B132B]">{r.entitlementType} - {r.allottedPlotLocation || 'Plot #28, R&R Sector 4'}</h3>
+            <p className="text-xs text-slate-500 font-medium">Entitlement Type: <strong className="text-[#0B132B]">{r.entitlementType}</strong></p>
             <div className="flex justify-between items-center text-xs pt-2 border-t border-[#E2E8F0]">
-              <span className="text-[#64748B]">Grant Sanctioned: <strong className="font-extrabold text-[#047857]">₹{(r.entitlementAmountINR / 100000).toFixed(2)} L</strong></span>
+              <span className="text-slate-500">Grant Sanctioned: <strong className="font-extrabold text-[#047857]">₹{(r.entitlementAmountINR / 100000).toFixed(2)} L</strong></span>
               <button
                 onClick={() => toggleRRStatus(r)}
                 disabled={updatingId === r.id}
-                className="px-3 py-1 rounded-lg bg-[#0F172A] text-white hover:bg-[#1E293B] text-xs font-bold cursor-pointer disabled:opacity-50"
+                className="px-3 py-1 rounded-2xl bg-[#0B132B] text-white hover:bg-[#1E293B] text-xs font-extrabold cursor-pointer disabled:opacity-50"
               >
                 {r.status === 'COMPLETED' ? 'Mark Sanctioned' : 'Handover & Complete'}
               </button>
@@ -405,22 +405,22 @@ export function TwinLegalTab({ projectId, legalCases }: { projectId: string; leg
   };
 
   return (
-    <div className="space-y-4 font-sans">
+    <div className="space-y-4 ">
       <div className="flex justify-between items-center">
         <div>
-          <h2 className="text-base font-extrabold text-[#0F172A]">Legal Cases & Land Reference Court Inquiries</h2>
-          <p className="text-xs text-[#64748B] font-medium">High Court writ petitions, stay orders, and Section 64 reference appeals</p>
+          <h2 className="text-base font-extrabold text-[#0B132B]">Legal Cases & Land Reference Court Inquiries</h2>
+          <p className="text-xs text-slate-500 font-medium">High Court writ petitions, stay orders, and Section 64 reference appeals</p>
         </div>
         {canFileLegal ? (
           <button
             onClick={() => setLegalModalOpen(true)}
-            className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-[#EA580C] hover:bg-[#C2410C] text-white text-xs font-bold shadow-sm transition-all cursor-pointer"
+            className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-brand-gradient hover:bg-[#3730A3] text-white text-xs font-extrabold shadow-soft transition-all cursor-pointer"
           >
             <PlusCircle className="w-3.5 h-3.5" />
             <span>Docket New Legal Writ</span>
           </button>
         ) : (
-          <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#F1F5F9] border border-[#CBD5E1] text-[11px] font-bold text-[#64748B]">
+          <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#F1F5F9] border border-[#CBD5E1] text-[11px] font-extrabold text-slate-500">
             <Lock className="w-3.5 h-3.5 text-[#94A3B8]" />
             <span>Docketing Restricted</span>
           </div>
@@ -429,18 +429,18 @@ export function TwinLegalTab({ projectId, legalCases }: { projectId: string; leg
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {legalCases.map((l) => (
-          <div key={l.id} className="p-5 rounded-2xl bg-white border border-[#BAE6FD] shadow-sm space-y-3">
+          <div key={l.id} className="p-5 rounded-2xl bg-white border border-slate-200/80 shadow-soft space-y-3">
             <div className="flex justify-between items-center text-xs">
-              <span className="font-mono text-[#0F172A] font-extrabold">{l.caseNumber} ({l.courtName})</span>
-              <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-bold border ${l.stayGranted ? 'bg-[#FFF1F2] text-[#9F1239] border-[#FECDD3]' : 'bg-[#ECFDF5] text-[#047857] border-[#A7F3D0]'}`}>
+              <span className="font-mono text-[#0B132B] font-extrabold">{l.caseNumber} ({l.courtName})</span>
+              <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-extrabold border ${l.stayGranted ? 'bg-[#FFF1F2] text-[#9F1239] border-[#FECDD3]' : 'bg-[#ECFDF5] text-[#047857] border-[#A7F3D0]'}`}>
                 {l.stayGranted ? 'STAY GRANTED' : l.status}
               </span>
             </div>
-            <h3 className="text-sm font-bold text-[#0F172A]">{l.litigantName}</h3>
-            <p className="text-xs text-[#64748B] font-medium">Advocate on Record: <strong className="text-[#0F172A]">{l.advocateName}</strong></p>
-            <div className="flex justify-between text-[11px] text-[#64748B] pt-2 border-t border-[#BAE6FD]/60">
-              <span>Next Hearing: <strong className="text-[#0F172A] font-mono">{l.nextHearingDate}</strong></span>
-              <span className="font-bold text-[#0369A1]">CALA Response Affidavit Filed</span>
+            <h3 className="text-sm font-extrabold text-[#0B132B]">{l.litigantName}</h3>
+            <p className="text-xs text-slate-500 font-medium">Advocate on Record: <strong className="text-[#0B132B]">{l.advocateName}</strong></p>
+            <div className="flex justify-between text-[11px] text-slate-500 pt-2 border-t border-slate-200/80/60">
+              <span>Next Hearing: <strong className="text-[#0B132B] font-mono">{l.nextHearingDate}</strong></span>
+              <span className="font-extrabold text-indigo-600">CALA Response Affidavit Filed</span>
             </div>
           </div>
         ))}
@@ -448,48 +448,48 @@ export function TwinLegalTab({ projectId, legalCases }: { projectId: string; leg
 
       {legalModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-xs p-4">
-          <div className="w-full max-w-md bg-white rounded-2xl p-6 shadow-xl border border-[#BAE6FD] space-y-4">
-            <div className="flex justify-between items-center border-b border-[#BAE6FD]/60 pb-3">
-              <h3 className="text-sm font-extrabold text-[#0F172A]">Docket High Court Writ / Tribunal Appeal</h3>
-              <button onClick={() => setLegalModalOpen(false)} className="text-[#64748B] hover:text-[#0F172A] cursor-pointer"><X className="w-4 h-4" /></button>
+          <div className="w-full max-w-md bg-white rounded-2xl p-6 shadow-xl border border-slate-200/80 space-y-4">
+            <div className="flex justify-between items-center border-b border-slate-200/80 pb-3">
+              <h3 className="text-sm font-extrabold text-[#0B132B]">Docket High Court Writ / Tribunal Appeal</h3>
+              <button onClick={() => setLegalModalOpen(false)} className="text-slate-500 hover:text-[#0B132B] cursor-pointer"><X className="w-4 h-4" /></button>
             </div>
             <form onSubmit={handleCreateLegalCase} className="space-y-3 text-xs">
               <div>
-                <label className="block text-[#64748B] font-bold mb-1">Case / Writ Petition Number</label>
+                <label className="block text-slate-500 font-extrabold mb-1">Case / Writ Petition Number</label>
                 <input
                   required
                   type="text"
                   value={caseNo}
                   onChange={(e) => setCaseNo(e.target.value)}
                   placeholder="e.g. WP/10442/2026"
-                  className="w-full bg-[#F0F7FF] border border-[#BAE6FD] rounded-xl px-3 py-2 text-xs text-[#0F172A] focus:outline-none focus:border-[#EA580C]"
+                  className="w-full bg-transparent border border-slate-200/80 rounded-xl px-3 py-2 text-xs text-[#0B132B] focus:outline-none focus:border-[#4F46E5]"
                 />
               </div>
               <div>
-                <label className="block text-[#64748B] font-bold mb-1">Court Jurisdiction</label>
+                <label className="block text-slate-500 font-extrabold mb-1">Court Jurisdiction</label>
                 <input
                   type="text"
                   value={court}
                   onChange={(e) => setCourt(e.target.value)}
-                  className="w-full bg-[#F0F7FF] border border-[#BAE6FD] rounded-xl px-3 py-2 text-xs text-[#0F172A] focus:outline-none focus:border-[#EA580C]"
+                  className="w-full bg-transparent border border-slate-200/80 rounded-xl px-3 py-2 text-xs text-[#0B132B] focus:outline-none focus:border-[#4F46E5]"
                 />
               </div>
               <div>
-                <label className="block text-[#64748B] font-bold mb-1">Petitioner vs Respondent Title</label>
+                <label className="block text-slate-500 font-extrabold mb-1">Petitioner vs Respondent Title</label>
                 <input
                   required
                   type="text"
                   value={petitioner}
                   onChange={(e) => setPetitioner(e.target.value)}
                   placeholder="e.g. Shri R.K. Patil vs State of Maharashtra"
-                  className="w-full bg-[#F0F7FF] border border-[#BAE6FD] rounded-xl px-3 py-2 text-xs text-[#0F172A] focus:outline-none focus:border-[#EA580C]"
+                  className="w-full bg-transparent border border-slate-200/80 rounded-xl px-3 py-2 text-xs text-[#0B132B] focus:outline-none focus:border-[#4F46E5]"
                 />
               </div>
               <div className="pt-2">
                 <button
                   type="submit"
                   disabled={saving}
-                  className="w-full py-2.5 bg-[#EA580C] hover:bg-[#C2410C] text-white font-bold rounded-xl text-xs transition-all cursor-pointer"
+                  className="w-full py-2.5 bg-brand-gradient hover:bg-[#3730A3] text-white font-extrabold rounded-xl text-xs transition-all cursor-pointer"
                 >
                   {saving ? 'Registering Docket…' : 'Register Legal Docket & Seal'}
                 </button>
@@ -503,17 +503,17 @@ export function TwinLegalTab({ projectId, legalCases }: { projectId: string; leg
 };
 
 export const TwinFieldEvidenceTab: React.FC<{ evidence: FieldEvidence[]; projectId?: string }> = ({ evidence }) => (
-  <div className="space-y-6 font-sans">
+  <div className="space-y-6 ">
     {/* Top Header & Native AR Sentinel Feature Banner */}
-    <div className="p-6 rounded-2xl bg-gradient-to-br from-[#0F172A] via-[#1E293B] to-[#0F172A] text-white border border-[#334155] shadow-lg flex flex-col lg:flex-row lg:items-center justify-between gap-6">
+    <div className="p-6 rounded-2xl bg-gradient-to-br from-[#0B132B] via-[#1E293B] to-[#0B132B] text-white border border-[#334155] shadow-lg flex flex-col lg:flex-row lg:items-center justify-between gap-6">
       <div className="space-y-2">
         <div className="flex items-center gap-2">
-          <span className="px-2.5 py-0.5 rounded-full bg-[#EA580C] text-white text-[10px] font-black tracking-wider uppercase">
+          <span className="px-2.5 py-0.5 rounded-full bg-brand-gradient text-white text-[10px] font-extrabold tracking-wider uppercase">
             NATIVE AR SENTINEL ENGINE v1.0
           </span>
           <span className="text-xs text-[#94A3B8] font-mono">Google ARCore • Jetpack Compose • OpenGL ES 2.0</span>
         </div>
-        <h2 className="text-lg font-black tracking-tight text-white flex items-center gap-2">
+        <h2 className="text-lg font-extrabold tracking-tight text-white flex items-center gap-2">
           <span>Real-Time AR Boundary Demarcation & Geotagged Field Evidence</span>
         </h2>
         <p className="text-xs text-[#94A3B8] max-w-2xl leading-relaxed">
@@ -525,11 +525,11 @@ export const TwinFieldEvidenceTab: React.FC<{ evidence: FieldEvidence[]; project
         <a
           href="/bhumi-shield-ar-sentinel-v1.0.apk"
           download="bhumi-shield-ar-sentinel-v1.0.apk"
-          className="flex items-center justify-center gap-2 px-5 py-3 rounded-xl bg-[#EA580C] hover:bg-[#C2410C] text-white font-black text-xs shadow-md transition-all cursor-pointer border border-[#EA580C]"
+          className="flex items-center justify-center gap-2 px-5 py-3 rounded-xl bg-brand-gradient hover:bg-[#3730A3] text-white font-extrabold text-xs shadow-float transition-all cursor-pointer border border-[#4F46E5]"
         >
           <span className="text-base">⬇️</span>
           <span>Download AR Sentinel APK</span>
-          <span className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-black/20 text-white font-bold">
+          <span className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-black/20 text-white font-extrabold">
             35.6 MB
           </span>
         </a>
@@ -537,27 +537,27 @@ export const TwinFieldEvidenceTab: React.FC<{ evidence: FieldEvidence[]; project
     </div>
 
     <div>
-      <h3 className="text-sm font-extrabold text-[#0F172A]">DGPS & Tamper-Evident Ground Field Evidence Logs</h3>
-      <p className="text-xs text-[#64748B] font-medium">Real-time mobile uploads synchronized with cryptographic hash verification</p>
+      <h3 className="text-sm font-extrabold text-[#0B132B]">DGPS & Tamper-Evident Ground Field Evidence Logs</h3>
+      <p className="text-xs text-slate-500 font-medium">Real-time mobile uploads synchronized with cryptographic hash verification</p>
     </div>
 
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
       {evidence.map((ev) => (
-        <div key={ev.id} className="p-4 rounded-2xl bg-white border border-[#BAE6FD] shadow-sm space-y-2">
+        <div key={ev.id} className="p-4 rounded-2xl bg-white border border-slate-200/80 shadow-soft space-y-2">
           <div className="flex justify-between items-center text-xs">
-            <span className="font-mono text-[#0F172A] font-extrabold">INSPECTION #{ev.id}</span>
-            <span className="px-2 py-0.5 rounded-full text-[9px] font-bold bg-[#ECFDF5] text-[#047857] border border-[#A7F3D0]">
+            <span className="font-mono text-[#0B132B] font-extrabold">INSPECTION #{ev.id}</span>
+            <span className="px-2 py-0.5 rounded-full text-[9px] font-extrabold bg-[#ECFDF5] text-[#047857] border border-[#A7F3D0]">
               VERIFIED
             </span>
           </div>
-          <div className="h-32 bg-[#F0F7FF] rounded-xl flex items-center justify-center border border-[#BAE6FD] text-xs text-[#0369A1] font-mono">
+          <div className="h-32 bg-transparent rounded-xl flex items-center justify-center border border-slate-200/80 text-xs text-indigo-600 font-mono">
             📷 Geotagged Capture Photo Preview
           </div>
-          <p className="text-xs text-[#0F172A] font-bold">{ev.notes || 'Boundary verification confirmed'}</p>
-          <div className="text-[10px] text-[#64748B] font-mono space-y-0.5 pt-1 border-t border-[#BAE6FD]/60">
+          <p className="text-xs text-[#0B132B] font-extrabold">{ev.notes || 'Boundary verification confirmed'}</p>
+          <div className="text-[10px] text-slate-500 font-mono space-y-0.5 pt-1 border-t border-slate-200/80/60">
             <div>GPS: {ev.gpsCoordinates?.lat?.toFixed(4) || '19.0760'}° N, {ev.gpsCoordinates?.lng?.toFixed(4) || '72.8777'}° E (±{ev.accuracyMeters || 1.2}m)</div>
             <div>Officer: {ev.capturedByOfficerName}</div>
-            <div className="truncate text-[#0369A1]">SHA-256: {ev.tamperProofHash}</div>
+            <div className="truncate text-indigo-600">SHA-256: {ev.tamperProofHash}</div>
           </div>
         </div>
       ))}
@@ -566,31 +566,31 @@ export const TwinFieldEvidenceTab: React.FC<{ evidence: FieldEvidence[]; project
 );
 
 export const TwinIntelligenceTab: React.FC<{ prediction?: PredictionRecord }> = ({ prediction }) => (
-  <div className="space-y-4 font-sans">
+  <div className="space-y-4 ">
     <div>
-      <h2 className="text-base font-extrabold text-[#0F172A]">AI Forecast Engine & Risk Analytics</h2>
-      <p className="text-xs text-[#64748B] font-medium">Predictive bottleneck simulation and statutory timeline breach forecasts</p>
+      <h2 className="text-base font-extrabold text-[#0B132B]">AI Forecast Engine & Risk Analytics</h2>
+      <p className="text-xs text-slate-500 font-medium">Predictive bottleneck simulation and statutory timeline breach forecasts</p>
     </div>
 
-    <div className="p-6 rounded-2xl bg-white border border-[#BAE6FD] shadow-sm space-y-4">
-      <div className="flex justify-between items-center border-b border-[#BAE6FD]/60 pb-3">
-        <h3 className="text-sm font-extrabold text-[#0F172A]">Corridor Milestone Forecast & Delay Risk</h3>
-        <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-[#FFF7ED] text-[#EA580C] border border-[#FFEDD5]">
+    <div className="p-6 rounded-2xl bg-white border border-slate-200/80 shadow-soft space-y-4">
+      <div className="flex justify-between items-center border-b border-slate-200/80 pb-3">
+        <h3 className="text-sm font-extrabold text-[#0B132B]">Corridor Milestone Forecast & Delay Risk</h3>
+        <span className="px-2.5 py-0.5 rounded-full text-[10px] font-extrabold bg-[#EEF2FF] text-indigo-600 border border-[#E0E7FF]">
           LITIGATION RISK: {prediction ? `${prediction.litigationRiskScore}%` : '42%'}
         </span>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
-        <div className="p-4 rounded-xl bg-[#F0F7FF] border border-[#BAE6FD]">
-          <span className="text-[#0369A1] font-bold">Predicted Handover Delay:</span>
-          <p className="text-xl font-extrabold text-[#0F172A] font-mono mt-1">+{prediction?.predictedDelayDays || 48} Days</p>
+        <div className="p-4 rounded-xl bg-transparent border border-slate-200/80">
+          <span className="text-indigo-600 font-extrabold">Predicted Handover Delay:</span>
+          <p className="text-xl font-extrabold text-[#0B132B] font-mono mt-1">+{prediction?.predictedDelayDays || 48} Days</p>
         </div>
-        <div className="p-4 rounded-xl bg-[#F0F7FF] border border-[#BAE6FD]">
-          <span className="text-[#0369A1] font-bold">Cost Overrun Risk:</span>
-          <p className="text-sm font-extrabold text-[#EA580C] mt-1">{prediction?.costOverrunRiskPercentage ? `${prediction.costOverrunRiskPercentage}%` : 'Section 15 Claim Hearings Volume'}</p>
+        <div className="p-4 rounded-xl bg-transparent border border-slate-200/80">
+          <span className="text-indigo-600 font-extrabold">Cost Overrun Risk:</span>
+          <p className="text-sm font-extrabold text-indigo-600 mt-1">{prediction?.costOverrunRiskPercentage ? `${prediction.costOverrunRiskPercentage}%` : 'Section 15 Claim Hearings Volume'}</p>
         </div>
-        <div className="p-4 rounded-xl bg-[#F0F7FF] border border-[#BAE6FD]">
-          <span className="text-[#0369A1] font-bold">Model Confidence:</span>
+        <div className="p-4 rounded-xl bg-transparent border border-slate-200/80">
+          <span className="text-indigo-600 font-extrabold">Model Confidence:</span>
           <p className="text-xl font-extrabold text-[#059669] font-mono mt-1">{prediction ? `${(prediction.confidenceScore * 100).toFixed(1)}%` : '94.2%'}</p>
         </div>
       </div>
@@ -626,54 +626,54 @@ export const TwinActionsTab: React.FC<{ projectId?: string }> = ({ projectId = '
   };
 
   return (
-    <div className="space-y-4 font-sans">
+    <div className="space-y-4 ">
       <div>
-        <h2 className="text-base font-extrabold text-[#0F172A]">Statutory Orders & Authority Directives</h2>
-        <p className="text-xs text-[#64748B] font-medium">Execute verified statutory orders and trigger inter-departmental workflows</p>
+        <h2 className="text-base font-extrabold text-[#0B132B]">Statutory Orders & Authority Directives</h2>
+        <p className="text-xs text-slate-500 font-medium">Execute verified statutory orders and trigger inter-departmental workflows</p>
       </div>
 
       {issuedMessage && (
-        <div className="p-3 bg-[#ECFDF5] border border-[#A7F3D0] rounded-xl text-xs font-bold text-[#047857] flex items-center gap-2">
+        <div className="p-3 bg-[#ECFDF5] border border-[#A7F3D0] rounded-xl text-xs font-extrabold text-[#047857] flex items-center gap-2">
           <CheckCircle2 className="w-4 h-4" />
           <span>{issuedMessage}</span>
         </div>
       )}
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div className="p-5 rounded-2xl bg-white border border-[#BAE6FD] shadow-sm space-y-3">
-          <h3 className="text-xs font-extrabold text-[#0F172A]">Issue Provisional Solatium Clearance</h3>
-          <p className="text-[11px] text-[#64748B] font-medium">
+        <div className="p-5 rounded-2xl bg-white border border-slate-200/80 shadow-soft space-y-3">
+          <h3 className="text-xs font-extrabold text-[#0B132B]">Issue Provisional Solatium Clearance</h3>
+          <p className="text-[11px] text-slate-500 font-medium">
             Direct CALA to execute Supreme Court SLP standard affidavit and release 50% provisional solatium under Section 30.
           </p>
           {canIssueDirective ? (
             <button
               onClick={() => handleIssueDirective('Provisional Solatium Release', '50% release under Sec 30')}
-              className="w-full py-2.5 bg-[#EA580C] hover:bg-[#C2410C] text-white rounded-xl text-xs font-bold shadow-sm transition-all cursor-pointer"
+              className="w-full py-2.5 bg-brand-gradient hover:bg-[#3730A3] text-white rounded-xl text-xs font-extrabold shadow-soft transition-all cursor-pointer"
             >
               Issue Order to CALA
             </button>
           ) : (
-            <div className="w-full py-2 bg-[#F1F5F9] border border-[#CBD5E1] rounded-xl text-[11px] font-bold text-[#64748B] text-center flex items-center justify-center gap-1.5">
+            <div className="w-full py-2 bg-[#F1F5F9] border border-[#CBD5E1] rounded-xl text-[11px] font-extrabold text-slate-500 text-center flex items-center justify-center gap-1.5">
               <Lock className="w-3.5 h-3.5 text-[#94A3B8]" />
               <span>Directive Issuance Restricted</span>
             </div>
           )}
         </div>
 
-        <div className="p-5 rounded-2xl bg-white border border-[#BAE6FD] shadow-sm space-y-3">
-          <h3 className="text-xs font-extrabold text-[#0F172A]">Convene High-Powered State Clearance Board</h3>
-          <p className="text-[11px] text-[#64748B] font-medium">
+        <div className="p-5 rounded-2xl bg-white border border-slate-200/80 shadow-soft space-y-3">
+          <h3 className="text-xs font-extrabold text-[#0B132B]">Convene High-Powered State Clearance Board</h3>
+          <p className="text-[11px] text-slate-500 font-medium">
             Transmit expedited statutory Section 2 Forest clearance request to Principal Chief Conservator of Forests.
           </p>
           {canIssueDirective ? (
             <button
               onClick={() => handleIssueDirective('State NOC Escalation', 'Expedited Forest NOC transmission')}
-              className="w-full py-2.5 bg-[#EA580C] hover:bg-[#C2410C] text-white rounded-xl text-xs font-bold shadow-sm transition-all cursor-pointer"
+              className="w-full py-2.5 bg-brand-gradient hover:bg-[#3730A3] text-white rounded-xl text-xs font-extrabold shadow-soft transition-all cursor-pointer"
             >
               Transmit State NOC Directive
             </button>
           ) : (
-            <div className="w-full py-2 bg-[#F1F5F9] border border-[#CBD5E1] rounded-xl text-[11px] font-bold text-[#64748B] text-center flex items-center justify-center gap-1.5">
+            <div className="w-full py-2 bg-[#F1F5F9] border border-[#CBD5E1] rounded-xl text-[11px] font-extrabold text-slate-500 text-center flex items-center justify-center gap-1.5">
               <Lock className="w-3.5 h-3.5 text-[#94A3B8]" />
               <span>Directive Issuance Restricted</span>
             </div>
@@ -685,15 +685,15 @@ export const TwinActionsTab: React.FC<{ projectId?: string }> = ({ projectId = '
 };
 
 export const TwinAuditTab: React.FC<{ auditLogs: AuditLogEntry[] }> = ({ auditLogs }) => (
-  <div className="space-y-4 font-sans">
+  <div className="space-y-4 ">
     <div>
-      <h2 className="text-base font-extrabold text-[#0F172A]">Immutable Audit History & Forensic Trail</h2>
-      <p className="text-xs text-[#64748B] font-medium">Cryptographically verifiable chronological ledger for this project</p>
+      <h2 className="text-base font-extrabold text-[#0B132B]">Immutable Audit History & Forensic Trail</h2>
+      <p className="text-xs text-slate-500 font-medium">Cryptographically verifiable chronological ledger for this project</p>
     </div>
 
-    <div className="rounded-2xl bg-white border border-[#E2E8F0] overflow-hidden shadow-sm">
-      <table className="w-full text-left text-xs text-[#0F172A]">
-        <thead className="bg-[#F8FAFC] text-[11px] uppercase tracking-wider text-[#64748B] font-extrabold border-b border-[#E2E8F0]">
+    <div className="rounded-2xl bg-white border border-[#E2E8F0] overflow-hidden shadow-soft">
+      <table className="w-full text-left text-xs text-[#0B132B]">
+        <thead className="bg-transparent text-[11px] uppercase tracking-wider text-slate-500 font-extrabold border-b border-[#E2E8F0]">
           <tr>
             <th className="p-3">Action</th>
             <th className="p-3">Collection</th>
@@ -705,17 +705,17 @@ export const TwinAuditTab: React.FC<{ auditLogs: AuditLogEntry[] }> = ({ auditLo
         </thead>
         <tbody className="divide-y divide-[#E2E8F0] font-mono text-[11px]">
           {auditLogs.map((log) => (
-            <tr key={log.id} className="hover:bg-[#F8FAFC]/60 transition-colors">
-              <td className="p-3 font-bold">
-                <span className="px-2 py-0.5 rounded text-[10px] bg-[#F1F5F9] text-[#0F172A] border border-[#CBD5E1]">
+            <tr key={log.id} className="hover:bg-transparent/60 transition-colors">
+              <td className="p-3 font-extrabold">
+                <span className="px-2 py-0.5 rounded text-[10px] bg-[#F1F5F9] text-[#0B132B] border border-[#CBD5E1]">
                   {log.action}
                 </span>
               </td>
-              <td className="p-3 text-[#0F172A]">{log.targetCollection}</td>
-              <td className="p-3 text-[#0F172A]">{log.actorName}</td>
-              <td className="p-3 text-[#0F172A] font-bold">{log.actorRole}</td>
-              <td className="p-3 text-[#64748B]">{new Date(log.timestamp).toLocaleTimeString()}</td>
-              <td className="p-3 text-[10px] text-[#64748B] truncate max-w-[150px]">{log.verificationHash}</td>
+              <td className="p-3 text-[#0B132B]">{log.targetCollection}</td>
+              <td className="p-3 text-[#0B132B]">{log.actorName}</td>
+              <td className="p-3 text-[#0B132B] font-extrabold">{log.actorRole}</td>
+              <td className="p-3 text-slate-500">{new Date(log.timestamp).toLocaleTimeString()}</td>
+              <td className="p-3 text-[10px] text-slate-500 truncate max-w-[150px]">{log.verificationHash}</td>
             </tr>
           ))}
         </tbody>

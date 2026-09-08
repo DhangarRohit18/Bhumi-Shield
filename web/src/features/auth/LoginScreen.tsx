@@ -41,7 +41,7 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ onLoginSuccess }) => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-[#EAF0FF] via-[#F4F1FF] to-white flex flex-col justify-between font-sans text-[#0B132B] relative overflow-hidden">
+    <div className="min-h-screen bg-gradient-to-b from-[#EAF0FF] via-[#F4F1FF] to-white flex flex-col justify-between  text-[#0B132B] relative overflow-hidden">
       {/* Background Decorative Ambient Glow Orbs */}
       <div className="pointer-events-none absolute inset-0 -z-10 overflow-hidden">
         <div className="absolute left-[-10%] top-[-10%] w-[500px] h-[500px] rounded-full bg-gradient-to-br from-indigo-200/40 to-purple-200/40 blur-3xl opacity-70" />
@@ -56,12 +56,12 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ onLoginSuccess }) => {
             <Shield className="w-5 h-5 text-white stroke-[2.5]" />
           </div>
           <div>
-            <span className="font-black text-xl tracking-tight text-[#0B132B]">BHUMI-SHIELD</span>
-            <span className="text-[10px] font-bold text-indigo-600 block leading-none">The Land Operating System</span>
+            <span className="font-extrabold text-xl tracking-tight text-[#0B132B]">BHUMI-SHIELD</span>
+            <span className="text-[10px] font-extrabold text-indigo-600 block leading-none">The Land Operating System</span>
           </div>
         </div>
 
-        <div className="hidden sm:flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-indigo-500/15 bg-white/70 backdrop-blur-md text-xs font-semibold text-indigo-900 shadow-xs">
+        <div className="hidden sm:flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-indigo-500/15 bg-white/70 backdrop-blur-md text-xs font-extrabold text-indigo-900 shadow-xs">
           <span className="w-2 h-2 rounded-full bg-[#7C3AED] animate-pulse" />
           <span>RFCTLARR Act (2013) Compliant</span>
         </div>
@@ -72,7 +72,7 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ onLoginSuccess }) => {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center w-full">
           {/* Left Hero Narrative */}
           <div className="lg:col-span-6 space-y-6 text-center lg:text-left">
-            <div className="inline-flex items-center gap-2 rounded-full border border-indigo-500/20 bg-white/80 px-4 py-1.5 text-xs font-bold text-indigo-600 shadow-xs backdrop-blur-md">
+            <div className="inline-flex items-center gap-2 rounded-full border border-indigo-500/20 bg-white/80 px-4 py-1.5 text-xs font-extrabold text-indigo-600 shadow-xs backdrop-blur-md">
               <span className="h-1.5 w-1.5 rounded-full bg-[#7C3AED]" />
               Built for Modern Land Operations
             </div>
@@ -87,7 +87,7 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ onLoginSuccess }) => {
             </p>
 
             {/* Micro Feature Bullet Points */}
-            <div className="pt-2 grid grid-cols-2 gap-3 text-xs font-bold text-slate-700 max-w-md mx-auto lg:mx-0 text-left">
+            <div className="pt-2 grid grid-cols-2 gap-3 text-xs font-extrabold text-slate-700 max-w-md mx-auto lg:mx-0 text-left">
               <div className="flex items-center gap-2">
                 <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
                 <span>Multi-Corridor GIS Tracking</span>
@@ -114,7 +114,7 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ onLoginSuccess }) => {
                 <div className="inline-flex p-2 rounded-2xl bg-indigo-50 text-indigo-600 mb-1">
                   <Lock className="w-4 h-4" />
                 </div>
-                <h2 className="text-lg font-black text-[#0B132B] tracking-tight">
+                <h2 className="text-lg font-extrabold text-[#0B132B] tracking-tight">
                   Sign in to your Workspace
                 </h2>
                 <p className="text-xs text-slate-500 font-medium">
@@ -125,7 +125,7 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ onLoginSuccess }) => {
               <form onSubmit={handleLogin} className="space-y-4 text-xs">
                 {/* Role Clearance Selector */}
                 <div className="space-y-1.5">
-                  <label className="block text-slate-700 font-bold uppercase text-[10px] tracking-wider">
+                  <label className="block text-slate-700 font-extrabold uppercase text-[10px] tracking-wider">
                     Statutory Role Clearance
                   </label>
                   <div className="space-y-2">
@@ -138,7 +138,7 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ onLoginSuccess }) => {
                           className={`p-3 rounded-2xl border transition-all cursor-pointer flex items-center justify-between ${
                             isSelected
                               ? 'bg-indigo-50/70 border-indigo-500 ring-2 ring-indigo-500/20 shadow-xs'
-                              : 'bg-slate-50/70 border-slate-200/80 hover:bg-slate-100/60'
+                              : 'bg-transparent/70 border-slate-200/80 hover:bg-slate-100/60'
                           }`}
                         >
                           <div>
@@ -149,7 +149,7 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ onLoginSuccess }) => {
                               {opt.desc}
                             </span>
                           </div>
-                          <span className={`text-[9px] font-black uppercase px-2 py-0.5 rounded-full ${
+                          <span className={`text-[9px] font-extrabold uppercase px-2 py-0.5 rounded-full ${
                             isSelected ? 'bg-indigo-600 text-white' : 'bg-slate-200 text-slate-700'
                           }`}>
                             {opt.badge}
@@ -162,7 +162,7 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ onLoginSuccess }) => {
 
                 {/* Official ID */}
                 <div className="space-y-1">
-                  <label className="block text-slate-700 font-bold uppercase text-[10px] tracking-wider">
+                  <label className="block text-slate-700 font-extrabold uppercase text-[10px] tracking-wider">
                     Official ID / Aadhaar SSO Token
                   </label>
                   <input
@@ -170,13 +170,13 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ onLoginSuccess }) => {
                     required
                     value={officialId}
                     onChange={(e) => setOfficialId(e.target.value)}
-                    className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-xs font-mono text-slate-900 font-bold focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all"
+                    className="w-full bg-transparent border border-slate-200 rounded-xl px-3.5 py-2.5 text-xs font-mono text-[#0B132B] font-extrabold focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all"
                   />
                 </div>
 
                 {/* DSC Passcode */}
                 <div className="space-y-1">
-                  <label className="block text-slate-700 font-bold uppercase text-[10px] tracking-wider">
+                  <label className="block text-slate-700 font-extrabold uppercase text-[10px] tracking-wider">
                     DSC Digital Signature Passcode
                   </label>
                   <input
@@ -184,7 +184,7 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ onLoginSuccess }) => {
                     required
                     value={accessKey}
                     onChange={(e) => setAccessKey(e.target.value)}
-                    className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-xs font-mono text-slate-900 font-bold focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all"
+                    className="w-full bg-transparent border border-slate-200 rounded-xl px-3.5 py-2.5 text-xs font-mono text-[#0B132B] font-extrabold focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all"
                   />
                 </div>
 
@@ -192,7 +192,7 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ onLoginSuccess }) => {
                 <div className="pt-2">
                   <button
                     type="submit"
-                    className="w-full py-3.5 rounded-full font-bold text-xs bg-brand-gradient text-white shadow-soft hover:shadow-float hover:-translate-y-0.5 active:scale-[0.98] transition-all duration-200 flex items-center justify-center gap-2 cursor-pointer group"
+                    className="w-full py-3.5 rounded-full font-extrabold text-xs bg-brand-gradient text-white shadow-soft hover:shadow-float hover:-translate-y-0.5 active:scale-[0.98] transition-all duration-200 flex items-center justify-center gap-2 cursor-pointer group"
                   >
                     <span>Authenticate & Open Workspace</span>
                     <ArrowRight className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" />

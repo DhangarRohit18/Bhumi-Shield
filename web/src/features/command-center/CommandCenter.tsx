@@ -127,7 +127,7 @@ export const CommandCenter: React.FC = () => {
   }, [allCompensations]);
 
   return (
-    <div className="flex flex-col min-h-screen bg-[#F8FAFC] text-[#0F172A] font-sans">
+    <div className="flex flex-col min-h-screen bg-transparent text-[#0B132B] ">
       <NationalOperationalHeader
         activeRole={activeRole}
         scopeLabel={scopeLabel}
@@ -149,7 +149,7 @@ export const CommandCenter: React.FC = () => {
         isLockedToDistrict={isLockedToDistrict}
       />
 
-      <div className="p-6 space-y-6 bg-[#F8FAFC]">
+      <div className="p-6 space-y-6 bg-transparent">
         <GISCommandMap
           drillDown={drillDown}
           projects={filteredProjects}

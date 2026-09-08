@@ -20,10 +20,10 @@ export const Header: React.FC<HeaderProps> = ({ onLogout }) => {
     <header className="sticky top-0 z-50 font-sans px-4 sm:px-6 py-2.5 bg-white/80 backdrop-blur-xl border-b border-slate-200/70 shadow-[0_4px_20px_-10px_rgba(0,0,0,0.03)] flex items-center justify-between gap-3">
       {/* Left Active Context / Status Pill */}
       <div className="flex items-center gap-2">
-        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-slate-100/80 border border-slate-200/80 text-[11px] font-semibold text-slate-700">
+        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-slate-100/80 border border-slate-200/80 text-[11px] font-extrabold text-slate-700">
           <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
           <span className="hidden sm:inline">Operating System for Land Operations</span>
-          <span className="sm:hidden font-mono font-bold text-slate-900">RFCTLARR 2013</span>
+          <span className="sm:hidden font-mono font-extrabold text-[#0B132B]">RFCTLARR 2013</span>
         </div>
       </div>
 
@@ -35,7 +35,7 @@ export const Header: React.FC<HeaderProps> = ({ onLogout }) => {
             value={activeRole}
             onChange={(e) => switchDemoRole(e.target.value as UserRole)}
             aria-label="Switch Active Government Role"
-            className="appearance-none pl-3 pr-8 py-1.5 rounded-full text-xs font-bold bg-slate-100 hover:bg-slate-200/80 text-slate-800 border border-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all cursor-pointer shadow-xs"
+            className="appearance-none pl-3 pr-8 py-1.5 rounded-full text-xs font-extrabold bg-slate-100 hover:bg-slate-200/80 text-slate-800 border border-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all cursor-pointer shadow-xs"
           >
             {roles.map((r) => (
               <option key={r.id} value={r.id}>
@@ -50,7 +50,7 @@ export const Header: React.FC<HeaderProps> = ({ onLogout }) => {
         {onLogout && (
           <button
             onClick={onLogout}
-            className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-bold text-slate-600 hover:text-slate-900 bg-white hover:bg-slate-100 border border-slate-200 shadow-xs transition-all cursor-pointer active:scale-95"
+            className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-extrabold text-slate-600 hover:text-[#0B132B] bg-white hover:bg-slate-100 border border-slate-200 shadow-xs transition-all cursor-pointer active:scale-95"
             title="Log Out & Return to Login Screen"
           >
             <LogOut className="w-3.5 h-3.5 text-rose-500" />

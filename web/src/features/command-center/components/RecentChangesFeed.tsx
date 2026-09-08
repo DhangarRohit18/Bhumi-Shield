@@ -60,19 +60,19 @@ export const RecentChangesFeed: React.FC<RecentChangesProps> = ({
   }, [workflowEvents.length]); // re-run whenever the count changes
 
   return (
-    <div className="bg-white border border-[#E2E8F0] rounded-2xl p-5 shadow-sm font-sans space-y-4">
+    <div className="bg-white border border-[#E2E8F0] rounded-2xl p-5 shadow-soft  space-y-4">
       <div className="flex items-center justify-between border-b border-[#E2E8F0] pb-3">
         <div className="flex items-center gap-2">
-          <div className="p-1.5 rounded-lg bg-[#F1F5F9] text-[#0F172A] border border-[#CBD5E1]">
-            <History className="w-4 h-4 text-[#0F172A]" />
+          <div className="p-1.5 rounded-2xl bg-[#F1F5F9] text-[#0B132B] border border-[#CBD5E1]">
+            <History className="w-4 h-4 text-[#0B132B]" />
           </div>
           <div>
-            <h2 className="text-sm font-extrabold text-[#0F172A]">Live Statutory Chronology & Recent Shifts</h2>
-            <p className="text-[11px] text-[#64748B]">Answering "What changed recently?" with real-time audit ledger feeds</p>
+            <h2 className="text-sm font-extrabold text-[#0B132B]">Live Statutory Chronology & Recent Shifts</h2>
+            <p className="text-[11px] text-slate-500">Answering "What changed recently?" with real-time audit ledger feeds</p>
           </div>
         </div>
         {/* ── Real-time sync active indicator (matches JK farmerService pattern) ── */}
-        <div className="flex items-center gap-1.5 text-[10px] text-[#065F46] font-mono font-bold">
+        <div className="flex items-center gap-1.5 text-[10px] text-[#065F46] font-mono font-extrabold">
           <span className="relative flex h-2 w-2">
             <span className="absolute inline-flex h-full w-full rounded-full bg-[#10B981] opacity-75 animate-ping" />
             <span className="relative inline-flex rounded-full h-2 w-2 bg-[#10B981]" />
@@ -87,46 +87,46 @@ export const RecentChangesFeed: React.FC<RecentChangesProps> = ({
           return (
             <div
               key={evt.id}
-              className={`p-3.5 rounded-xl border transition-all space-y-1.5 shadow-sm
+              className={`p-3.5 rounded-xl border transition-all space-y-1.5 shadow-soft
                 ${isNew
                   ? 'bg-[#F0FDF4] border-[#BBF7D0] animate-[slideIn_0.3s_ease-out]'
-                  : 'bg-[#F8FAFC] border-[#E2E8F0] hover:border-[#0F172A]'
+                  : 'bg-transparent border-[#E2E8F0] hover:border-[#0B132B]'
                 }`}
               style={isNew ? { animation: 'slideIn 0.3s ease-out' } : undefined}
             >
               <div className="flex items-center justify-between">
-                <span className="px-2 py-0.5 rounded text-[9px] font-mono font-bold bg-[#E2E8F0] text-[#0F172A] border border-[#CBD5E1]">
+                <span className="px-2 py-0.5 rounded text-[9px] font-mono font-extrabold bg-[#E2E8F0] text-[#0B132B] border border-[#CBD5E1]">
                   {evt.stage}
                 </span>
 
                 <div className="flex items-center gap-1.5">
                   {/* ── NEW badge for freshly-pushed events ── */}
                   {isNew && (
-                    <span className="flex items-center gap-0.5 px-1.5 py-0.5 rounded text-[9px] font-bold bg-[#D1FAE5] text-[#065F46] border border-[#6EE7B7] animate-pulse">
+                    <span className="flex items-center gap-0.5 px-1.5 py-0.5 rounded text-[9px] font-extrabold bg-[#D1FAE5] text-[#065F46] border border-[#6EE7B7] animate-pulse">
                       <Sparkles className="w-2.5 h-2.5" />
                       NEW
                     </span>
                   )}
-                  <span className="text-[10px] text-[#64748B] font-mono font-medium">
+                  <span className="text-[10px] text-slate-500 font-mono font-medium">
                     {relativeTime(evt.createdAt)}
                   </span>
                 </div>
               </div>
 
-              <p className="text-xs font-extrabold text-[#0F172A] leading-snug">
+              <p className="text-xs font-extrabold text-[#0B132B] leading-snug">
                 {evt.actionTaken}
               </p>
 
-              <p className="text-[11px] text-[#64748B] leading-normal font-medium">
+              <p className="text-[11px] text-slate-500 leading-normal font-medium">
                 {evt.comments}
               </p>
 
-              <div className="flex items-center justify-between pt-1.5 border-t border-[#E2E8F0] text-[10px] text-[#64748B]">
+              <div className="flex items-center justify-between pt-1.5 border-t border-[#E2E8F0] text-[10px] text-slate-500">
                 <span>
-                  Actor: <strong className="text-[#0F172A]">{evt.actorName}</strong> ({evt.actorRole})
+                  Actor: <strong className="text-[#0B132B]">{evt.actorName}</strong> ({evt.actorRole})
                 </span>
                 {evt.gazetteOrderNo && (
-                  <span className="font-mono text-[#0F172A] font-bold">{evt.gazetteOrderNo}</span>
+                  <span className="font-mono text-[#0B132B] font-extrabold">{evt.gazetteOrderNo}</span>
                 )}
               </div>
             </div>
@@ -134,7 +134,7 @@ export const RecentChangesFeed: React.FC<RecentChangesProps> = ({
         })}
 
         {sortedEvents.length === 0 && (
-          <p className="text-xs text-[#64748B] text-center py-4 font-medium">
+          <p className="text-xs text-slate-500 text-center py-4 font-medium">
             No workflow events yet — advance a lifecycle stage to see activity here.
           </p>
         )}

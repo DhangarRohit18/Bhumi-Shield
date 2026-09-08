@@ -30,16 +30,16 @@ export const FarmerDetailsDrawer: React.FC<FarmerDetailsDrawerProps> = ({
   onVisualiseLand,
 }) => {
   return (
-    <div className="fixed inset-y-0 right-0 z-50 w-full max-w-xl bg-white shadow-2xl border-l border-[#BAE6FD] flex flex-col font-sans animate-in slide-in-from-right duration-200">
+    <div className="fixed inset-y-0 right-0 z-50 w-full max-w-xl bg-white shadow-2xl border-l border-slate-200/80 flex flex-col  animate-in slide-in-from-right duration-200">
       {/* Header */}
-      <div className="p-4 bg-gradient-to-r from-[#F0FDF4] via-[#F8FAFC] to-[#FFF7ED] border-b border-[#E2E8F0] flex items-center justify-between">
+      <div className="p-4 bg-gradient-to-r from-[#F0FDF4] via-[#F8FAFC] to-[#EEF2FF] border-b border-[#E2E8F0] flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-[#059669] text-white flex items-center justify-center font-black shadow-sm text-base">
+          <div className="w-10 h-10 rounded-xl bg-[#059669] text-white flex items-center justify-center font-extrabold shadow-soft text-base">
             🌾
           </div>
           <div>
             <div className="flex items-center gap-2">
-              <h3 className="font-extrabold text-sm text-[#0F172A]">{farmer.farmerName}</h3>
+              <h3 className="font-extrabold text-sm text-[#0B132B]">{farmer.farmerName}</h3>
               <span
                 className={`px-2 py-0.5 rounded-full text-[9px] font-extrabold border ${
                   farmer.arVerificationStatus === 'VERIFIED'
@@ -56,8 +56,8 @@ export const FarmerDetailsDrawer: React.FC<FarmerDetailsDrawerProps> = ({
                   : '⏳ Visit Scheduled'}
               </span>
             </div>
-            <p className="text-xs text-[#64748B] flex items-center gap-1.5 mt-0.5">
-              <MapPin className="w-3 h-3 text-[#EA580C]" />
+            <p className="text-xs text-slate-500 flex items-center gap-1.5 mt-0.5">
+              <MapPin className="w-3 h-3 text-indigo-600" />
               <span>
                 {farmer.village}, {farmer.talukaTehsil}, {farmer.district} ({farmer.state})
               </span>
@@ -66,7 +66,7 @@ export const FarmerDetailsDrawer: React.FC<FarmerDetailsDrawerProps> = ({
         </div>
         <button
           onClick={onClose}
-          className="p-1.5 rounded-lg text-[#64748B] hover:text-[#0F172A] hover:bg-[#F1F5F9] cursor-pointer"
+          className="p-1.5 rounded-2xl text-slate-500 hover:text-[#0B132B] hover:bg-[#F1F5F9] cursor-pointer"
         >
           <X className="w-5 h-5" />
         </button>
@@ -76,80 +76,80 @@ export const FarmerDetailsDrawer: React.FC<FarmerDetailsDrawerProps> = ({
       <div className="flex-1 overflow-y-auto p-4 space-y-4">
         {/* Quick Statutory Metrics */}
         <div className="grid grid-cols-3 gap-3">
-          <div className="p-3 rounded-xl bg-[#F8FAFC] border border-[#E2E8F0]">
-            <span className="text-[10px] font-bold text-[#64748B] uppercase tracking-wider">Total Holding</span>
-            <p className="text-base font-black text-[#0F172A] mt-0.5">{farmer.totalLandAreaAcres} Ac</p>
+          <div className="p-3 rounded-xl bg-transparent border border-[#E2E8F0]">
+            <span className="text-[10px] font-extrabold text-slate-500 uppercase tracking-wider">Total Holding</span>
+            <p className="text-base font-extrabold text-[#0B132B] mt-0.5">{farmer.totalLandAreaAcres} Ac</p>
             <p className="text-[10px] text-[#059669] font-medium">Acquired: {farmer.acquiredAreaAcres} Ac</p>
           </div>
 
-          <div className="p-3 rounded-xl bg-[#F8FAFC] border border-[#E2E8F0]">
-            <span className="text-[10px] font-bold text-[#64748B] uppercase tracking-wider">Total Award</span>
-            <p className="text-base font-black text-[#EA580C] mt-0.5">
+          <div className="p-3 rounded-xl bg-transparent border border-[#E2E8F0]">
+            <span className="text-[10px] font-extrabold text-slate-500 uppercase tracking-wider">Total Award</span>
+            <p className="text-base font-extrabold text-indigo-600 mt-0.5">
               ₹{(farmer.totalCompensationINR / 100000).toFixed(1)} L
             </p>
-            <p className="text-[10px] text-[#64748B]">100% Solatium Incl.</p>
+            <p className="text-[10px] text-slate-500">100% Solatium Incl.</p>
           </div>
 
-          <div className="p-3 rounded-xl bg-[#F8FAFC] border border-[#E2E8F0]">
-            <span className="text-[10px] font-bold text-[#64748B] uppercase tracking-wider">PFMS Credit</span>
+          <div className="p-3 rounded-xl bg-transparent border border-[#E2E8F0]">
+            <span className="text-[10px] font-extrabold text-slate-500 uppercase tracking-wider">PFMS Credit</span>
             <span
               className={`inline-block mt-1 px-2 py-0.5 rounded text-[10px] font-extrabold border ${
                 farmer.disbursementStatus === 'DISBURSED'
                   ? 'bg-[#ECFDF5] text-[#059669] border-[#A7F3D0]'
                   : farmer.disbursementStatus === 'UNDER_DISPUTE'
                   ? 'bg-[#FEF2F2] text-[#DC2626] border-[#FECACA]'
-                  : 'bg-[#FFF7ED] text-[#EA580C] border-[#FFEDD5]'
+                  : 'bg-[#EEF2FF] text-indigo-600 border-[#E0E7FF]'
               }`}
             >
               {farmer.disbursementStatus}
             </span>
-            <p className="text-[9px] text-[#64748B] mt-0.5 font-mono">{farmer.bankDetails.accountMasked}</p>
+            <p className="text-[9px] text-slate-500 mt-0.5 font-mono">{farmer.bankDetails.accountMasked}</p>
           </div>
         </div>
 
         {/* 7/12 & Khatauni Land Record Card */}
-        <div className="p-4 rounded-xl bg-[#F8FAFC] border border-[#E2E8F0] space-y-2.5">
+        <div className="p-4 rounded-xl bg-transparent border border-[#E2E8F0] space-y-2.5">
           <div className="flex items-center justify-between">
-            <h4 className="font-extrabold text-xs uppercase tracking-wider text-[#0F172A] flex items-center gap-1.5">
-              <FileText className="w-3.5 h-3.5 text-[#0284C7]" />
+            <h4 className="font-extrabold text-xs uppercase tracking-wider text-[#0B132B] flex items-center gap-1.5">
+              <FileText className="w-3.5 h-3.5 text-[#4F46E5]" />
               <span>Official 7/12 & Khatauni Land Record</span>
             </h4>
-            <span className="font-mono text-[10px] font-black text-[#EA580C] bg-[#FFF7ED] px-2 py-0.5 rounded border border-[#FFEDD5]">
+            <span className="font-mono text-[10px] font-extrabold text-indigo-600 bg-[#EEF2FF] px-2 py-0.5 rounded border border-[#E0E7FF]">
               {farmer.ulpin}
             </span>
           </div>
 
           <div className="grid grid-cols-2 gap-2 text-xs pt-1">
             <div className="flex justify-between py-1 border-b border-[#E2E8F0]">
-              <span className="text-[#64748B]">Survey / Gat No:</span>
-              <strong className="text-[#0F172A] font-mono">{farmer.surveyGatNumber}</strong>
+              <span className="text-slate-500">Survey / Gat No:</span>
+              <strong className="text-[#0B132B] font-mono">{farmer.surveyGatNumber}</strong>
             </div>
             <div className="flex justify-between py-1 border-b border-[#E2E8F0]">
-              <span className="text-[#64748B]">Hissa Number:</span>
-              <strong className="text-[#0F172A] font-mono">{farmer.hissaNumber}</strong>
+              <span className="text-slate-500">Hissa Number:</span>
+              <strong className="text-[#0B132B] font-mono">{farmer.hissaNumber}</strong>
             </div>
             <div className="flex justify-between py-1 border-b border-[#E2E8F0]">
-              <span className="text-[#64748B]">Khata Number:</span>
-              <strong className="text-[#0F172A] font-mono">{farmer.khataNumber}</strong>
+              <span className="text-slate-500">Khata Number:</span>
+              <strong className="text-[#0B132B] font-mono">{farmer.khataNumber}</strong>
             </div>
             <div className="flex justify-between py-1 border-b border-[#E2E8F0]">
-              <span className="text-[#64748B]">Classification:</span>
-              <strong className="text-[#0F172A]">{farmer.landClassification}</strong>
+              <span className="text-slate-500">Classification:</span>
+              <strong className="text-[#0B132B]">{farmer.landClassification}</strong>
             </div>
             <div className="flex justify-between py-1 border-b border-[#E2E8F0]">
-              <span className="text-[#64748B]">Soil Type:</span>
-              <span className="text-[#0F172A] font-medium">{farmer.soilType}</span>
+              <span className="text-slate-500">Soil Type:</span>
+              <span className="text-[#0B132B] font-medium">{farmer.soilType}</span>
             </div>
             <div className="flex justify-between py-1 border-b border-[#E2E8F0]">
-              <span className="text-[#64748B]">Tenure Class:</span>
-              <span className="text-[#0F172A] font-medium text-[11px]">{farmer.tenureType}</span>
+              <span className="text-slate-500">Tenure Class:</span>
+              <span className="text-[#0B132B] font-medium text-[11px]">{farmer.tenureType}</span>
             </div>
           </div>
         </div>
 
         {/* Joint Holders & Title Breakdown */}
-        <div className="p-4 rounded-xl bg-[#F8FAFC] border border-[#E2E8F0] space-y-2">
-          <h4 className="font-extrabold text-xs uppercase tracking-wider text-[#0F172A] flex items-center gap-1.5">
+        <div className="p-4 rounded-xl bg-transparent border border-[#E2E8F0] space-y-2">
+          <h4 className="font-extrabold text-xs uppercase tracking-wider text-[#0B132B] flex items-center gap-1.5">
             <Users className="w-3.5 h-3.5 text-[#7C3AED]" />
             <span>Joint Title Holders & Successors ({farmer.jointHolders.length})</span>
           </h4>
@@ -157,13 +157,13 @@ export const FarmerDetailsDrawer: React.FC<FarmerDetailsDrawerProps> = ({
             {farmer.jointHolders.map((holder, idx) => (
               <div
                 key={idx}
-                className="flex items-center justify-between p-2 rounded-lg bg-white border border-[#E2E8F0] text-xs"
+                className="flex items-center justify-between p-2 rounded-2xl bg-white border border-[#E2E8F0] text-xs"
               >
                 <div>
-                  <p className="font-bold text-[#0F172A]">{holder.name}</p>
-                  <p className="text-[10px] text-[#64748B]">Relation: {holder.relation}</p>
+                  <p className="font-extrabold text-[#0B132B]">{holder.name}</p>
+                  <p className="text-[10px] text-slate-500">Relation: {holder.relation}</p>
                 </div>
-                <span className="px-2 py-0.5 rounded bg-[#F1F5F9] text-[#0F172A] font-mono font-extrabold text-[11px]">
+                <span className="px-2 py-0.5 rounded bg-[#F1F5F9] text-[#0B132B] font-mono font-extrabold text-[11px]">
                   Share: {holder.shareFraction}
                 </span>
               </div>
@@ -172,29 +172,29 @@ export const FarmerDetailsDrawer: React.FC<FarmerDetailsDrawerProps> = ({
         </div>
 
         {/* Financial Valuation & Bank PFMS Gateway */}
-        <div className="p-4 rounded-xl bg-[#F8FAFC] border border-[#E2E8F0] space-y-2.5">
-          <h4 className="font-extrabold text-xs uppercase tracking-wider text-[#0F172A] flex items-center gap-1.5">
+        <div className="p-4 rounded-xl bg-transparent border border-[#E2E8F0] space-y-2.5">
+          <h4 className="font-extrabold text-xs uppercase tracking-wider text-[#0B132B] flex items-center gap-1.5">
             <CreditCard className="w-3.5 h-3.5 text-[#059669]" />
             <span>Direct PFMS Bank Entitlement</span>
           </h4>
           <div className="grid grid-cols-2 gap-2 text-xs">
-            <div className="p-2 bg-white rounded-lg border border-[#E2E8F0]">
-              <p className="text-[10px] text-[#64748B]">Base Valuation</p>
-              <p className="font-mono font-bold text-[#0F172A]">₹{farmer.estimatedValuationINR.toLocaleString('en-IN')}</p>
+            <div className="p-2 bg-white rounded-2xl border border-[#E2E8F0]">
+              <p className="text-[10px] text-slate-500">Base Valuation</p>
+              <p className="font-mono font-extrabold text-[#0B132B]">₹{farmer.estimatedValuationINR.toLocaleString('en-IN')}</p>
             </div>
-            <div className="p-2 bg-white rounded-lg border border-[#E2E8F0]">
-              <p className="text-[10px] text-[#64748B]">Sec 30 Solatium (100%)</p>
-              <p className="font-mono font-bold text-[#059669]">₹{farmer.solatiumINR.toLocaleString('en-IN')}</p>
+            <div className="p-2 bg-white rounded-2xl border border-[#E2E8F0]">
+              <p className="text-[10px] text-slate-500">Sec 30 Solatium (100%)</p>
+              <p className="font-mono font-extrabold text-[#059669]">₹{farmer.solatiumINR.toLocaleString('en-IN')}</p>
             </div>
-            <div className="col-span-2 p-2.5 bg-[#ECFDF5] rounded-lg border border-[#A7F3D0] flex justify-between items-center">
+            <div className="col-span-2 p-2.5 bg-[#ECFDF5] rounded-2xl border border-[#A7F3D0] flex justify-between items-center">
               <div>
-                <p className="text-[10px] font-bold text-[#065F46]">Disbursal Bank</p>
+                <p className="text-[10px] font-extrabold text-[#065F46]">Disbursal Bank</p>
                 <p className="font-extrabold text-[#064E3B] text-xs">{farmer.bankDetails.bankName}</p>
                 <p className="font-mono text-[10px] text-[#047857]">
                   A/C: {farmer.bankDetails.accountMasked} • IFSC: {farmer.bankDetails.ifsc}
                 </p>
               </div>
-              <span className="font-black text-sm text-[#047857] font-mono">
+              <span className="font-extrabold text-sm text-[#047857] font-mono">
                 ₹{farmer.totalCompensationINR.toLocaleString('en-IN')}
               </span>
             </div>
@@ -202,13 +202,13 @@ export const FarmerDetailsDrawer: React.FC<FarmerDetailsDrawerProps> = ({
         </div>
 
         {/* Comprehensive Land Ownership & Buy/Sell Transaction History */}
-        <div className="p-4 rounded-xl bg-[#F8FAFC] border border-[#BAE6FD] space-y-3">
+        <div className="p-4 rounded-xl bg-transparent border border-slate-200/80 space-y-3">
           <div className="flex items-center justify-between">
-            <h4 className="font-extrabold text-xs uppercase tracking-wider text-[#0F172A] flex items-center gap-1.5">
-              <History className="w-4 h-4 text-[#0284C7]" />
+            <h4 className="font-extrabold text-xs uppercase tracking-wider text-[#0B132B] flex items-center gap-1.5">
+              <History className="w-4 h-4 text-[#4F46E5]" />
               <span>Chain of Title & Transaction History (Buy / Sell / Inheritance)</span>
             </h4>
-            <span className="text-[10px] font-bold text-[#0284C7] bg-[#EFF6FF] px-2 py-0.5 rounded border border-[#BFDBFE]">
+            <span className="text-[10px] font-extrabold text-[#4F46E5] bg-[#EFF6FF] px-2 py-0.5 rounded border border-[#BFDBFE]">
               {farmer.landOwnershipHistory?.length || 0} Deed Records
             </span>
           </div>
@@ -223,13 +223,13 @@ export const FarmerDetailsDrawer: React.FC<FarmerDetailsDrawerProps> = ({
                 >
                   <div className="flex items-start justify-between">
                     <div className="flex items-center gap-2">
-                      <div className="w-6 h-6 rounded-full bg-[#EFF6FF] text-[#0284C7] flex items-center justify-center font-black text-[10px] border border-[#BFDBFE]">
+                      <div className="w-6 h-6 rounded-full bg-[#EFF6FF] text-[#4F46E5] flex items-center justify-center font-extrabold text-[10px] border border-[#BFDBFE]">
                         {index + 1}
                       </div>
                       <div>
-                        <p className="font-extrabold text-xs text-[#0F172A]">{rec.ownerName}</p>
-                        <p className="text-[10px] text-[#64748B]">
-                          Tenure: <span className="font-medium text-[#0F172A]">{rec.periodFrom} – {rec.periodTo}</span> ({rec.relationType})
+                        <p className="font-extrabold text-xs text-[#0B132B]">{rec.ownerName}</p>
+                        <p className="text-[10px] text-slate-500">
+                          Tenure: <span className="font-medium text-[#0B132B]">{rec.periodFrom} – {rec.periodTo}</span> ({rec.relationType})
                         </p>
                       </div>
                     </div>
@@ -240,8 +240,8 @@ export const FarmerDetailsDrawer: React.FC<FarmerDetailsDrawerProps> = ({
                           : rec.transactionType === 'SUCCESSION_WARIS'
                           ? 'bg-[#EFF6FF] text-[#1D4ED8] border-[#BFDBFE]'
                           : rec.transactionType === 'ACQUISITION_NOTIFIED'
-                          ? 'bg-[#FFF7ED] text-[#EA580C] border-[#FFEDD5]'
-                          : 'bg-[#F8FAFC] text-[#475569] border-[#CBD5E1]'
+                          ? 'bg-[#EEF2FF] text-indigo-600 border-[#E0E7FF]'
+                          : 'bg-transparent text-[#475569] border-[#CBD5E1]'
                       }`}
                     >
                       {rec.transactionType.replace(/_/g, ' ')}
@@ -250,10 +250,10 @@ export const FarmerDetailsDrawer: React.FC<FarmerDetailsDrawerProps> = ({
 
                   <div className="grid grid-cols-2 gap-2 text-[11px] pt-1.5 border-t border-[#F1F5F9]">
                     <div className="flex justify-between py-0.5">
-                      <span className="text-[#64748B] flex items-center gap-1">
-                        <Coins className="w-3 h-3 text-[#EA580C]" /> Transaction Price:
+                      <span className="text-slate-500 flex items-center gap-1">
+                        <Coins className="w-3 h-3 text-indigo-600" /> Transaction Price:
                       </span>
-                      <span className="font-bold text-[#0F172A] font-mono">
+                      <span className="font-extrabold text-[#0B132B] font-mono">
                         {rec.considerationAmountINR !== undefined
                           ? `₹${rec.considerationAmountINR.toLocaleString('en-IN')}`
                           : 'Succession (₹0)'}
@@ -261,33 +261,33 @@ export const FarmerDetailsDrawer: React.FC<FarmerDetailsDrawerProps> = ({
                     </div>
 
                     <div className="flex justify-between py-0.5">
-                      <span className="text-[#64748B] flex items-center gap-1">
-                        <Calendar className="w-3 h-3 text-[#0284C7]" /> Mutation Date:
+                      <span className="text-slate-500 flex items-center gap-1">
+                        <Calendar className="w-3 h-3 text-[#4F46E5]" /> Mutation Date:
                       </span>
-                      <span className="font-bold text-[#0F172A]">{rec.mutationApprovalDate}</span>
+                      <span className="font-extrabold text-[#0B132B]">{rec.mutationApprovalDate}</span>
                     </div>
 
                     <div className="flex justify-between py-0.5">
-                      <span className="text-[#64748B]">Area Transferred:</span>
-                      <span className="font-mono font-bold text-[#0F172A]">{rec.areaTransferredAcres} Acres</span>
+                      <span className="text-slate-500">Area Transferred:</span>
+                      <span className="font-mono font-extrabold text-[#0B132B]">{rec.areaTransferredAcres} Acres</span>
                     </div>
 
                     <div className="flex justify-between py-0.5">
-                      <span className="text-[#64748B]">Mutation / Ferfar No:</span>
-                      <span className="font-mono font-bold text-[#059669]">Ferfar #{rec.mutationEntryNo}</span>
+                      <span className="text-slate-500">Mutation / Ferfar No:</span>
+                      <span className="font-mono font-extrabold text-[#059669]">Ferfar #{rec.mutationEntryNo}</span>
                     </div>
 
-                    <div className="col-span-2 flex justify-between py-0.5 text-[10px] bg-[#F8FAFC] p-1.5 rounded border border-[#E2E8F0]">
-                      <span className="text-[#64748B] flex items-center gap-1">
-                        <Landmark className="w-3 h-3 text-[#64748B]" /> Sub-Registrar / SRO:
+                    <div className="col-span-2 flex justify-between py-0.5 text-[10px] bg-transparent p-1.5 rounded border border-[#E2E8F0]">
+                      <span className="text-slate-500 flex items-center gap-1">
+                        <Landmark className="w-3 h-3 text-slate-500" /> Sub-Registrar / SRO:
                       </span>
-                      <span className="font-medium text-[#0F172A]">{rec.subRegistrarOffice} (Deed Reg #{rec.deedRegistrationNo})</span>
+                      <span className="font-medium text-[#0B132B]">{rec.subRegistrarOffice} (Deed Reg #{rec.deedRegistrationNo})</span>
                     </div>
                   </div>
                 </div>
               ))
             ) : (
-              <div className="p-3 bg-white rounded-lg border border-[#E2E8F0] text-center text-xs text-[#64748B]">
+              <div className="p-3 bg-white rounded-2xl border border-[#E2E8F0] text-center text-xs text-slate-500">
                 No historical deeds recorded.
               </div>
             )}
@@ -295,9 +295,9 @@ export const FarmerDetailsDrawer: React.FC<FarmerDetailsDrawerProps> = ({
         </div>
 
         {/* Encumbrance & Bank Loan Charge Status (Form 15/16) */}
-        <div className="p-4 rounded-xl bg-[#F8FAFC] border border-[#E2E8F0] space-y-2.5">
+        <div className="p-4 rounded-xl bg-transparent border border-[#E2E8F0] space-y-2.5">
           <div className="flex items-center justify-between">
-            <h4 className="font-extrabold text-xs uppercase tracking-wider text-[#0F172A] flex items-center gap-1.5">
+            <h4 className="font-extrabold text-xs uppercase tracking-wider text-[#0B132B] flex items-center gap-1.5">
               <ShieldCheck className="w-3.5 h-3.5 text-[#059669]" />
               <span>Encumbrance & Land Charge Certificate (Nil / Active Mortgages)</span>
             </h4>
@@ -306,10 +306,10 @@ export const FarmerDetailsDrawer: React.FC<FarmerDetailsDrawerProps> = ({
           {farmer.encumbrances && farmer.encumbrances.length > 0 ? (
             <div className="space-y-1.5">
               {farmer.encumbrances.map((enc, idx) => (
-                <div key={idx} className="p-2.5 bg-white rounded-lg border border-[#E2E8F0] flex items-center justify-between text-xs">
+                <div key={idx} className="p-2.5 bg-white rounded-2xl border border-[#E2E8F0] flex items-center justify-between text-xs">
                   <div>
                     <div className="flex items-center gap-2">
-                      <p className="font-bold text-[#0F172A]">{enc.institutionName}</p>
+                      <p className="font-extrabold text-[#0B132B]">{enc.institutionName}</p>
                       <span
                         className={`px-2 py-0.2 rounded-full text-[9px] font-extrabold ${
                           enc.status === 'NOC_ISSUED' || enc.status === 'DISCHARGED'
@@ -320,12 +320,12 @@ export const FarmerDetailsDrawer: React.FC<FarmerDetailsDrawerProps> = ({
                         {enc.status.replace(/_/g, ' ')}
                       </span>
                     </div>
-                    <p className="text-[10px] text-[#64748B] mt-0.5">
+                    <p className="text-[10px] text-slate-500 mt-0.5">
                       Type: {enc.loanType.replace(/_/g, ' ')} • Charge Date: {enc.chargeDate}
                     </p>
                   </div>
                   <div className="text-right">
-                    <p className="font-mono font-bold text-[#0F172A]">
+                    <p className="font-mono font-extrabold text-[#0B132B]">
                       {enc.chargeAmountINR > 0 ? `₹${enc.chargeAmountINR.toLocaleString('en-IN')}` : '₹0 (Nil Charge)'}
                     </p>
                     {enc.nocCertificateNo && (
@@ -336,21 +336,21 @@ export const FarmerDetailsDrawer: React.FC<FarmerDetailsDrawerProps> = ({
               ))}
             </div>
           ) : (
-            <div className="p-2.5 bg-[#ECFDF5] rounded-lg border border-[#A7F3D0] flex items-center gap-2 text-xs text-[#065F46]">
+            <div className="p-2.5 bg-[#ECFDF5] rounded-2xl border border-[#A7F3D0] flex items-center gap-2 text-xs text-[#065F46]">
               <CheckCircle2 className="w-4 h-4 text-[#059669]" />
-              <span className="font-bold">Zero Encumbrance / Clean Freehold Title (No Outstanding Institutional Liens)</span>
+              <span className="font-extrabold">Zero Encumbrance / Clean Freehold Title (No Outstanding Institutional Liens)</span>
             </div>
           )}
         </div>
 
         {/* DGPS Ground Demarcation Pillars */}
-        <div className="p-4 rounded-xl bg-[#F8FAFC] border border-[#E2E8F0] space-y-2">
+        <div className="p-4 rounded-xl bg-transparent border border-[#E2E8F0] space-y-2">
           <div className="flex items-center justify-between">
-            <h4 className="font-extrabold text-xs uppercase tracking-wider text-[#0F172A] flex items-center gap-1.5">
-              <Compass className="w-3.5 h-3.5 text-[#EA580C]" />
+            <h4 className="font-extrabold text-xs uppercase tracking-wider text-[#0B132B] flex items-center gap-1.5">
+              <Compass className="w-3.5 h-3.5 text-indigo-600" />
               <span>DGPS Boundary Corner Pillars ({farmer.dgpsPillars.length})</span>
             </h4>
-            <span className="text-[10px] font-mono text-[#0284C7] font-bold flex items-center gap-1">
+            <span className="text-[10px] font-mono text-[#4F46E5] font-extrabold flex items-center gap-1">
               <QrCode className="w-3 h-3" /> {farmer.qrPasscode}
             </span>
           </div>
@@ -359,15 +359,15 @@ export const FarmerDetailsDrawer: React.FC<FarmerDetailsDrawerProps> = ({
             {farmer.dgpsPillars.map((pillar) => (
               <div
                 key={pillar.pillarId}
-                className="p-2 rounded-lg bg-white border border-[#E2E8F0] flex items-center justify-between"
+                className="p-2 rounded-2xl bg-white border border-[#E2E8F0] flex items-center justify-between"
               >
                 <div>
-                  <span className="font-mono font-bold text-[#0F172A] text-[11px]">{pillar.pillarId}</span>
-                  <p className="text-[9px] text-[#64748B] font-mono">
+                  <span className="font-mono font-extrabold text-[#0B132B] text-[11px]">{pillar.pillarId}</span>
+                  <p className="text-[9px] text-slate-500 font-mono">
                     {pillar.lat.toFixed(4)}, {pillar.lng.toFixed(4)}
                   </p>
                 </div>
-                <span className="text-[9px] px-1.5 py-0.5 rounded bg-[#EFF6FF] text-[#1D4ED8] font-mono font-bold">
+                <span className="text-[9px] px-1.5 py-0.5 rounded bg-[#EFF6FF] text-[#1D4ED8] font-mono font-extrabold">
                   ±{pillar.rtkAccuracyCm} cm
                 </span>
               </div>
@@ -380,7 +380,7 @@ export const FarmerDetailsDrawer: React.FC<FarmerDetailsDrawerProps> = ({
       <div className="p-4 bg-white border-t border-[#E2E8F0]">
         <button
           onClick={() => onVisualiseLand(farmer)}
-          className="w-full py-2.5 rounded-xl bg-[#EA580C] hover:bg-[#C2410C] text-white text-xs font-black flex items-center justify-center gap-2 shadow-sm transition-all cursor-pointer"
+          className="w-full py-2.5 rounded-xl bg-brand-gradient hover:bg-[#3730A3] text-white text-xs font-extrabold flex items-center justify-center gap-2 shadow-soft transition-all cursor-pointer"
         >
           <MapIcon className="w-4 h-4" />
           <span>Visualise Cadastral Land & AR Demarcation</span>

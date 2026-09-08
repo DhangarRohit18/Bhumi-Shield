@@ -60,20 +60,20 @@ export const CorridorReadinessWorkspace: React.FC = () => {
   }, [currentProject, activeFactorFilter, statusFilter, searchQuery]);
 
   return (
-    <div className="flex flex-col min-h-screen bg-[#F0F7FF] text-[#0F172A] font-sans space-y-5 pb-12">
+    <div className="flex flex-col min-h-screen bg-transparent text-[#0B132B]  space-y-5 pb-12">
       {/* Top Banner & Corridor Selector */}
-      <div className="bg-white rounded-2xl p-5 border border-[#BAE6FD]/80 shadow-sm space-y-4">
-        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 border-b border-[#BAE6FD]/40 pb-4">
+      <div className="bg-white rounded-2xl p-5 border border-slate-200/80/80 shadow-soft space-y-4">
+        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 border-b border-slate-200/80/40 pb-4">
           <div className="flex items-center gap-3">
-            <div className="p-2.5 rounded-2xl bg-[#EA580C] text-white shadow-md">
+            <div className="p-2.5 rounded-2xl bg-brand-gradient text-white shadow-float">
               <Route className="w-6 h-6 text-white" />
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <h1 className="text-lg font-black text-[#0F172A] tracking-tight">
+                <h1 className="text-lg font-extrabold text-[#0B132B] tracking-tight">
                   Social Consent & Project Readiness Corridor
                 </h1>
-                <span className="px-2 py-0.5 rounded-md text-[10px] font-black uppercase bg-[#FFF7ED] text-[#EA580C] border border-[#FFEDD5]">
+                <span className="px-2 py-0.5 rounded-xl text-[10px] font-extrabold uppercase bg-[#EEF2FF] text-indigo-600 border border-[#E0E7FF]">
                   Corridor Risk Engine
                 </span>
               </div>
@@ -93,13 +93,13 @@ export const CorridorReadinessWorkspace: React.FC = () => {
                     setActiveFactorFilter('ALL');
                     setStatusFilter('ALL');
                   }}
-                  className={`px-3.5 py-2 rounded-xl text-xs font-black transition-all cursor-pointer whitespace-nowrap border flex items-center gap-2 ${
+                  className={`px-3.5 py-2 rounded-xl text-xs font-extrabold transition-all cursor-pointer whitespace-nowrap border flex items-center gap-2 ${
                     isSelected
-                      ? 'bg-[#0F172A] text-white border-[#0F172A] shadow-md scale-[1.02]'
-                      : 'bg-[#F8FAFC] text-[#475569] border-slate-200 hover:bg-white hover:text-[#0F172A]'
+                      ? 'bg-[#0B132B] text-white border-[#0B132B] shadow-float scale-[1.02]'
+                      : 'bg-transparent text-[#475569] border-slate-200 hover:bg-white hover:text-[#0B132B]'
                   }`}
                 >
-                  <Activity className={`w-3.5 h-3.5 ${isSelected ? 'text-[#38BDF8]' : 'text-[#64748B]'}`} />
+                  <Activity className={`w-3.5 h-3.5 ${isSelected ? 'text-[#38BDF8]' : 'text-slate-500'}`} />
                   <span>{proj.name.split(' (')[0]}</span>
                   <span className={`text-[10px] font-mono px-1.5 py-0.2 rounded ${isSelected ? 'bg-white/20 text-white' : 'bg-slate-200 text-[#475569]'}`}>
                     {proj.totalLengthKm} km
@@ -113,44 +113,44 @@ export const CorridorReadinessWorkspace: React.FC = () => {
         {/* Project Macro Metrics & Readiness Meter Banner */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4 pt-1">
           {/* Readiness Score Card */}
-          <div className="p-4 rounded-2xl bg-gradient-to-br from-[#F0F7FF] via-white to-[#E0F2FE] border border-[#BAE6FD] shadow-xs flex flex-col justify-between">
-            <span className="text-[11px] font-extrabold text-[#0284C7] uppercase tracking-wider">
+          <div className="p-4 rounded-2xl bg-gradient-to-br from-[#F0F7FF] via-white to-[#EEF2FF] border border-slate-200/80 shadow-xs flex flex-col justify-between">
+            <span className="text-[11px] font-extrabold text-[#4F46E5] uppercase tracking-wider">
               Corridor Readiness Score
             </span>
             <div className="flex items-baseline gap-2 my-2">
-              <span className="text-4xl font-black text-[#0F172A] font-mono tracking-tight">
+              <span className="text-4xl font-extrabold text-[#0B132B] font-mono tracking-tight">
                 {currentProject.overallReadinessScore}
               </span>
-              <span className="text-sm font-bold text-[#64748B]">/ 100</span>
+              <span className="text-sm font-extrabold text-slate-500">/ 100</span>
             </div>
             <div className="w-full bg-slate-200 h-2 rounded-full overflow-hidden">
               <div
-                className="bg-[#EA580C] h-full rounded-full transition-all duration-700"
+                className="bg-brand-gradient h-full rounded-full transition-all duration-700"
                 style={{ width: `${currentProject.overallReadinessScore}%` }}
               />
             </div>
           </div>
 
           {/* Cleared vs In-Process Length */}
-          <div className="p-4 rounded-2xl bg-[#F8FAFC] border border-slate-200 flex flex-col justify-between">
-            <span className="text-[11px] font-extrabold text-[#64748B] uppercase tracking-wider">
+          <div className="p-4 rounded-2xl bg-transparent border border-slate-200 flex flex-col justify-between">
+            <span className="text-[11px] font-extrabold text-slate-500 uppercase tracking-wider">
               Corridor Right-of-Way Status
             </span>
             <div className="flex justify-between items-baseline my-2">
               <div>
-                <span className="text-2xl font-black text-emerald-600 font-mono">
+                <span className="text-2xl font-extrabold text-emerald-600 font-mono">
                   {currentProject.clearedKm} km
                 </span>
-                <span className="text-[10px] block font-bold text-[#64748B]">🟢 Cleared ({( (currentProject.clearedKm / currentProject.totalLengthKm) * 100).toFixed(0)}%)</span>
+                <span className="text-[10px] block font-extrabold text-slate-500">🟢 Cleared ({( (currentProject.clearedKm / currentProject.totalLengthKm) * 100).toFixed(0)}%)</span>
               </div>
               <div className="text-right">
-                <span className="text-2xl font-black text-amber-600 font-mono">
+                <span className="text-2xl font-extrabold text-amber-600 font-mono">
                   {currentProject.underProcessKm} km
                 </span>
-                <span className="text-[10px] block font-bold text-[#64748B]">🟡 Under Process</span>
+                <span className="text-[10px] block font-extrabold text-slate-500">🟡 Under Process</span>
               </div>
             </div>
-            <p className="text-[10px] text-[#64748B]">Total Alignment: {currentProject.totalLengthKm} km</p>
+            <p className="text-[10px] text-slate-500">Total Alignment: {currentProject.totalLengthKm} km</p>
           </div>
 
           {/* Social Consent & Legal Impasse Constraints */}
@@ -160,28 +160,28 @@ export const CorridorReadinessWorkspace: React.FC = () => {
             </span>
             <div className="flex justify-between items-baseline my-2">
               <div>
-                <span className="text-2xl font-black text-rose-600 font-mono">
+                <span className="text-2xl font-extrabold text-rose-600 font-mono">
                   {currentProject.disputedKm} km
                 </span>
-                <span className="text-[10px] block font-bold text-rose-700">🔴 Objections</span>
+                <span className="text-[10px] block font-extrabold text-rose-700">🔴 Objections</span>
               </div>
               <div className="text-right">
-                <span className="text-2xl font-black text-purple-600 font-mono">
+                <span className="text-2xl font-extrabold text-purple-600 font-mono">
                   {currentProject.litigationKm} km
                 </span>
-                <span className="text-[10px] block font-bold text-purple-700">🟣 Court Stays</span>
+                <span className="text-[10px] block font-extrabold text-purple-700">🟣 Court Stays</span>
               </div>
             </div>
-            <p className="text-[10px] text-rose-800 font-bold">⚫ {currentProject.criticalBlockedKm} km Critical Blocking Delay</p>
+            <p className="text-[10px] text-rose-800 font-extrabold">⚫ {currentProject.criticalBlockedKm} km Critical Blocking Delay</p>
           </div>
 
           {/* Target Commission & Fast-Track Actions */}
-          <div className="p-4 rounded-2xl bg-[#0F172A] text-white flex flex-col justify-between shadow-sm">
+          <div className="p-4 rounded-2xl bg-[#0B132B] text-white flex flex-col justify-between shadow-soft">
             <span className="text-[11px] font-extrabold text-[#38BDF8] uppercase tracking-wider">
               Target Commissioning
             </span>
             <div className="my-1">
-              <span className="text-xl font-black font-mono text-white">
+              <span className="text-xl font-extrabold font-mono text-white">
                 {currentProject.targetCommissionDate}
               </span>
               <p className="text-[11px] text-[#94A3B8] mt-0.5">
@@ -195,7 +195,7 @@ export const CorridorReadinessWorkspace: React.FC = () => {
                 );
                 if (disputed) setInspectingSegment(disputed);
               }}
-              className="px-3 py-1.5 rounded-lg bg-[#EA580C] hover:bg-[#C2410C] text-white text-xs font-black transition-all cursor-pointer flex items-center justify-between"
+              className="px-3 py-1.5 rounded-2xl bg-brand-gradient hover:bg-[#3730A3] text-white text-xs font-extrabold transition-all cursor-pointer flex items-center justify-between"
             >
               <span>Triage Critical Blockers</span>
               <ChevronRight className="w-3.5 h-3.5" />
@@ -228,16 +228,16 @@ export const CorridorReadinessWorkspace: React.FC = () => {
       />
 
       {/* Filter & Search Bar */}
-      <div className="bg-white rounded-2xl p-4 border border-[#BAE6FD]/80 shadow-sm flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3">
+      <div className="bg-white rounded-2xl p-4 border border-slate-200/80/80 shadow-soft flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3">
         {/* Search */}
         <div className="relative flex-1">
-          <Search className="w-4 h-4 text-[#64748B] absolute left-3 top-1/2 -translate-y-1/2" />
+          <Search className="w-4 h-4 text-slate-500 absolute left-3 top-1/2 -translate-y-1/2" />
           <input
             type="text"
             placeholder="Search by Village, Section Chainage, District, or Blocker..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full pl-9 pr-4 py-2 rounded-xl bg-[#F8FAFC] border border-slate-200 text-xs font-medium text-[#0F172A] focus:outline-none focus:ring-2 focus:ring-[#0284C7] focus:bg-white transition-all"
+            className="w-full pl-9 pr-4 py-2 rounded-xl bg-transparent border border-slate-200 text-xs font-medium text-[#0B132B] focus:outline-none focus:ring-2 focus:ring-[#4F46E5] focus:bg-white transition-all"
           />
         </div>
 
@@ -254,10 +254,10 @@ export const CorridorReadinessWorkspace: React.FC = () => {
             <button
               key={btn.id}
               onClick={() => setStatusFilter(btn.id as any)}
-              className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer whitespace-nowrap border ${
+              className={`px-3 py-1.5 rounded-2xl text-xs font-extrabold transition-all cursor-pointer whitespace-nowrap border ${
                 statusFilter === btn.id
-                  ? 'bg-[#0284C7] text-white border-[#0284C7] shadow-xs'
-                  : 'bg-[#F8FAFC] text-[#475569] border-slate-200 hover:bg-slate-100'
+                  ? 'bg-[#4F46E5] text-white border-[#4F46E5] shadow-xs'
+                  : 'bg-transparent text-[#475569] border-slate-200 hover:bg-slate-100'
               }`}
             >
               {btn.label}
@@ -269,10 +269,10 @@ export const CorridorReadinessWorkspace: React.FC = () => {
       {/* Segments Cards Grid */}
       <div className="space-y-3">
         <div className="flex items-center justify-between px-1">
-          <h3 className="text-sm font-black text-[#0F172A] tracking-tight">
+          <h3 className="text-sm font-extrabold text-[#0B132B] tracking-tight">
             Corridor Chainage Sections & Cadastral Segments ({filteredSegments.length})
           </h3>
-          <span className="text-xs text-[#64748B] font-medium">
+          <span className="text-xs text-slate-500 font-medium">
             Click any section to inspect the full Delay Chain and Official Dossier
           </span>
         </div>
@@ -286,27 +286,27 @@ export const CorridorReadinessWorkspace: React.FC = () => {
               <div
                 key={seg.id}
                 onClick={() => setInspectingSegment(seg)}
-                className={`p-4 rounded-2xl bg-white border transition-all cursor-pointer flex flex-col justify-between space-y-3 shadow-xs hover:shadow-md ${
+                className={`p-4 rounded-2xl bg-white border transition-all cursor-pointer flex flex-col justify-between space-y-3 shadow-xs hover:shadow-float ${
                   isSelected
-                    ? 'border-[#EA580C] ring-2 ring-[#EA580C]/20 shadow-md'
-                    : 'border-slate-200 hover:border-[#BAE6FD]'
+                    ? 'border-[#4F46E5] ring-2 ring-[#4F46E5]/20 shadow-float'
+                    : 'border-slate-200 hover:border-slate-200/80'
                 }`}
               >
                 <div>
                   {/* Status & Chainage Pill */}
                   <div className="flex items-center justify-between gap-2 mb-2">
-                    <span className={`px-2 py-0.5 rounded-md text-[10px] font-black border ${config.badgeClass}`}>
+                    <span className={`px-2 py-0.5 rounded-xl text-[10px] font-extrabold border ${config.badgeClass}`}>
                       {seg.statusLabel}
                     </span>
-                    <span className="text-[11px] font-mono font-bold text-[#64748B] bg-slate-100 px-2 py-0.5 rounded">
+                    <span className="text-[11px] font-mono font-extrabold text-slate-500 bg-slate-100 px-2 py-0.5 rounded">
                       {seg.lengthKm} km
                     </span>
                   </div>
 
-                  <h4 className="text-xs font-black text-[#0F172A] leading-tight line-clamp-1">
+                  <h4 className="text-xs font-extrabold text-[#0B132B] leading-tight line-clamp-1">
                     {seg.segmentName}
                   </h4>
-                  <p className="text-[11px] text-[#0284C7] font-bold mt-0.5">
+                  <p className="text-[11px] text-[#4F46E5] font-extrabold mt-0.5">
                     {seg.villageName} • {seg.district}
                   </p>
                   <p className="text-[11px] text-[#475569] mt-2 line-clamp-2 leading-relaxed">
@@ -316,12 +316,12 @@ export const CorridorReadinessWorkspace: React.FC = () => {
 
                 {/* Footer Metrics */}
                 <div className="border-t border-slate-100 pt-2.5 flex items-center justify-between text-[11px]">
-                  <div className="flex items-center gap-2 text-[#64748B]">
+                  <div className="flex items-center gap-2 text-slate-500">
                     <span>{seg.affectedLandholdersCount} Landholders</span>
                     <span>•</span>
-                    <span className="text-rose-600 font-bold">{seg.recordedObjectionsCount} Objections</span>
+                    <span className="text-rose-600 font-extrabold">{seg.recordedObjectionsCount} Objections</span>
                   </div>
-                  <span className="font-mono font-black text-[#0F172A] bg-[#F0F7FF] px-2 py-0.5 rounded border border-[#BAE6FD]">
+                  <span className="font-mono font-extrabold text-[#0B132B] bg-transparent px-2 py-0.5 rounded border border-slate-200/80">
                     {seg.readinessScore}/100
                   </span>
                 </div>
@@ -341,11 +341,11 @@ export const CorridorReadinessWorkspace: React.FC = () => {
       {/* AR Verification Modal HUD */}
       {arModalWaypoint && (
         <div className="fixed inset-0 z-[1500] bg-black/70 backdrop-blur-md flex items-center justify-center p-4">
-          <div className="bg-[#0F172A] text-white rounded-3xl p-6 max-w-md w-full border border-[#38BDF8]/40 shadow-2xl space-y-4">
+          <div className="bg-[#0B132B] text-white rounded-3xl p-6 max-w-md w-full border border-[#38BDF8]/40 shadow-2xl space-y-4">
             <div className="flex items-center justify-between border-b border-white/10 pb-3">
               <div className="flex items-center gap-2 text-[#38BDF8]">
                 <Sparkles className="w-5 h-5 animate-spin" />
-                <h3 className="text-sm font-black tracking-tight">AR Spatial Verification HUD</h3>
+                <h3 className="text-sm font-extrabold tracking-tight">AR Spatial Verification HUD</h3>
               </div>
               <button
                 onClick={() => setArModalWaypoint(null)}
@@ -357,13 +357,13 @@ export const CorridorReadinessWorkspace: React.FC = () => {
 
             <div className="space-y-2 text-xs text-[#CBD5E1]">
               <p>
-                Waypoint Code: <span className="font-mono font-bold text-white bg-white/10 px-2 py-0.5 rounded">{arModalWaypoint}</span>
+                Waypoint Code: <span className="font-mono font-extrabold text-white bg-white/10 px-2 py-0.5 rounded">{arModalWaypoint}</span>
               </p>
-              <div className="h-44 rounded-2xl bg-slate-900 border border-slate-700 relative overflow-hidden flex flex-col items-center justify-center text-center p-4">
+              <div className="h-44 rounded-2xl bg-[#0B132B] border border-slate-700 relative overflow-hidden flex flex-col items-center justify-center text-center p-4">
                 <div className="w-20 h-20 rounded-full border-2 border-dashed border-[#38BDF8] animate-spin flex items-center justify-center mb-2">
                   <Route className="w-8 h-8 text-[#38BDF8]" />
                 </div>
-                <span className="text-[11px] font-bold text-[#38BDF8]">AR Camera & LiDAR Sensor Connected</span>
+                <span className="text-[11px] font-extrabold text-[#38BDF8]">AR Camera & LiDAR Sensor Connected</span>
                 <span className="text-[9px] text-[#94A3B8] mt-1">Overlaying 3D CAD Viaduct & Survey Pegs over camera feed</span>
               </div>
               <p className="text-[11px] text-[#94A3B8]">
@@ -373,7 +373,7 @@ export const CorridorReadinessWorkspace: React.FC = () => {
 
             <button
               onClick={() => setArModalWaypoint(null)}
-              className="w-full py-2.5 rounded-xl bg-[#EA580C] hover:bg-[#C2410C] text-white font-extrabold text-xs transition-all cursor-pointer"
+              className="w-full py-2.5 rounded-xl bg-brand-gradient hover:bg-[#3730A3] text-white font-extrabold text-xs transition-all cursor-pointer"
             >
               Close AR HUD
             </button>

@@ -124,30 +124,30 @@ export const GISCommandMap: React.FC<MapProps> = ({
   };
 
   return (
-    <div className="relative w-full h-[540px] rounded-2xl overflow-hidden border border-[#E2E8F0] shadow-sm bg-white font-sans">
+    <div className="relative w-full h-[540px] rounded-2xl overflow-hidden border border-[#E2E8F0] shadow-soft bg-white ">
       {/* Sleek Floating Satellite & SAR Radar Mode Switcher */}
-      <div className="absolute top-3 left-3 z-[1000] bg-white/95 backdrop-blur-md border border-[#E2E8F0] rounded-xl p-2 shadow-lg space-y-1.5 max-w-[340px] sm:max-w-[400px]">
+      <div className="absolute top-3 left-3 z-[1000] bg-white/80 backdrop-blur-xl border border-[#E2E8F0] rounded-xl p-2 shadow-lg space-y-1.5 max-w-[340px] sm:max-w-[400px]">
         <div className="flex items-center justify-between gap-2 border-b border-[#E2E8F0] pb-1.5">
           <div className="flex items-center gap-1.5">
-            <div className="p-1 rounded-md bg-[#EA580C] text-white">
+            <div className="p-1 rounded-xl bg-brand-gradient text-white">
               <Satellite className="w-3 h-3 text-white" />
             </div>
             <div>
-              <span className="font-extrabold text-[#0F172A] text-[11px] block leading-tight">
+              <span className="font-extrabold text-[#0B132B] text-[11px] block leading-tight">
                 Earth Observation & SAR
               </span>
-              <span className="text-[8.5px] text-[#64748B] font-mono">
+              <span className="text-[8.5px] text-slate-500 font-mono">
                 Sentinel-1 SAR • NISAR L+S
               </span>
             </div>
           </div>
           <div className="flex items-center gap-1">
-            <span className="px-1.5 py-0.5 rounded text-[8px] font-mono font-bold bg-[#ECFDF5] text-[#059669] border border-[#A7F3D0]">
+            <span className="px-1.5 py-0.5 rounded text-[8px] font-mono font-extrabold bg-[#ECFDF5] text-[#059669] border border-[#A7F3D0]">
               RADAR LIVE
             </span>
             <button
               onClick={() => setIsControlsCollapsed(!isControlsCollapsed)}
-              className="p-1 hover:bg-[#F1F5F9] rounded text-[#64748B] hover:text-[#0F172A] transition-colors"
+              className="p-1 hover:bg-[#F1F5F9] rounded text-slate-500 hover:text-[#0B132B] transition-colors"
               title={isControlsCollapsed ? 'Expand Controls' : 'Collapse Controls'}
             >
               {isControlsCollapsed ? <ChevronDown className="w-3.5 h-3.5" /> : <ChevronUp className="w-3.5 h-3.5" />}
@@ -168,14 +168,14 @@ export const GISCommandMap: React.FC<MapProps> = ({
                 <button
                   key={mode.id}
                   onClick={() => setVisionMode(mode.id as MapVisionMode)}
-                  className={`px-1.5 py-1 rounded-md text-left transition-all cursor-pointer border flex items-center gap-1 ${
+                  className={`px-1.5 py-1 rounded-xl text-left transition-all cursor-pointer border flex items-center gap-1 ${
                     visionMode === mode.id
-                      ? 'bg-[#0F172A] border-[#EA580C] text-white shadow-sm ring-1 ring-[#EA580C]/50'
-                      : 'bg-[#F8FAFC] border-[#E2E8F0] text-[#334155] hover:bg-[#F1F5F9]'
+                      ? 'bg-[#0B132B] border-[#4F46E5] text-white shadow-soft ring-1 ring-[#4F46E5]/50'
+                      : 'bg-transparent border-[#E2E8F0] text-[#334155] hover:bg-[#F1F5F9]'
                   }`}
                 >
                   <span className="text-xs leading-none">{mode.icon}</span>
-                  <span className={`text-[9.5px] font-bold truncate ${visionMode === mode.id ? 'text-white' : 'text-[#0F172A]'}`}>
+                  <span className={`text-[9.5px] font-extrabold truncate ${visionMode === mode.id ? 'text-white' : 'text-[#0B132B]'}`}>
                     {mode.label}
                   </span>
                 </button>
@@ -201,8 +201,8 @@ export const GISCommandMap: React.FC<MapProps> = ({
                       onClick={() => setActiveLayer(layer.id)}
                       className={`px-1.5 py-1 rounded text-[9px] font-extrabold transition-all cursor-pointer border truncate text-center ${
                         activeLayer === layer.id
-                          ? 'bg-[#0F172A] border-[#EA580C] text-white shadow-xs scale-[1.02]'
-                          : 'bg-[#F8FAFC] border-[#CBD5E1] text-[#475569] hover:text-[#0F172A] hover:bg-[#F1F5F9]'
+                          ? 'bg-[#0B132B] border-[#4F46E5] text-white shadow-xs scale-[1.02]'
+                          : 'bg-transparent border-[#CBD5E1] text-[#475569] hover:text-[#0B132B] hover:bg-[#F1F5F9]'
                       }`}
                     >
                       {layer.label}
@@ -211,9 +211,9 @@ export const GISCommandMap: React.FC<MapProps> = ({
                 </div>
 
                 {/* Dynamic Active Layer Legend Bar */}
-                <div className="px-2 py-1 rounded-md bg-[#F0F7FF] border border-[#BAE6FD] text-[9px] text-[#0369A1] flex items-center justify-between font-sans">
-                  <span className="font-bold flex items-center gap-1 truncate">
-                    <Sparkles className="w-2.5 h-2.5 text-[#EA580C] shrink-0" />
+                <div className="px-2 py-1 rounded-xl bg-transparent border border-slate-200/80 text-[9px] text-indigo-600 flex items-center justify-between ">
+                  <span className="font-extrabold flex items-center gap-1 truncate">
+                    <Sparkles className="w-2.5 h-2.5 text-indigo-600 shrink-0" />
                     {activeLayer === 'DELAY_RISK' && 'Delay Risk Hotspots'}
                     {activeLayer === 'COMPENSATION_BURDEN' && 'Solatium & Awards (>₹40L)'}
                     {activeLayer === 'OWNERSHIP_COMPLEXITY' && 'Disputed Title & Partitions'}
@@ -221,7 +221,7 @@ export const GISCommandMap: React.FC<MapProps> = ({
                     {activeLayer === 'RR_BURDEN' && 'PAF Resettlement Burden'}
                     {activeLayer === 'DOCUMENT_COMPLETENESS' && '7/12 RoR Verification'}
                   </span>
-                  <span className="font-mono font-bold bg-white px-1 py-0.2 rounded border border-[#BAE6FD] text-[#0F172A] shrink-0 ml-1">
+                  <span className="font-mono font-extrabold bg-white px-1 py-0.2 rounded border border-slate-200/80 text-[#0B132B] shrink-0 ml-1">
                     {parcels.length} Parcels
                   </span>
                 </div>
@@ -230,17 +230,17 @@ export const GISCommandMap: React.FC<MapProps> = ({
 
             {/* SAR Telemetry Live HUD (when in SAR Modes) */}
             {visionMode !== 'OPTICAL' && (
-              <div className="p-2 rounded-lg bg-[#0F172A] text-white space-y-1 text-[10px] font-sans border border-[#1E293B]">
-                <div className="flex items-center justify-between text-[#EA580C]">
-                  <span className="flex items-center gap-1 font-bold truncate">
-                    <Radio className="w-3 h-3 text-[#EA580C] animate-pulse shrink-0" />
-                    <span className="text-white text-[10px] font-semibold truncate">
+              <div className="p-2 rounded-2xl bg-[#0B132B] text-white space-y-1 text-[10px]  border border-[#1E293B]">
+                <div className="flex items-center justify-between text-indigo-600">
+                  <span className="flex items-center gap-1 font-extrabold truncate">
+                    <Radio className="w-3 h-3 text-indigo-600 animate-pulse shrink-0" />
+                    <span className="text-white text-[10px] font-extrabold truncate">
                       {visionMode === 'SAR_RADAR' && 'Sentinel-1 Dual-Pol GRD'}
                       {visionMode === 'INSAR_SUBSIDENCE' && 'InSAR Phase Coherence'}
                       {visionMode === 'SAR_CHANGE' && 'Sec 38 Possession Radar'}
                     </span>
                   </span>
-                  <span className="text-[8.5px] font-mono font-bold bg-white/10 px-1.5 py-0.5 rounded text-[#38BDF8] shrink-0">
+                  <span className="text-[8.5px] font-mono font-extrabold bg-white/10 px-1.5 py-0.5 rounded text-[#38BDF8] shrink-0">
                     {visionMode === 'SAR_RADAR' && '-14.2 dB'}
                     {visionMode === 'INSAR_SUBSIDENCE' && '-0.8 mm/yr'}
                     {visionMode === 'SAR_CHANGE' && '94.8% Done'}
@@ -259,8 +259,8 @@ export const GISCommandMap: React.FC<MapProps> = ({
 
       {/* Top Right High-Risk Triage Overlay */}
       {topRiskParcels.length > 0 && (
-        <div className="absolute top-3 right-3 z-[1000] bg-white/95 backdrop-blur-md border border-[#E2E8F0] rounded-xl p-2.5 shadow-md hidden md:block max-w-xs">
-          <p className="text-[10px] font-extrabold uppercase tracking-wider text-[#64748B] flex items-center gap-1 mb-1.5">
+        <div className="absolute top-3 right-3 z-[1000] bg-white/80 backdrop-blur-xl border border-[#E2E8F0] rounded-xl p-2.5 shadow-float hidden md:block max-w-xs">
+          <p className="text-[10px] font-extrabold uppercase tracking-wider text-slate-500 flex items-center gap-1 mb-1.5">
             <AlertCircle className="w-3.5 h-3.5 text-[#DC2626]" /> Critical Delay Hotspots
           </p>
           <div className="space-y-1">
@@ -271,10 +271,10 @@ export const GISCommandMap: React.FC<MapProps> = ({
                   const p = parcels.find((item) => item.id === m.parcelId);
                   if (p) handleMarkerClick(p);
                 }}
-                className="p-1.5 rounded-lg bg-[#F8FAFC] hover:bg-[#FFF7ED] border border-[#E2E8F0] hover:border-[#FDBA74] flex items-center justify-between cursor-pointer transition-all text-xs"
+                className="p-1.5 rounded-2xl bg-transparent hover:bg-[#EEF2FF] border border-[#E2E8F0] hover:border-[#FDBA74] flex items-center justify-between cursor-pointer transition-all text-xs"
               >
-                <span className="font-bold text-[#0F172A]">Khasra #{m.khasraNo}</span>
-                <span className="font-mono font-black text-[#DC2626] text-[10px]">
+                <span className="font-extrabold text-[#0B132B]">Khasra #{m.khasraNo}</span>
+                <span className="font-mono font-extrabold text-[#DC2626] text-[10px]">
                   {m.delayRiskScore}% Risk
                 </span>
               </div>
@@ -344,7 +344,7 @@ export const GISCommandMap: React.FC<MapProps> = ({
 
           {/* Strategic Corridor Polylines with visionMode-specific neon styling */}
           {STRATEGIC_CORRIDORS.map((corridor) => {
-            let corridorColor = corridor.projectId === 'proj-bullet-train-sec-3' ? '#0F172A' : '#334155';
+            let corridorColor = corridor.projectId === 'proj-bullet-train-sec-3' ? '#0B132B' : '#334155';
             let corridorWeight = 4;
 
             if (visionMode === 'SAR_RADAR') {
@@ -445,46 +445,46 @@ export const GISCommandMap: React.FC<MapProps> = ({
                 }}
               >
                 <Popup>
-                  <div className="p-1.5 text-[#0F172A] text-xs font-sans space-y-1.5 min-w-[200px]">
+                  <div className="p-1.5 text-[#0B132B] text-xs  space-y-1.5 min-w-[200px]">
                     <div className="flex items-center justify-between gap-2 border-b border-[#E2E8F0] pb-1">
-                      <strong className="text-xs font-extrabold text-[#0F172A]">Khasra #{parcel.khasraSurveyNo}</strong>
-                      <span className="font-mono font-bold text-[10px] px-1.5 py-0.5 rounded bg-[#FFF1F2] text-[#DC2626]">
+                      <strong className="text-xs font-extrabold text-[#0B132B]">Khasra #{parcel.khasraSurveyNo}</strong>
+                      <span className="font-mono font-extrabold text-[10px] px-1.5 py-0.5 rounded bg-[#FFF1F2] text-[#DC2626]">
                         {metrics.delayRiskScore}% Risk
                       </span>
                     </div>
 
                     {/* Active Layer Specific Metric Insight */}
                     {visionMode === 'OPTICAL' && (
-                      <div className="p-1.5 rounded-lg bg-[#F8FAFC] border border-[#E2E8F0] text-[10px] space-y-0.5 font-medium">
+                      <div className="p-1.5 rounded-2xl bg-transparent border border-[#E2E8F0] text-[10px] space-y-0.5 font-medium">
                         {activeLayer === 'DELAY_RISK' && (
-                          <p className="text-[#DC2626] font-bold">🔴 Delay Cause: {metrics.primaryRiskReason}</p>
+                          <p className="text-[#DC2626] font-extrabold">🔴 Delay Cause: {metrics.primaryRiskReason}</p>
                         )}
                         {activeLayer === 'COMPENSATION_BURDEN' && (
-                          <p className="text-[#C2410C] font-bold">
+                          <p className="text-[#3730A3] font-extrabold">
                             🟠 Solatium Total: ₹{(metrics.compensationBurdenINR / 100000).toFixed(1)} Lakhs
                           </p>
                         )}
                         {activeLayer === 'OWNERSHIP_COMPLEXITY' && (
-                          <p className="text-[#B45309] font-bold">
+                          <p className="text-[#B45309] font-extrabold">
                             🟡 Title: {metrics.ownershipCount} Co-owners ({metrics.ownershipConflict ? 'Dispute Pending' : 'Clear Title'})
                           </p>
                         )}
                         {activeLayer === 'LITIGATION' && (
-                          <p className="text-[#7E22CE] font-bold">
+                          <p className="text-[#7E22CE] font-extrabold">
                             🟣 Court Status: {metrics.hasActiveLitigation ? metrics.litigationCaseNo || 'High Court WP Active' : 'No Litigation'}
                           </p>
                         )}
                         {activeLayer === 'RR_BURDEN' && (
-                          <p className="text-[#1D4ED8] font-bold">
+                          <p className="text-[#1D4ED8] font-extrabold">
                             🔵 R&R Status: {metrics.pendingRRCount > 0 ? 'Resettlement Grants Pending' : 'All Entitlements Allocated'}
                           </p>
                         )}
                         {activeLayer === 'DOCUMENT_COMPLETENESS' && (
-                          <p className="text-[#047857] font-bold">
+                          <p className="text-[#047857] font-extrabold">
                             🟢 Compliance: {metrics.documentCompletenessPct}% 7/12 RoR Records Verified
                           </p>
                         )}
-                        <p className="text-[#64748B] text-[9px] pt-0.5">{metrics.recommendedAction}</p>
+                        <p className="text-slate-500 text-[9px] pt-0.5">{metrics.recommendedAction}</p>
                       </div>
                     )}
 
@@ -492,7 +492,7 @@ export const GISCommandMap: React.FC<MapProps> = ({
                       <div className="p-1 rounded bg-[#F0FDF4] border border-[#BBF7D0] text-[10px] font-mono text-[#166534] space-y-0.5">
                         <p>📡 SAR Dual-Pol Backscatter: -13.8 dB</p>
                         <p>🛡️ Encroachment Double-Bounce: None Detected</p>
-                        <p className="text-[#0284C7]">Cloud Cover: 100% Penetrated</p>
+                        <p className="text-[#4F46E5]">Cloud Cover: 100% Penetrated</p>
                       </div>
                     )}
 
@@ -504,13 +504,13 @@ export const GISCommandMap: React.FC<MapProps> = ({
                     )}
 
                     {visionMode === 'SAR_CHANGE' && (
-                      <div className="p-1.5 rounded bg-[#FAF5FF] border border-[#E9D5FF] text-[10.5px] font-sans text-[#6B21A8] space-y-0.5">
-                        <p className="font-semibold">🔍 Soil Clearance: Confirmed Cleared</p>
-                        <p className="font-semibold text-[#059669]">✅ Sec 38 Possession Verified: 96.4%</p>
+                      <div className="p-1.5 rounded bg-[#FAF5FF] border border-[#E9D5FF] text-[10.5px]  text-[#6B21A8] space-y-0.5">
+                        <p className="font-extrabold">🔍 Soil Clearance: Confirmed Cleared</p>
+                        <p className="font-extrabold text-[#059669]">✅ Sec 38 Possession Verified: 96.4%</p>
                       </div>
                     )}
 
-                    <p className="text-[10px] text-[#059669] font-bold pt-1">
+                    <p className="text-[10px] text-[#059669] font-extrabold pt-1">
                       Click marker to open full Digital Land Passport
                     </p>
                   </div>
@@ -527,8 +527,8 @@ export const GISCommandMap: React.FC<MapProps> = ({
             center={[dev.location.lat, dev.location.lng]}
             radius={5}
             pathOptions={{
-              color: dev.status === 'ONLINE' ? '#0F172A' : '#64748B',
-              fillColor: dev.status === 'ONLINE' ? '#0F172A' : '#94A3B8',
+              color: dev.status === 'ONLINE' ? '#0B132B' : '#64748B',
+              fillColor: dev.status === 'ONLINE' ? '#0B132B' : '#94A3B8',
               fillOpacity: 0.9,
               weight: 1,
             }}

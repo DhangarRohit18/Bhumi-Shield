@@ -139,9 +139,9 @@ export const WorkloadBalancer: React.FC<WorkloadBalancerProps> = ({ officers }) 
   };
 
   return (
-    <div className="space-y-4 font-sans text-[#0F172A]">
+    <div className="space-y-4  text-[#0B132B]">
       {successMessage && (
-        <div className="p-3.5 bg-[#ECFDF5] border border-[#A7F3D0] rounded-xl flex items-center justify-between text-xs font-bold text-[#065F46] shadow-sm">
+        <div className="p-3.5 bg-[#ECFDF5] border border-[#A7F3D0] rounded-xl flex items-center justify-between text-xs font-extrabold text-[#065F46] shadow-soft">
           <div className="flex items-center gap-2">
             <CheckCircle2 className="w-4 h-4 text-[#10B981]" />
             <span>{successMessage}</span>
@@ -151,7 +151,7 @@ export const WorkloadBalancer: React.FC<WorkloadBalancerProps> = ({ officers }) 
 
       {/* Critical Imbalance Alert & Smart Recommendation */}
       {recommendedPlan && (
-        <div className="p-4 rounded-2xl bg-[#FFFBEB] border border-[#FDE68A] flex flex-col md:flex-row md:items-center justify-between gap-3 shadow-sm">
+        <div className="p-4 rounded-2xl bg-[#FFFBEB] border border-[#FDE68A] flex flex-col md:flex-row md:items-center justify-between gap-3 shadow-soft">
           <div className="flex items-start gap-3">
             <div className="p-2 rounded-xl bg-[#F59E0B] text-white shrink-0 mt-0.5">
               <Scale className="w-5 h-5 text-white" />
@@ -161,7 +161,7 @@ export const WorkloadBalancer: React.FC<WorkloadBalancerProps> = ({ officers }) 
                 <span className="font-extrabold text-sm text-[#92400E]">
                   Critical Workload Imbalance Detected
                 </span>
-                <span className="px-2 py-0.5 rounded-full text-[9px] font-mono font-bold bg-[#FEF3C7] text-[#B45309] border border-[#FCD34D]">
+                <span className="px-2 py-0.5 rounded-full text-[9px] font-mono font-extrabold bg-[#FEF3C7] text-[#B45309] border border-[#FCD34D]">
                   ELIGIBLE REASSIGNMENT
                 </span>
               </div>
@@ -173,7 +173,7 @@ export const WorkloadBalancer: React.FC<WorkloadBalancerProps> = ({ officers }) 
 
           <button
             onClick={handleOpenSimulation}
-            className="px-4 py-2 bg-[#BF7834] hover:bg-[#A36224] text-white rounded-xl text-xs font-extrabold flex items-center justify-center gap-1.5 shadow-sm transition-all cursor-pointer shrink-0"
+            className="px-4 py-2 bg-[#BF7834] hover:bg-[#A36224] text-white rounded-xl text-xs font-extrabold flex items-center justify-center gap-1.5 shadow-soft transition-all cursor-pointer shrink-0"
           >
             <span>Review Redistribution</span>
             <ArrowRight className="w-4 h-4" />
@@ -187,16 +187,16 @@ export const WorkloadBalancer: React.FC<WorkloadBalancerProps> = ({ officers }) 
           <div
             key={dist.districtId}
             onClick={() => setSelectedDistrict(selectedDistrict === dist.districtId ? 'ALL' : dist.districtId)}
-            className={`p-4 rounded-xl border transition-all cursor-pointer shadow-sm ${
+            className={`p-4 rounded-xl border transition-all cursor-pointer shadow-soft ${
               selectedDistrict === dist.districtId
                 ? 'bg-white border-[#BF7834] ring-2 ring-[#BF7834]/20'
                 : 'bg-white border-[#E2E8F0] hover:border-[#CBD5E1]'
             }`}
           >
             <div className="flex items-center justify-between">
-              <span className="font-extrabold text-xs text-[#0F172A]">{dist.districtName}</span>
+              <span className="font-extrabold text-xs text-[#0B132B]">{dist.districtName}</span>
               <span
-                className={`text-[10px] font-mono font-bold px-2 py-0.5 rounded-full ${
+                className={`text-[10px] font-mono font-extrabold px-2 py-0.5 rounded-full ${
                   dist.isOverloaded
                     ? 'bg-[#FEF2F2] text-[#DC2626] border border-[#FECACA]'
                     : 'bg-[#ECFDF5] text-[#059669] border border-[#A7F3D0]'
@@ -208,16 +208,16 @@ export const WorkloadBalancer: React.FC<WorkloadBalancerProps> = ({ officers }) 
 
             <div className="grid grid-cols-3 gap-2 mt-3 pt-3 border-t border-[#F1F5F9] text-center">
               <div>
-                <p className="text-[10px] text-[#64748B]">Officers</p>
-                <p className="text-sm font-black text-[#0F172A]">{dist.officerCount}</p>
+                <p className="text-[10px] text-slate-500">Officers</p>
+                <p className="text-sm font-extrabold text-[#0B132B]">{dist.officerCount}</p>
               </div>
               <div>
-                <p className="text-[10px] text-[#64748B]">Pending</p>
-                <p className="text-sm font-black text-[#0F172A]">{dist.pendingCount}</p>
+                <p className="text-[10px] text-slate-500">Pending</p>
+                <p className="text-sm font-extrabold text-[#0B132B]">{dist.pendingCount}</p>
               </div>
               <div>
-                <p className="text-[10px] text-[#64748B]">Avg Load</p>
-                <p className={`text-sm font-black ${dist.isOverloaded ? 'text-[#DC2626]' : 'text-[#059669]'}`}>
+                <p className="text-[10px] text-slate-500">Avg Load</p>
+                <p className={`text-sm font-extrabold ${dist.isOverloaded ? 'text-[#DC2626]' : 'text-[#059669]'}`}>
                   {dist.avgLoad}%
                 </p>
               </div>
@@ -227,22 +227,22 @@ export const WorkloadBalancer: React.FC<WorkloadBalancerProps> = ({ officers }) 
       </div>
 
       {/* Officers List Table */}
-      <div className="bg-white border border-[#E2E8F0] rounded-xl overflow-hidden shadow-sm">
+      <div className="bg-white border border-[#E2E8F0] rounded-xl overflow-hidden shadow-soft">
         <div className="px-4 py-3 border-b border-[#E2E8F0] flex items-center justify-between">
           <div className="flex items-center gap-2">
             <Users className="w-4 h-4 text-[#BF7834]" />
-            <h3 className="font-extrabold text-xs text-[#0F172A]">
+            <h3 className="font-extrabold text-xs text-[#0B132B]">
               Officer Capacity & Workload Index ({filteredOfficers.length})
             </h3>
           </div>
-          <span className="text-[10px] text-[#64748B] font-mono">
+          <span className="text-[10px] text-slate-500 font-mono">
             Explainable Formula: ((Pending * Complexity) + (Overdue * 1.8)) / Capacity
           </span>
         </div>
 
         <div className="overflow-x-auto">
           <table className="w-full text-left text-xs">
-            <thead className="bg-[#F8FAFC] text-[#64748B] font-extrabold uppercase text-[10px] border-b border-[#E2E8F0]">
+            <thead className="bg-transparent text-slate-500 font-extrabold uppercase text-[10px] border-b border-[#E2E8F0]">
               <tr>
                 <th className="px-4 py-2.5">Officer</th>
                 <th className="px-4 py-2.5">District</th>
@@ -257,21 +257,21 @@ export const WorkloadBalancer: React.FC<WorkloadBalancerProps> = ({ officers }) 
               {filteredOfficers.map((o) => {
                 const isHeavy = o.calculatedWorkloadScore >= 80;
                 return (
-                  <tr key={o.officerUid} className="hover:bg-[#F8FAFC]">
+                  <tr key={o.officerUid} className="hover:bg-transparent">
                     <td className="px-4 py-3">
-                      <p className="font-extrabold text-[#0F172A]">{o.officerName}</p>
-                      <p className="text-[10px] text-[#64748B]">{o.role}</p>
+                      <p className="font-extrabold text-[#0B132B]">{o.officerName}</p>
+                      <p className="text-[10px] text-slate-500">{o.role}</p>
                     </td>
                     <td className="px-4 py-3 text-[#475569] font-medium">
                       {o.districtId === 'dist-palghar' ? 'Palghar' : o.districtId === 'dist-thane' ? 'Thane' : 'Varanasi'}
                     </td>
-                    <td className="px-4 py-3 text-center font-mono font-bold text-[#0F172A]">{o.assignedCases}</td>
-                    <td className="px-4 py-3 text-center font-mono font-bold text-[#0F172A]">{o.pendingCases}</td>
-                    <td className="px-4 py-3 text-center font-mono font-bold text-[#DC2626]">{o.overdueCases}</td>
-                    <td className="px-4 py-3 text-center font-mono text-[#64748B]">{o.maxCapacity}</td>
+                    <td className="px-4 py-3 text-center font-mono font-extrabold text-[#0B132B]">{o.assignedCases}</td>
+                    <td className="px-4 py-3 text-center font-mono font-extrabold text-[#0B132B]">{o.pendingCases}</td>
+                    <td className="px-4 py-3 text-center font-mono font-extrabold text-[#DC2626]">{o.overdueCases}</td>
+                    <td className="px-4 py-3 text-center font-mono text-slate-500">{o.maxCapacity}</td>
                     <td className="px-4 py-3 text-right">
                       <span
-                        className={`font-mono font-black text-xs px-2.5 py-1 rounded-lg ${
+                        className={`font-mono font-extrabold text-xs px-2.5 py-1 rounded-2xl ${
                           isHeavy
                             ? 'bg-[#FEF2F2] text-[#DC2626] border border-[#FECACA]'
                             : 'bg-[#ECFDF5] text-[#059669] border border-[#A7F3D0]'
@@ -295,19 +295,19 @@ export const WorkloadBalancer: React.FC<WorkloadBalancerProps> = ({ officers }) 
             <div className="flex items-center justify-between pb-3 border-b border-[#E2E8F0]">
               <div className="flex items-center gap-2">
                 <Sparkles className="w-5 h-5 text-[#BF7834]" />
-                <h3 className="text-sm font-black text-[#0F172A]">
+                <h3 className="text-sm font-extrabold text-[#0B132B]">
                   What-If Workload Redistribution Simulation
                 </h3>
               </div>
               <button
                 onClick={() => setIsModalOpen(false)}
-                className="text-xs text-[#64748B] hover:text-[#0F172A] font-bold cursor-pointer"
+                className="text-xs text-slate-500 hover:text-[#0B132B] font-extrabold cursor-pointer"
               >
                 ✕
               </button>
             </div>
 
-            <div className="p-3 bg-[#F8FAFC] border border-[#E2E8F0] rounded-xl text-xs text-[#475569] leading-relaxed">
+            <div className="p-3 bg-transparent border border-[#E2E8F0] rounded-xl text-xs text-[#475569] leading-relaxed">
               {activePlan.rationale}
             </div>
 
@@ -318,11 +318,11 @@ export const WorkloadBalancer: React.FC<WorkloadBalancerProps> = ({ officers }) 
                   Source: {activePlan.sourceOfficerName}
                 </p>
                 <div className="flex items-baseline justify-between text-xs">
-                  <span className="text-[#64748B]">Current Load:</span>
+                  <span className="text-slate-500">Current Load:</span>
                   <strong className="text-[#DC2626] font-mono">{activePlan.preSourceLoadPct}%</strong>
                 </div>
                 <div className="flex items-baseline justify-between text-xs">
-                  <span className="text-[#64748B]">Post Redistribution:</span>
+                  <span className="text-slate-500">Post Redistribution:</span>
                   <strong className="text-[#059669] font-mono">{activePlan.postSourceLoadPct}%</strong>
                 </div>
               </div>
@@ -332,12 +332,12 @@ export const WorkloadBalancer: React.FC<WorkloadBalancerProps> = ({ officers }) 
                   Target: {activePlan.targetOfficerName}
                 </p>
                 <div className="flex items-baseline justify-between text-xs">
-                  <span className="text-[#64748B]">Current Load:</span>
+                  <span className="text-slate-500">Current Load:</span>
                   <strong className="text-[#059669] font-mono">{activePlan.preTargetLoadPct}%</strong>
                 </div>
                 <div className="flex items-baseline justify-between text-xs">
-                  <span className="text-[#64748B]">Post Redistribution:</span>
-                  <strong className="text-[#0F172A] font-mono">{activePlan.postTargetLoadPct}%</strong>
+                  <span className="text-slate-500">Post Redistribution:</span>
+                  <strong className="text-[#0B132B] font-mono">{activePlan.postTargetLoadPct}%</strong>
                 </div>
               </div>
             </div>
@@ -348,7 +348,7 @@ export const WorkloadBalancer: React.FC<WorkloadBalancerProps> = ({ officers }) 
                 <TrendingDown className="w-4 h-4 text-[#D97706]" />
                 <span>Projected Statutory Delay Reduction</span>
               </div>
-              <span className="font-mono font-black text-sm text-[#B45309]">
+              <span className="font-mono font-extrabold text-sm text-[#B45309]">
                 -{activePlan.projectedDelayReductionDays} Days
               </span>
             </div>
@@ -357,14 +357,14 @@ export const WorkloadBalancer: React.FC<WorkloadBalancerProps> = ({ officers }) 
             <div className="flex items-center justify-end gap-2 pt-3 border-t border-[#E2E8F0]">
               <button
                 onClick={() => setIsModalOpen(false)}
-                className="px-4 py-2 rounded-xl text-xs font-bold text-[#64748B] hover:bg-[#F1F5F9] cursor-pointer"
+                className="px-4 py-2 rounded-xl text-xs font-extrabold text-slate-500 hover:bg-[#F1F5F9] cursor-pointer"
               >
                 Cancel
               </button>
               <button
                 onClick={handleApproveRedistribution}
                 disabled={isApplying}
-                className="px-5 py-2.5 rounded-xl bg-[#BF7834] hover:bg-[#A36224] text-white text-xs font-black flex items-center gap-1.5 shadow-md transition-all cursor-pointer"
+                className="px-5 py-2.5 rounded-xl bg-[#BF7834] hover:bg-[#A36224] text-white text-xs font-extrabold flex items-center gap-1.5 shadow-float transition-all cursor-pointer"
               >
                 {isApplying ? (
                   <>

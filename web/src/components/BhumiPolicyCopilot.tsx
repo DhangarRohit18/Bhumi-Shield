@@ -141,14 +141,14 @@ export const BhumiPolicyCopilot: React.FC = () => {
       {!isOpen && (
         <button
           onClick={() => setIsOpen(true)}
-          className="fixed bottom-6 right-6 z-[2000] flex items-center gap-2 px-4 py-3 rounded-full bg-gradient-to-r from-[#EA580C] to-[#C2410C] hover:from-[#C2410C] hover:to-[#9A3412] text-white font-extrabold text-xs shadow-2xl hover:shadow-orange-500/40 transition-all cursor-pointer border border-[#EA580C] group"
+          className="fixed bottom-6 right-6 z-[2000] flex items-center gap-2 px-4 py-3 rounded-full bg-gradient-to-r from-[#4F46E5] to-[#3730A3] hover:from-[#3730A3] hover:to-[#9A3412] text-white font-extrabold text-xs shadow-2xl hover:shadow-orange-500/40 transition-all cursor-pointer border border-[#4F46E5] group"
           title="Open BhumiAI Legal & Policy RAG Copilot"
         >
           <div className="p-1 rounded-full bg-white/20">
             <Sparkles className="w-4 h-4 text-white" />
           </div>
           <span className="tracking-wide">BhumiAI Legal Copilot</span>
-          <span className="px-1.5 py-0.5 rounded-full bg-black/30 text-[9px] font-mono font-bold text-white">
+          <span className="px-1.5 py-0.5 rounded-full bg-black/30 text-[9px] font-mono font-extrabold text-white">
             RAG v2.0
           </span>
         </button>
@@ -156,19 +156,19 @@ export const BhumiPolicyCopilot: React.FC = () => {
 
       {/* RAG Chatbot Modal Drawer */}
       {isOpen && (
-        <div className="fixed bottom-6 right-6 z-[2000] w-[92vw] sm:w-[440px] h-[580px] bg-white border border-[#BAE6FD] rounded-2xl shadow-2xl flex flex-col font-sans overflow-hidden">
+        <div className="fixed bottom-6 right-6 z-[2000] w-[92vw] sm:w-[440px] h-[580px] bg-white border border-slate-200/80 rounded-2xl shadow-2xl flex flex-col font-sans overflow-hidden">
           {/* Header */}
-          <div className="px-4 py-3.5 bg-[#0F172A] text-white flex items-center justify-between border-b border-[#1E293B]">
+          <div className="px-4 py-3.5 bg-[#0B132B] text-white flex items-center justify-between border-b border-[#1E293B]">
             <div className="flex items-center gap-2.5">
-              <div className="p-2 rounded-xl bg-[#EA580C] text-white shadow-md">
+              <div className="p-2 rounded-xl bg-brand-gradient text-white shadow-md">
                 <Scale className="w-4 h-4 text-white" />
               </div>
               <div>
                 <div className="flex items-center gap-2">
-                  <h3 className="font-black text-xs tracking-wide text-white">
+                  <h3 className="font-extrabold text-xs tracking-wide text-white">
                     BhumiAI Legal & Policy Copilot
                   </h3>
-                  <span className="px-1.5 py-0.2 rounded text-[8px] font-mono font-bold bg-[#EA580C] text-white">
+                  <span className="px-1.5 py-0.2 rounded text-[8px] font-mono font-extrabold bg-brand-gradient text-white">
                     RFCTLARR 2013
                   </span>
                 </div>
@@ -179,15 +179,15 @@ export const BhumiPolicyCopilot: React.FC = () => {
             </div>
             <button
               onClick={() => setIsOpen(false)}
-              className="p-1.5 rounded-lg text-[#94A3B8] hover:text-white hover:bg-white/10 transition-all cursor-pointer"
+              className="p-1.5 rounded-2xl text-[#94A3B8] hover:text-white hover:bg-white/10 transition-all cursor-pointer"
             >
               <X className="w-4 h-4" />
             </button>
           </div>
 
           {/* Quick Prompt Chips */}
-          <div className="px-3 py-2 bg-[#F0F7FF] border-b border-[#BAE6FD] flex items-center gap-1.5 overflow-x-auto text-[10px] font-bold text-[#0369A1] whitespace-nowrap">
-            <span className="text-[9px] text-[#64748B] uppercase font-bold shrink-0">Quick Queries:</span>
+          <div className="px-3 py-2 bg-[#F0F7FF] border-b border-slate-200/80 flex items-center gap-1.5 overflow-x-auto text-[10px] font-extrabold text-indigo-600 whitespace-nowrap">
+            <span className="text-[9px] text-slate-500 uppercase font-extrabold shrink-0">Quick Queries:</span>
             {[
               'Section 30 Solatium',
               'SC Gowramma (2024)',
@@ -198,7 +198,7 @@ export const BhumiPolicyCopilot: React.FC = () => {
               <button
                 key={chip}
                 onClick={() => handleSend(chip)}
-                className="px-2 py-1 rounded-md bg-white border border-[#BAE6FD] hover:bg-[#E0F2FE] hover:border-[#0284C7] text-[#0F172A] transition-all cursor-pointer shrink-0"
+                className="px-2 py-1 rounded-xl bg-white border border-slate-200/80 hover:bg-indigo-50 hover:border-[#4F46E5] text-[#0B132B] transition-all cursor-pointer shrink-0"
               >
                 {chip}
               </button>
@@ -215,20 +215,20 @@ export const BhumiPolicyCopilot: React.FC = () => {
                 <div
                   className={`max-w-[88%] p-3 rounded-2xl text-xs leading-relaxed shadow-xs ${
                     m.sender === 'user'
-                      ? 'bg-[#EA580C] text-white rounded-br-none font-medium'
-                      : 'bg-white border border-[#E2E8F0] text-[#0F172A] rounded-bl-none font-normal'
+                      ? 'bg-brand-gradient text-white rounded-br-none font-medium'
+                      : 'bg-white border border-[#E2E8F0] text-[#0B132B] rounded-bl-none font-normal'
                   }`}
                 >
                   <p>{m.text}</p>
 
                   {m.citation && (
-                    <div className="mt-2 pt-2 border-t border-[#E2E8F0] text-[10px] text-[#64748B] flex items-center justify-between gap-2">
-                      <span className="font-semibold text-[#0369A1] flex items-center gap-1">
-                        <BookOpen className="w-3 h-3 text-[#EA580C]" />
+                    <div className="mt-2 pt-2 border-t border-[#E2E8F0] text-[10px] text-slate-500 flex items-center justify-between gap-2">
+                      <span className="font-extrabold text-indigo-600 flex items-center gap-1">
+                        <BookOpen className="w-3 h-3 text-indigo-600" />
                         <span>{m.citation}</span>
                       </span>
                       {m.confidence && (
-                        <span className="font-mono text-[9px] font-bold text-[#059669]">
+                        <span className="font-mono text-[9px] font-extrabold text-[#059669]">
                           {Math.round(m.confidence * 100)}% Conf
                         </span>
                       )}
@@ -240,9 +240,9 @@ export const BhumiPolicyCopilot: React.FC = () => {
             ))}
 
             {isTyping && (
-              <div className="flex items-center gap-1.5 p-3 rounded-2xl bg-white border border-[#E2E8F0] text-[#64748B] text-xs max-w-fit shadow-xs">
-                <Sparkles className="w-3.5 h-3.5 text-[#EA580C] animate-spin" />
-                <span className="text-[11px] font-bold text-[#EA580C]">
+              <div className="flex items-center gap-1.5 p-3 rounded-2xl bg-white border border-[#E2E8F0] text-slate-500 text-xs max-w-fit shadow-xs">
+                <Sparkles className="w-3.5 h-3.5 text-indigo-600 animate-spin" />
+                <span className="text-[11px] font-extrabold text-indigo-600">
                   Retrieving statutory sections & Supreme Court precedents...
                 </span>
               </div>
@@ -251,19 +251,19 @@ export const BhumiPolicyCopilot: React.FC = () => {
           </div>
 
           {/* Input Bar */}
-          <div className="p-3 bg-white border-t border-[#BAE6FD] flex items-center gap-2">
+          <div className="p-3 bg-white border-t border-slate-200/80 flex items-center gap-2">
             <input
               type="text"
               value={inputQuery}
               onChange={(e) => setInputQuery(e.target.value)}
               onKeyDown={(e) => e.key === 'Enter' && handleSend()}
               placeholder="Ask any question on RFCTLARR, Solatium, Court Rulings..."
-              className="flex-1 px-3 py-2 text-xs bg-[#F0F7FF] border border-[#BAE6FD] rounded-xl text-[#0F172A] focus:outline-none focus:border-[#EA580C]"
+              className="flex-1 px-3 py-2 text-xs bg-[#F0F7FF] border border-slate-200/80 rounded-xl text-[#0B132B] focus:outline-none focus:border-[#4F46E5]"
             />
             <button
               onClick={() => handleSend()}
               disabled={!inputQuery.trim() || isTyping}
-              className="p-2.5 rounded-xl bg-[#EA580C] hover:bg-[#C2410C] disabled:bg-[#CBD5E1] text-white transition-all cursor-pointer shadow-md"
+              className="p-2.5 rounded-xl bg-brand-gradient hover:bg-[#3730A3] disabled:bg-[#CBD5E1] text-white transition-all cursor-pointer shadow-md"
             >
               <Send className="w-4 h-4 text-white" />
             </button>

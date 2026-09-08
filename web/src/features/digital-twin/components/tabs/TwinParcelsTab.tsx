@@ -169,16 +169,16 @@ export const TwinParcelsTab: React.FC<ParcelsTabProps> = ({
   };
 
   return (
-    <div className="space-y-6 font-sans">
+    <div className="space-y-6 ">
       {/* Village Filter & Real-time Action Bar */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div className="flex items-center gap-3">
-          <div className="p-2.5 rounded-xl bg-[#0F172A] text-white border border-[#0F172A]">
+          <div className="p-2.5 rounded-xl bg-[#0B132B] text-white border border-[#0B132B]">
             <MapPin className="w-5 h-5 text-white" />
           </div>
           <div>
-            <h2 className="text-sm font-extrabold text-[#0F172A]">4-Tier Cadastral Hierarchy & Live Land Ledger</h2>
-            <p className="text-xs text-[#64748B] font-medium">Project ➔ Revenue Village ➔ Cadastral Khasra ➔ Linked Case (Real-time Firestore Sync)</p>
+            <h2 className="text-sm font-extrabold text-[#0B132B]">4-Tier Cadastral Hierarchy & Live Land Ledger</h2>
+            <p className="text-xs text-slate-500 font-medium">Project ➔ Revenue Village ➔ Cadastral Khasra ➔ Linked Case (Real-time Firestore Sync)</p>
           </div>
         </div>
 
@@ -190,7 +190,7 @@ export const TwinParcelsTab: React.FC<ParcelsTabProps> = ({
               setSelectedParcelId(null);
             }}
             aria-label="Filter Revenue Village"
-            className="bg-[#F8FAFC] border border-[#CBD5E1] rounded-xl px-3 py-1.5 text-xs text-[#0F172A] focus:outline-none focus:border-[#0F172A] cursor-pointer font-bold shadow-sm"
+            className="bg-transparent border border-[#CBD5E1] rounded-xl px-3 py-1.5 text-xs text-[#0B132B] focus:outline-none focus:border-[#0B132B] cursor-pointer font-extrabold shadow-soft"
           >
             <option value="">All Revenue Villages ({villages.length})</option>
             {villages.map((v) => (
@@ -203,13 +203,13 @@ export const TwinParcelsTab: React.FC<ParcelsTabProps> = ({
           {canIntake ? (
             <button
               onClick={openCreateModal}
-              className="px-4 py-2 bg-[#EA580C] hover:bg-[#C2410C] text-white border border-[#EA580C] rounded-xl text-xs font-bold flex items-center gap-1.5 shadow-sm transition-all cursor-pointer"
+              className="px-4 py-2 bg-brand-gradient hover:bg-[#3730A3] text-white border border-[#4F46E5] rounded-xl text-xs font-extrabold flex items-center gap-1.5 shadow-soft transition-all cursor-pointer"
             >
               <PlusCircle className="w-4 h-4 text-white" />
               <span>+ Intake Cadastral Plot</span>
             </button>
           ) : (
-            <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#F1F5F9] border border-[#CBD5E1] text-[11px] font-bold text-[#64748B]" title="Intake restricted to authorized Acquisition and Revenue officers">
+            <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#F1F5F9] border border-[#CBD5E1] text-[11px] font-extrabold text-slate-500" title="Intake restricted to authorized Acquisition and Revenue officers">
               <Lock className="w-3.5 h-3.5 text-[#94A3B8]" />
               <span>Intake Restricted</span>
             </div>
@@ -219,18 +219,18 @@ export const TwinParcelsTab: React.FC<ParcelsTabProps> = ({
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Left 2 Cols: Parcels Cadastral Table with Real-time Edit Buttons */}
-        <div className="lg:col-span-2 rounded-2xl border border-[#BAE6FD] overflow-hidden shadow-sm bg-white">
-          <div className="p-4 bg-[#F0F7FF] border-b border-[#BAE6FD] flex items-center justify-between">
-            <h3 className="text-xs font-extrabold text-[#0F172A]">Live Cadastral Plots in Jurisdiction ({filteredParcels.length})</h3>
-            <span className="text-[11px] text-[#0369A1] font-bold flex items-center gap-1">
+        <div className="lg:col-span-2 rounded-2xl border border-slate-200/80 overflow-hidden shadow-soft bg-white">
+          <div className="p-4 bg-transparent border-b border-slate-200/80 flex items-center justify-between">
+            <h3 className="text-xs font-extrabold text-[#0B132B]">Live Cadastral Plots in Jurisdiction ({filteredParcels.length})</h3>
+            <span className="text-[11px] text-indigo-600 font-extrabold flex items-center gap-1">
               <span className="w-2 h-2 rounded-full bg-[#10B981] animate-ping" />
               <span>Live Subscriptions Active</span>
             </span>
           </div>
 
           <div className="overflow-x-auto">
-            <table className="w-full text-left text-xs text-[#0F172A]">
-              <thead className="bg-[#F0F7FF]/50 text-[10px] uppercase tracking-wider text-[#64748B] font-extrabold border-b border-[#BAE6FD]/60">
+            <table className="w-full text-left text-xs text-[#0B132B]">
+              <thead className="bg-transparent/50 text-[10px] uppercase tracking-wider text-slate-500 font-extrabold border-b border-slate-200/80">
                 <tr>
                   <th className="p-3">Khasra Survey #</th>
                   <th className="p-3">Classification</th>
@@ -241,7 +241,7 @@ export const TwinParcelsTab: React.FC<ParcelsTabProps> = ({
                   <th className="p-3 text-right">Actions</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-[#BAE6FD]/40">
+              <tbody className="divide-y divide-[#E0E7FF]/40">
                 {filteredParcels.map((p) => {
                   const isSelected = p.id === (activeParcel?.id || '');
                   return (
@@ -249,27 +249,27 @@ export const TwinParcelsTab: React.FC<ParcelsTabProps> = ({
                       key={p.id}
                       onClick={() => setSelectedParcelId(p.id!)}
                       className={`cursor-pointer transition-colors ${
-                        isSelected ? 'bg-[#E0F2FE] border-l-4 border-l-[#EA580C]' : 'hover:bg-[#F0F7FF]/60'
+                        isSelected ? 'bg-indigo-50 border-l-4 border-l-[#4F46E5]' : 'hover:bg-transparent/60'
                       }`}
                     >
-                      <td className="p-3 font-extrabold text-[#0F172A] flex items-center gap-1.5">
-                        <MapPin className="w-3.5 h-3.5 text-[#EA580C]" />
+                      <td className="p-3 font-extrabold text-[#0B132B] flex items-center gap-1.5">
+                        <MapPin className="w-3.5 h-3.5 text-indigo-600" />
                         <span>{p.khasraSurveyNo}</span>
                       </td>
                       <td className="p-3">
-                        <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-[#F0F7FF] text-[#0369A1] border border-[#BAE6FD]">
+                        <span className="px-2.5 py-0.5 rounded-full text-[10px] font-extrabold bg-transparent text-indigo-600 border border-slate-200/80">
                           {p.landClassification}
                         </span>
                       </td>
-                      <td className="p-3 font-mono text-[#0F172A] font-medium">{p.areaAcres}</td>
-                      <td className="p-3 font-mono font-extrabold text-[#0F172A]">
+                      <td className="p-3 font-mono text-[#0B132B] font-medium">{p.areaAcres}</td>
+                      <td className="p-3 font-mono font-extrabold text-[#0B132B]">
                         ₹{(p.totalCompensationINR / 100000).toFixed(2)} L
                       </td>
-                      <td className="p-3 font-mono text-[10px] text-[#64748B]">
+                      <td className="p-3 font-mono text-[10px] text-slate-500">
                         {p.qrAssetId || 'UNTAGGED'}
                       </td>
                       <td className="p-3">
-                        <span className="px-2.5 py-0.5 rounded-full text-[10px] font-extrabold bg-[#0F172A] text-white">
+                        <span className="px-2.5 py-0.5 rounded-full text-[10px] font-extrabold bg-[#0B132B] text-white">
                           {p.status}
                         </span>
                       </td>
@@ -277,7 +277,7 @@ export const TwinParcelsTab: React.FC<ParcelsTabProps> = ({
                         {canEdit ? (
                           <button
                             onClick={() => openEditModal(p)}
-                            className="p-1.5 rounded-lg hover:bg-[#E0F2FE] text-[#0369A1] hover:text-[#0F172A] transition-all cursor-pointer"
+                            className="p-1.5 rounded-2xl hover:bg-indigo-50 text-indigo-600 hover:text-[#0B132B] transition-all cursor-pointer"
                             title="Edit Cadastral Plot"
                           >
                             <Edit3 className="w-3.5 h-3.5" />
@@ -297,22 +297,22 @@ export const TwinParcelsTab: React.FC<ParcelsTabProps> = ({
         </div>
 
         {/* Right Col: Deep Case Inspector (Parcel -> Case) with Real-Time Mutation Actions */}
-        <div className="p-5 rounded-2xl border border-[#BAE6FD] shadow-sm bg-white space-y-4 font-sans">
-          <div className="flex items-center justify-between border-b border-[#BAE6FD]/60 pb-3">
+        <div className="p-5 rounded-2xl border border-slate-200/80 shadow-soft bg-white space-y-4 ">
+          <div className="flex items-center justify-between border-b border-slate-200/80 pb-3">
             <div>
-              <span className="text-[10px] font-mono text-[#0369A1] font-bold">INSPECTING CADASTRAL PLOT</span>
-              <h3 className="text-sm font-extrabold text-[#0F172A]">Khasra #{activeParcel?.khasraSurveyNo || '142/A-1'}</h3>
+              <span className="text-[10px] font-mono text-indigo-600 font-extrabold">INSPECTING CADASTRAL PLOT</span>
+              <h3 className="text-sm font-extrabold text-[#0B132B]">Khasra #{activeParcel?.khasraSurveyNo || '142/A-1'}</h3>
             </div>
-            <span className="px-2.5 py-0.5 rounded-full text-[10px] font-extrabold bg-[#0F172A] text-white">
+            <span className="px-2.5 py-0.5 rounded-full text-[10px] font-extrabold bg-[#0B132B] text-white">
               {activeParcel?.status || 'AWARDED'}
             </span>
           </div>
 
           {/* Quick Statutory Transition Trigger with RBAC Enforcement */}
-          <div className="p-3.5 bg-[#F0F7FF] rounded-xl border border-[#BAE6FD] space-y-2">
+          <div className="p-3.5 bg-transparent rounded-xl border border-slate-200/80 space-y-2">
             <div className="flex items-center justify-between">
-              <span className="text-[10px] uppercase font-extrabold text-[#0369A1]">Statutory Status Action</span>
-              <span className="text-[9px] font-mono font-bold text-[#EA580C]">
+              <span className="text-[10px] uppercase font-extrabold text-indigo-600">Statutory Status Action</span>
+              <span className="text-[9px] font-mono font-extrabold text-indigo-600">
                 {canSignAward ? '✓ Authorized' : '🔒 Restricted'}
               </span>
             </div>
@@ -320,9 +320,9 @@ export const TwinParcelsTab: React.FC<ParcelsTabProps> = ({
               <button
                 onClick={() => activeParcel?.id && handleUpdateStatus(activeParcel.id, 'AWARDED')}
                 disabled={!canSignAward}
-                className={`flex-1 py-1.5 px-2 rounded-lg text-[11px] font-bold transition-all shadow-xs ${
+                className={`flex-1 py-1.5 px-2 rounded-2xl text-[11px] font-extrabold transition-all shadow-xs ${
                   canSignAward
-                    ? 'bg-[#EA580C] hover:bg-[#C2410C] text-white cursor-pointer'
+                    ? 'bg-brand-gradient hover:bg-[#3730A3] text-white cursor-pointer'
                     : 'bg-[#E2E8F0] text-[#94A3B8] cursor-not-allowed'
                 }`}
                 title={canSignAward ? 'Sign Section 23 Award Decree' : getPermissionReason(activeRole, 'SIGN_AWARD_DECREE')}
@@ -332,9 +332,9 @@ export const TwinParcelsTab: React.FC<ParcelsTabProps> = ({
               <button
                 onClick={() => activeParcel?.id && handleUpdateStatus(activeParcel.id, 'DISBURSED')}
                 disabled={!canDisburse}
-                className={`flex-1 py-1.5 px-2 rounded-lg text-[11px] font-bold transition-all shadow-xs ${
+                className={`flex-1 py-1.5 px-2 rounded-2xl text-[11px] font-extrabold transition-all shadow-xs ${
                   canDisburse
-                    ? 'bg-white hover:bg-[#E0F2FE] text-[#0F172A] border border-[#BAE6FD] cursor-pointer'
+                    ? 'bg-white hover:bg-indigo-50 text-[#0B132B] border border-slate-200/80 cursor-pointer'
                     : 'bg-[#F1F5F9] text-[#94A3B8] border border-[#E2E8F0] cursor-not-allowed'
                 }`}
                 title={canDisburse ? 'Mark Compensation Disbursed' : getPermissionReason(activeRole, 'MARK_PARCEL_DISBURSED')}
@@ -345,47 +345,47 @@ export const TwinParcelsTab: React.FC<ParcelsTabProps> = ({
           </div>
 
           {/* 1. Compensation Award Case Card */}
-          <div className="p-4 rounded-xl bg-[#F8FAFC] border border-[#E2E8F0] space-y-2 text-xs">
-            <div className="flex items-center justify-between font-extrabold text-[#0F172A]">
+          <div className="p-4 rounded-xl bg-transparent border border-[#E2E8F0] space-y-2 text-xs">
+            <div className="flex items-center justify-between font-extrabold text-[#0B132B]">
               <span className="flex items-center gap-1.5">
-                <DollarSign className="w-3.5 h-3.5 text-[#0F172A]" />
+                <DollarSign className="w-3.5 h-3.5 text-[#0B132B]" />
                 <span>Statutory Award Decree</span>
               </span>
-              <span className="text-[10px] text-[#0F172A] font-bold">{activeComp?.disbursementStatus || 'CREDITED'}</span>
+              <span className="text-[10px] text-[#0B132B] font-extrabold">{activeComp?.disbursementStatus || 'CREDITED'}</span>
             </div>
-            <div className="text-[11px] text-[#64748B] space-y-1 font-medium">
-              <div className="flex justify-between"><span>Basic Land Value:</span><span className="text-[#0F172A]">₹{((activeParcel?.estimatedMarketValueINR || 12500000) / 100000).toFixed(2)} L</span></div>
-              <div className="flex justify-between"><span>100% Solatium (Sec 30):</span><span className="text-[#0F172A] font-extrabold">₹{((activeParcel?.calculatedSolatiumINR || 12500000) / 100000).toFixed(2)} L</span></div>
-              <div className="flex justify-between pt-1 border-t border-[#E2E8F0] font-extrabold text-[#0F172A]">
-                <span>Total Disbursed:</span><span className="text-[#0F172A]">₹{((activeParcel?.totalCompensationINR || 27500000) / 100000).toFixed(2)} L</span>
+            <div className="text-[11px] text-slate-500 space-y-1 font-medium">
+              <div className="flex justify-between"><span>Basic Land Value:</span><span className="text-[#0B132B]">₹{((activeParcel?.estimatedMarketValueINR || 12500000) / 100000).toFixed(2)} L</span></div>
+              <div className="flex justify-between"><span>100% Solatium (Sec 30):</span><span className="text-[#0B132B] font-extrabold">₹{((activeParcel?.calculatedSolatiumINR || 12500000) / 100000).toFixed(2)} L</span></div>
+              <div className="flex justify-between pt-1 border-t border-[#E2E8F0] font-extrabold text-[#0B132B]">
+                <span>Total Disbursed:</span><span className="text-[#0B132B]">₹{((activeParcel?.totalCompensationINR || 27500000) / 100000).toFixed(2)} L</span>
               </div>
             </div>
           </div>
 
           {/* 2. Project Affected Family (PAF) & R&R Case */}
-          <div className="p-4 rounded-xl bg-[#F8FAFC] border border-[#E2E8F0] space-y-2 text-xs">
-            <div className="flex items-center justify-between font-extrabold text-[#0F172A]">
+          <div className="p-4 rounded-xl bg-transparent border border-[#E2E8F0] space-y-2 text-xs">
+            <div className="flex items-center justify-between font-extrabold text-[#0B132B]">
               <span className="flex items-center gap-1.5">
-                <Home className="w-3.5 h-3.5 text-[#0F172A]" />
+                <Home className="w-3.5 h-3.5 text-[#0B132B]" />
                 <span>R&R Entitlement Case</span>
               </span>
-              <span className="text-[10px] text-[#0F172A] font-bold">{activePAF?.rrEntitlementStatus || 'ALLOCATED'}</span>
+              <span className="text-[10px] text-[#0B132B] font-extrabold">{activePAF?.rrEntitlementStatus || 'ALLOCATED'}</span>
             </div>
-            <div className="text-[11px] text-[#64748B] space-y-1 font-medium">
-              <p className="font-extrabold text-[#0F172A]">{activePAF?.headOfFamilyName || 'Smt. Anusaya Pandurang Patil'}</p>
+            <div className="text-[11px] text-slate-500 space-y-1 font-medium">
+              <p className="font-extrabold text-[#0B132B]">{activePAF?.headOfFamilyName || 'Smt. Anusaya Pandurang Patil'}</p>
               <p>Category: {activePAF?.category || 'OBC'} • Family Size: {activePAF?.familyMembersCount || 5}</p>
               <p>Bank: {activePAF?.bankAccountNumberMasked || 'XXXXXX4092'}</p>
             </div>
           </div>
 
           {/* 3. Native AR Field Sentinel Inspection Card */}
-          <div className="p-4 rounded-xl bg-gradient-to-br from-[#0F172A] to-[#1E293B] text-white border border-[#334155] space-y-3 text-xs shadow-sm">
+          <div className="p-4 rounded-xl bg-gradient-to-br from-[#0B132B] to-[#1E293B] text-white border border-[#334155] space-y-3 text-xs shadow-soft">
             <div className="flex items-center justify-between">
               <span className="flex items-center gap-1.5 font-extrabold text-white">
                 <span className="text-sm">📱</span>
                 <span>AR Ground Demarcation</span>
               </span>
-              <span className="text-[9px] font-mono font-black px-1.5 py-0.5 rounded bg-[#EA580C] text-white">
+              <span className="text-[9px] font-mono font-extrabold px-1.5 py-0.5 rounded bg-brand-gradient text-white">
                 ARCore DGPS
               </span>
             </div>
@@ -395,7 +395,7 @@ export const TwinParcelsTab: React.FC<ParcelsTabProps> = ({
             <a
               href="/bhumi-shield-ar-sentinel-v1.0.apk"
               download="bhumi-shield-ar-sentinel-v1.0.apk"
-              className="w-full flex items-center justify-center gap-2 py-2 px-3 rounded-lg bg-[#EA580C] hover:bg-[#C2410C] text-white font-extrabold text-xs transition-all shadow-xs"
+              className="w-full flex items-center justify-center gap-2 py-2 px-3 rounded-2xl bg-brand-gradient hover:bg-[#3730A3] text-white font-extrabold text-xs transition-all shadow-xs"
             >
               <span>Download AR Sentinel APK</span>
               <span className="text-[10px] font-mono opacity-80">(35.6 MB)</span>
@@ -406,24 +406,24 @@ export const TwinParcelsTab: React.FC<ParcelsTabProps> = ({
 
       {/* MODAL: Real-Time Add / Edit Cadastral Plot */}
       {modalOpen && (
-        <div className="fixed inset-0 bg-[#0F172A]/40 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-          <div className="bg-white border border-[#CBD5E1] rounded-2xl p-6 max-w-md w-full shadow-2xl space-y-4 font-sans">
+        <div className="fixed inset-0 bg-[#0B132B]/40 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+          <div className="bg-white border border-[#CBD5E1] rounded-2xl p-6 max-w-md w-full shadow-2xl space-y-4 ">
             <div className="flex justify-between items-center border-b border-[#E2E8F0] pb-3">
-              <h2 className="text-sm font-extrabold text-[#0F172A]">
+              <h2 className="text-sm font-extrabold text-[#0B132B]">
                 {editingParcel ? `Edit Khasra #${editingParcel.khasraSurveyNo}` : 'Intake New Cadastral Plot'}
               </h2>
-              <button onClick={() => setModalOpen(false)} className="text-[#64748B] hover:text-[#0F172A] cursor-pointer">
+              <button onClick={() => setModalOpen(false)} className="text-slate-500 hover:text-[#0B132B] cursor-pointer">
                 <X className="w-4 h-4" />
               </button>
             </div>
 
             <form onSubmit={handleSaveParcel} className="space-y-3.5 text-xs">
               <div>
-                <label className="block text-[#0F172A] mb-1 font-bold">Revenue Village</label>
+                <label className="block text-[#0B132B] mb-1 font-extrabold">Revenue Village</label>
                 <select
                   value={villageId}
                   onChange={(e) => setVillageId(e.target.value)}
-                  className="w-full bg-[#F8FAFC] border border-[#CBD5E1] rounded-xl px-3.5 py-2 text-[#0F172A] font-medium"
+                  className="w-full bg-transparent border border-[#CBD5E1] rounded-xl px-3.5 py-2 text-[#0B132B] font-medium"
                 >
                   {villages.map((v) => (
                     <option key={v.id} value={v.id}>{v.name} ({v.censusCode})</option>
@@ -432,36 +432,36 @@ export const TwinParcelsTab: React.FC<ParcelsTabProps> = ({
               </div>
 
               <div>
-                <label className="block text-[#0F172A] mb-1 font-bold">Khasra / Survey Number</label>
+                <label className="block text-[#0B132B] mb-1 font-extrabold">Khasra / Survey Number</label>
                 <input
                   type="text"
                   required
                   placeholder="e.g. 144/1-C"
                   value={khasraNo}
                   onChange={(e) => setKhasraNo(e.target.value)}
-                  className="w-full bg-[#F8FAFC] border border-[#CBD5E1] rounded-xl px-3.5 py-2 text-[#0F172A] font-medium"
+                  className="w-full bg-transparent border border-[#CBD5E1] rounded-xl px-3.5 py-2 text-[#0B132B] font-medium"
                 />
               </div>
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-[#0F172A] mb-1 font-bold">Area (Acres)</label>
+                  <label className="block text-[#0B132B] mb-1 font-extrabold">Area (Acres)</label>
                   <input
                     type="number"
                     step="0.01"
                     required
                     value={areaAcres}
                     onChange={(e) => setAreaAcres(e.target.value)}
-                    className="w-full bg-[#F8FAFC] border border-[#CBD5E1] rounded-xl px-3.5 py-2 text-[#0F172A] font-medium"
+                    className="w-full bg-transparent border border-[#CBD5E1] rounded-xl px-3.5 py-2 text-[#0B132B] font-medium"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-[#0F172A] mb-1 font-bold">Classification</label>
+                  <label className="block text-[#0B132B] mb-1 font-extrabold">Classification</label>
                   <select
                     value={landClass}
                     onChange={(e: any) => setLandClass(e.target.value)}
-                    className="w-full bg-[#F8FAFC] border border-[#CBD5E1] rounded-xl px-3.5 py-2 text-[#0F172A] font-medium"
+                    className="w-full bg-transparent border border-[#CBD5E1] rounded-xl px-3.5 py-2 text-[#0B132B] font-medium"
                   >
                     <option value="Agricultural">Agricultural</option>
                     <option value="Residential">Residential</option>
@@ -473,15 +473,15 @@ export const TwinParcelsTab: React.FC<ParcelsTabProps> = ({
               </div>
 
               <div>
-                <label className="block text-[#0F172A] mb-1 font-bold">Basic Valuation (₹ INR)</label>
+                <label className="block text-[#0B132B] mb-1 font-extrabold">Basic Valuation (₹ INR)</label>
                 <input
                   type="number"
                   required
                   value={valuation}
                   onChange={(e) => setValuation(e.target.value)}
-                  className="w-full bg-[#F8FAFC] border border-[#CBD5E1] rounded-xl px-3.5 py-2 text-[#0F172A] font-medium"
+                  className="w-full bg-transparent border border-[#CBD5E1] rounded-xl px-3.5 py-2 text-[#0B132B] font-medium"
                 />
-                <p className="text-[10px] text-[#0F172A] mt-1 font-bold">
+                <p className="text-[10px] text-[#0B132B] mt-1 font-extrabold">
                   + 100% Solatium will be automatically computed: ₹{((parseFloat(valuation) || 0) * 2 / 100000).toFixed(2)} Lakhs Total Award
                 </p>
               </div>
@@ -490,14 +490,14 @@ export const TwinParcelsTab: React.FC<ParcelsTabProps> = ({
                 <button
                   type="button"
                   onClick={() => setModalOpen(false)}
-                  className="px-4 py-2 bg-[#F8FAFC] text-[#0F172A] rounded-xl text-xs font-bold border border-[#CBD5E1] cursor-pointer"
+                  className="px-4 py-2 bg-transparent text-[#0B132B] rounded-xl text-xs font-extrabold border border-[#CBD5E1] cursor-pointer"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
                   disabled={saving}
-                  className="px-4 py-2 bg-[#0F172A] hover:bg-[#1E293B] text-white border border-[#0F172A] font-bold rounded-xl text-xs cursor-pointer shadow-sm"
+                  className="px-4 py-2 bg-[#0B132B] hover:bg-[#1E293B] text-white border border-[#0B132B] font-extrabold rounded-xl text-xs cursor-pointer shadow-soft"
                 >
                   {saving ? 'Saving to Firebase...' : editingParcel ? 'Update Plot' : 'Save Plot'}
                 </button>
