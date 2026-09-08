@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useMemo } from 'react';
 import { FarmerRecord } from '../../types';
 import { farmerService } from '../../services/entities.service';
+import { useFirestoreCollection } from '../../hooks/useFirestore';
 import { auditService } from '../../services/audit.service';
 import { seedBhumiShieldDemoData } from '../../utils/seedData';
 import { useAuth } from '../../contexts/AuthContext';
@@ -186,18 +187,16 @@ export const KrishiSathiWorkspace: React.FC = () => {
   };
 
   // Real-time Live Firestore Subscription + Auto-seed on first open if empty
+  const { data: firestoreFarmers, loading: firestoreLoading } = useFirestoreCollection(farmerService);
+
   useEffect(() => {
-    setLoading(true);
-    const unsubscribe = farmerService.subscribe((data) => {
-      setFarmers(data);
-      setLoading(false);
-      // Auto seed if completely empty
-      if (data.length === 0) {
-        seedBhumiShieldDemoData().catch(console.error);
-      }
-    });
-    return () => unsubscribe();
-  }, []);
+    setFarmers(firestoreFarmers);
+    setLoading(firestoreLoading);
+    // Auto seed if completely empty
+    if (!firestoreLoading && firestoreFarmers.length === 0) {
+      seedBhumiShieldDemoData().catch(console.error);
+    }
+  }, [firestoreFarmers, firestoreLoading]);
 
   // Filtered Farmers
   const filteredFarmers = useMemo(() => {
