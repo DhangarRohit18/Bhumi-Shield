@@ -177,8 +177,7 @@ export const TwinParcelsTab: React.FC<ParcelsTabProps> = ({
             <MapPin className="w-5 h-5 text-white" />
           </div>
           <div>
-            <h2 className="text-sm font-extrabold text-[#0B132B]">4-Tier Cadastral Hierarchy & Live Land Ledger</h2>
-            <p className="text-xs text-slate-500 font-medium">Project ➔ Revenue Village ➔ Cadastral Khasra ➔ Linked Case (Real-time Firestore Sync)</p>
+            <h2 className="text-sm font-extrabold text-[#0B132B]">Cadastral Parcels Ledger</h2>
           </div>
         </div>
 

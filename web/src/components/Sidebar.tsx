@@ -14,7 +14,6 @@ import { UserRole } from '../types';
 
 export type MainWorkspaceId =
   | 'command_center'
-  | 'corridor_readiness'
   | 'digital_twin'
   | 'ops_intelligence'
   | 'admin'
@@ -28,9 +27,9 @@ interface SidebarProps {
 
 // Statutory RBAC Permission Matrix for Workspace Access
 const ROLE_WORKSPACE_PERMISSIONS: Record<UserRole, MainWorkspaceId[]> = {
-  'NATIONAL_EXECUTIVE': ['command_center', 'corridor_readiness', 'digital_twin', 'ops_intelligence', 'admin', 'krishi_sathi', 'structural_valuations'],
-  'FIELD_ACQUISITION': ['corridor_readiness', 'digital_twin', 'ops_intelligence', 'krishi_sathi', 'structural_valuations'],
-  'AUDIT_CITIZEN': ['command_center', 'corridor_readiness', 'digital_twin', 'admin', 'krishi_sathi', 'structural_valuations'],
+  'NATIONAL_EXECUTIVE': ['command_center', 'digital_twin', 'ops_intelligence', 'admin', 'krishi_sathi', 'structural_valuations'],
+  'FIELD_ACQUISITION': ['digital_twin', 'ops_intelligence', 'krishi_sathi', 'structural_valuations'],
+  'AUDIT_CITIZEN': ['command_center', 'digital_twin', 'admin', 'structural_valuations'],
 };
 
 export const Sidebar: React.FC<SidebarProps> = ({
@@ -51,12 +50,6 @@ export const Sidebar: React.FC<SidebarProps> = ({
       id: 'command_center',
       name: 'Command Center',
       icon: Globe,
-    },
-    {
-      id: 'corridor_readiness',
-      name: 'Corridor Readiness',
-      badge: 'GIS AI',
-      icon: Route,
     },
     {
       id: 'digital_twin',
