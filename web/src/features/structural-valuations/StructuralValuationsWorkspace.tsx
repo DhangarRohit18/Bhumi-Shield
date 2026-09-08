@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Home, Plus, Building, Search, Hammer, Trash2, IndianRupee } from 'lucide-react';
 import { structureAssetService, compensationService, farmerService } from '../../services/entities.service';
 import { StructureAsset, CompensationAward, FarmerRecord } from '../../types';
+import { FALLBACK_STRUCTURAL_ASSETS } from '../../utils/staticFallbackData';
 
 export const StructuralValuationsWorkspace: React.FC = () => {
   const [structures, setStructures] = useState<StructureAsset[]>([]);
@@ -14,7 +15,13 @@ export const StructuralValuationsWorkspace: React.FC = () => {
   const [areaSqFt, setAreaSqFt] = useState('');
 
   useEffect(() => {
-    const unsubStructures = structureAssetService.subscribe(setStructures);
+    const unsubStructures = structureAssetService.subscribe((data) => {
+      if (data && data.length > 0) {
+        setStructures(data);
+      } else {
+        setStructures(FALLBACK_STRUCTURAL_ASSETS);
+      }
+    });
     const unsubFarmers = farmerService.subscribe(setFarmers);
     const unsubComp = compensationService.subscribe(setCompensations);
     return () => {
