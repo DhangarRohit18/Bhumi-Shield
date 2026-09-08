@@ -1,4 +1,4 @@
-﻿// Reusable, generic, and strongly-typed Firestore Service Layer
+// Reusable, generic, and strongly-typed Firestore Service Layer
 import {
   collection,
   doc,
@@ -103,13 +103,19 @@ export class FirestoreGenericService<T extends BaseEntity> {
     onError?: (err: Error) => void,
     constraints: QueryConstraint[] = []
   ): Unsubscribe {
-    const finalConstraints = [where('isDeleted', '==', false), ...constraints];
-    const q = query(this.getColRef(), ...finalConstraints);
+    // NOTE: isDeleted filter is applied CLIENT-SIDE to avoid needing composite
+    // Firestore indexes on every collection. This lets all collections work
+    // immediately without Firebase console index setup.
+    const q = constraints.length > 0
+      ? query(this.getColRef(), ...constraints)
+      : this.getColRef();
 
     return onSnapshot(
       q,
       (snapshot) => {
-        const items = snapshot.docs.map((docSnap) => docSnap.data() as T);
+        const items = snapshot.docs
+          .map((docSnap) => docSnap.data() as T)
+          .filter((item) => !(item as any).isDeleted);
         onData(items);
       },
       (error) => {
