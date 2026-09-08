@@ -10,7 +10,13 @@ import {
   FALLBACK_PARCELS,
   FALLBACK_FARMERS,
   FALLBACK_BOTTLENECKS,
-  FALLBACK_OFFICER_WORKLOADS
+  FALLBACK_OFFICER_WORKLOADS,
+  FALLBACK_INTERVENTIONS,
+  FALLBACK_WORKFLOW_EVENTS,
+  FALLBACK_COMPENSATION,
+  FALLBACK_DOCUMENTS,
+  FALLBACK_LEGAL_CASES,
+  FALLBACK_PREDICTIONS,
 } from '../utils/staticFallbackData';
 
 const FALLBACK_MAP: Record<string, any[]> = {
@@ -21,7 +27,13 @@ const FALLBACK_MAP: Record<string, any[]> = {
   'parcels': FALLBACK_PARCELS,
   'farmers': FALLBACK_FARMERS,
   'bottlenecks': FALLBACK_BOTTLENECKS,
-  'officer_workload_scores': FALLBACK_OFFICER_WORKLOADS
+  'officer_workloads': FALLBACK_OFFICER_WORKLOADS,       // ← fixed key
+  'interventions': FALLBACK_INTERVENTIONS,
+  'workflow_events': FALLBACK_WORKFLOW_EVENTS,
+  'compensation': FALLBACK_COMPENSATION,
+  'documents': FALLBACK_DOCUMENTS,
+  'legal_cases': FALLBACK_LEGAL_CASES,
+  'predictions': FALLBACK_PREDICTIONS,
 };
 
 export function useFirestoreCollection<T extends BaseEntity>(
