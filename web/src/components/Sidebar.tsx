@@ -36,6 +36,8 @@ const ROLE_WORKSPACE_PERMISSIONS: Record<UserRole, MainWorkspaceId[]> = {
 export const Sidebar: React.FC<SidebarProps> = ({
   activeTab,
   setActiveTab,
+  seeding,
+  handleSeed,
 }) => {
   const { activeRole } = useAuth();
 
@@ -157,7 +159,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
 
       {/* Footer Role & Environment Badge */}
       <div className="pt-4 border-t border-slate-100 space-y-2">
-        <div className="p-3 rounded-2xl bg-gradient-to-br from-[#F4F1FF] to-[#EAF0FF] border border-indigo-100/80">
+        <div className="p-3 rounded-2xl bg-gradient-to-br from-[#F4F1FF] to-[#EAF0FF] border border-indigo-100/80 mb-2">
           <div className="flex items-center justify-between">
             <span className="text-[10px] font-extrabold uppercase text-indigo-900/70">
               Active Tier
@@ -170,6 +172,22 @@ export const Sidebar: React.FC<SidebarProps> = ({
             {activeRole === 'AUDIT_CITIZEN' && '🛡️ Public Vigilance'}
           </p>
         </div>
+
+        {/* Database Seed Button */}
+        {handleSeed && (
+          <button
+            onClick={handleSeed}
+            disabled={seeding}
+            className={`w-full flex items-center justify-center gap-2 p-2.5 rounded-2xl text-xs font-extrabold transition-all cursor-pointer ${
+              seeding 
+                ? 'bg-slate-100 text-slate-400 cursor-not-allowed' 
+                : 'bg-white border border-indigo-200 text-indigo-600 hover:bg-indigo-50 shadow-soft'
+            }`}
+          >
+            <Sparkles className={`w-3.5 h-3.5 ${seeding ? 'animate-pulse' : ''}`} />
+            {seeding ? 'Seeding Sandbox...' : 'Seed Demo Sandbox'}
+          </button>
+        )}
       </div>
     </aside>
   );

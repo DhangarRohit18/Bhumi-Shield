@@ -172,6 +172,7 @@ export const KrishiSathiWorkspace: React.FC = () => {
 
 
   const [isSeeding, setIsSeeding] = useState<boolean>(false);
+  const [qrModalFarmer, setQrModalFarmer] = useState<FarmerRecord | null>(null);
 
   const handleTriggerSeed = async () => {
     setIsSeeding(true);
@@ -569,6 +570,16 @@ export const KrishiSathiWorkspace: React.FC = () => {
 
                   <td className="p-3 pr-4 text-right">
                     <div className="flex items-center justify-end gap-1.5">
+                      {/* Option 0: QR Passport Button */}
+                      <button
+                        onClick={() => setQrModalFarmer(farmer)}
+                        className="px-2.5 py-1.5 rounded-xl bg-indigo-50 hover:bg-indigo-100 text-indigo-700 text-xs font-extrabold flex items-center gap-1 border border-indigo-200/80 transition-all cursor-pointer shadow-2xs"
+                        title="View & Scan Real-Time Digital Passport QR Code"
+                      >
+                        <QrCode className="w-3.5 h-3.5 text-indigo-600" />
+                        <span>QR Passport</span>
+                      </button>
+
                       {/* Option 1: View Detailed Farmer Profile */}
                       <button
                         onClick={() => setInspectingFarmer(farmer)}
@@ -619,6 +630,67 @@ export const KrishiSathiWorkspace: React.FC = () => {
             setInspectingFarmer(f);
           }}
         />
+      )}
+
+      {/* Modal 3: Option 0 - QR Passport Scanner Modal */}
+      {qrModalFarmer && (
+        <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-md flex items-center justify-center p-4">
+          <div className="bg-white rounded-3xl max-w-sm w-full p-6 space-y-4 text-center shadow-float border border-slate-100 animate-in zoom-in-95 duration-200">
+            <div className="flex justify-between items-center border-b border-slate-100 pb-3">
+              <div className="flex items-center gap-2 text-left">
+                <div className="w-8 h-8 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center font-extrabold shrink-0">
+                  <QrCode className="w-4 h-4" />
+                </div>
+                <div>
+                  <h3 className="font-extrabold text-sm text-[#0B132B]">{qrModalFarmer.farmerName}</h3>
+                  <p className="text-[10px] text-slate-500 font-mono">Survey #{qrModalFarmer.surveyGatNumber} • {qrModalFarmer.ulpin}</p>
+                </div>
+              </div>
+              <button
+                onClick={() => setQrModalFarmer(null)}
+                className="p-1 rounded-xl text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition-colors"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            <div className="p-4 bg-gradient-to-br from-indigo-50/70 via-white to-indigo-50/30 rounded-2xl border border-indigo-100 space-y-3 flex flex-col items-center">
+              <p className="text-xs text-indigo-950 font-extrabold">Scan with Google Lens or Camera</p>
+              <div className="p-3 bg-white rounded-2xl shadow-soft border border-slate-200">
+                <img
+                  src={`https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(window.location.origin + '/passport/' + (qrModalFarmer.parcelId || qrModalFarmer.id))}`}
+                  alt="Land Passport QR Code"
+                  className="w-44 h-44"
+                />
+              </div>
+              <span className="text-[10px] font-extrabold uppercase text-emerald-700 bg-emerald-50 px-3 py-1 rounded-full border border-emerald-200">
+                ✓ Verified Encrypted Passport Gateway
+              </span>
+            </div>
+
+            <div className="text-[11px] text-slate-600 text-left space-y-1.5 bg-slate-50/80 p-3 rounded-2xl border border-slate-200/60 font-medium">
+              <div className="flex justify-between">
+                <span className="text-slate-500">Village & District:</span>
+                <strong className="text-[#0B132B]">{qrModalFarmer.village}, {qrModalFarmer.district}</strong>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-slate-500">Acquired Area:</span>
+                <strong className="text-emerald-700">{qrModalFarmer.acquiredAreaAcres} Acres</strong>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-slate-500">Statutory Award:</span>
+                <strong className="text-indigo-600 font-mono">₹{(qrModalFarmer.totalCompensationINR / 100000).toFixed(1)} Lakhs</strong>
+              </div>
+            </div>
+
+            <button
+              onClick={() => setQrModalFarmer(null)}
+              className="w-full py-3 rounded-xl bg-brand-gradient text-white text-xs font-extrabold shadow-soft hover:shadow-float transition-all cursor-pointer"
+            >
+              Close Passport QR
+            </button>
+          </div>
+        </div>
       )}
 
       {/* Real-Time Admin Registration Modal */}

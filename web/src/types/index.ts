@@ -622,6 +622,8 @@ export interface FarmerRecord extends BaseEntity {
   surveyGatNumber: string;
   hissaNumber: string;
   ulpin: string;
+  parcelId?: string;
+  verificationPhotoUrl?: string;
   totalLandAreaAcres: number;
   acquiredAreaAcres: number;
   retainedAreaAcres: number;
