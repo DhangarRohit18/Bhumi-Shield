@@ -1,60 +1,63 @@
 import React from 'react';
 import {
-  Globe,
-  Route,
-  Cpu,
-  Brain,
-  Shield,
-  Sprout,
-  Sparkles,
-  Home,
+  Globe, Route, Cpu, Brain, Shield, Home,
+  Map, Activity, CheckCircle, Folder, IndianRupee, PieChart,
+  Settings, List, MapPin, Scan, Camera, MessageSquare, Wifi,
+  RefreshCw, FileText, LayoutDashboard
 } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { UserRole } from '../types';
 
 export type MainWorkspaceId =
-  | 'command_center'
-  | 'corridor_readiness'
-  | 'digital_twin'
-  | 'ops_intelligence'
-  | 'admin'
-  | 'krishi_sathi'
-  | 'structural_valuations';
+  | 'command_center' | 'digital_twin' | 'gis_heatmap' | 'interventions' | 'workload' | 'approvals' | 'projects' | 'compensation_rr' | 'reports' | 'administration' | 'audit'
+  | 'my_tasks' | 'field_visits' | 'parcel_verification' | 'qr_ar' | 'evidence' | 'compensation' | 'rr' | 'grievances' | 'iot' | 'sync'
+  | 'public_projects' | 'parcel_passport';
 
 interface SidebarProps {
   activeTab: MainWorkspaceId;
   setActiveTab: (t: MainWorkspaceId) => void;
 }
 
-// Statutory RBAC Permission Matrix for Workspace Access
 const ROLE_WORKSPACE_PERMISSIONS: Record<UserRole, MainWorkspaceId[]> = {
   'NATIONAL_EXECUTIVE': [
-    'command_center',
-    'corridor_readiness',
-    'digital_twin',
-    'ops_intelligence',
-    'admin',
-    'structural_valuations'
+    'command_center', 'digital_twin', 'gis_heatmap', 'interventions', 'workload', 'approvals', 'projects', 'compensation_rr', 'reports', 'administration', 'audit'
   ],
   'FIELD_ACQUISITION': [
-    'digital_twin',
-    'structural_valuations',
-    'krishi_sathi',
-    'corridor_readiness'
+    'my_tasks', 'digital_twin', 'field_visits', 'parcel_verification', 'qr_ar', 'evidence', 'compensation', 'rr', 'grievances', 'iot', 'sync'
   ],
   'AUDIT_CITIZEN': [
-    'krishi_sathi',
-    'structural_valuations',
-    'admin'
+    'public_projects', 'parcel_passport', 'grievances', 'audit'
   ],
 };
 
-export const Sidebar: React.FC<SidebarProps> = ({
-  activeTab,
-  setActiveTab,
-}) => {
-  const { activeRole } = useAuth();
+const WORKSPACE_CONFIG: Record<MainWorkspaceId, { name: string, icon: any, badge?: string }> = {
+  command_center: { name: 'Command Center', icon: Globe },
+  digital_twin: { name: 'Digital Twin', icon: Cpu },
+  gis_heatmap: { name: 'GIS / Heatmap', icon: Map, badge: 'AI' },
+  interventions: { name: 'Interventions', icon: Brain },
+  workload: { name: 'Workload', icon: Activity },
+  approvals: { name: 'Approvals', icon: CheckCircle },
+  projects: { name: 'Projects', icon: Folder },
+  compensation_rr: { name: 'Compensation & R&R', icon: IndianRupee },
+  reports: { name: 'Reports', icon: PieChart },
+  administration: { name: 'Administration', icon: Settings },
+  audit: { name: 'Audit', icon: Shield },
+  my_tasks: { name: 'My Tasks', icon: List },
+  field_visits: { name: 'Field Visits', icon: MapPin },
+  parcel_verification: { name: 'Parcel Verification', icon: CheckCircle },
+  qr_ar: { name: 'QR / AR', icon: Scan },
+  evidence: { name: 'Evidence', icon: Camera },
+  compensation: { name: 'Compensation', icon: IndianRupee },
+  rr: { name: 'R&R', icon: Home },
+  grievances: { name: 'Grievances', icon: MessageSquare },
+  iot: { name: 'IoT', icon: Wifi },
+  sync: { name: 'Sync', icon: RefreshCw },
+  public_projects: { name: 'Public Projects', icon: Globe },
+  parcel_passport: { name: 'Parcel Passport', icon: FileText }
+};
 
+export const Sidebar: React.FC<SidebarProps> = ({ activeTab, setActiveTab }) => {
+  const { activeRole } = useAuth();
   const allowedWorkspaces = ROLE_WORKSPACE_PERMISSIONS[activeRole] || ['command_center'];
 
   React.useEffect(() => {
@@ -63,127 +66,67 @@ export const Sidebar: React.FC<SidebarProps> = ({
     }
   }, [activeRole, activeTab, allowedWorkspaces, setActiveTab]);
 
-  const allWorkspaces: {
-    id: MainWorkspaceId;
-    name: string;
-    badge?: string;
-    icon: any;
-  }[] = [
-    {
-      id: 'command_center',
-      name: 'Command Center',
-      icon: Globe,
-    },
-    {
-      id: 'corridor_readiness',
-      name: 'Corridor Readiness',
-      badge: 'GIS AI',
-      icon: Route,
-    },
-    {
-      id: 'digital_twin',
-      name: 'Digital Twin',
-      icon: Cpu,
-    },
-    {
-      id: 'ops_intelligence',
-      name: 'Interventions',
-      icon: Brain,
-    },
-    {
-      id: 'admin',
-      name: 'Audit & Security',
-      icon: Shield,
-    },
-    {
-      id: 'krishi_sathi',
-      name: 'Krishi Sathi',
-      badge: 'AR',
-      icon: Sprout,
-    },
-    {
-      id: 'structural_valuations',
-      name: 'Land with Property',
-      badge: 'BSR',
-      icon: Home,
-    },
-  ];
-
-  const visibleWorkspaces = allWorkspaces.filter((w) => allowedWorkspaces.includes(w.id));
-
   return (
-    <aside className="w-full md:w-64 bg-white border-r border-slate-200/80 p-4 flex flex-col justify-between shrink-0 font-sans shadow-[4px_0_24px_-12px_rgba(0,0,0,0.03)] z-40">
-      <div className="space-y-6">
-        {/* Brand Header */}
-        <div className="flex items-center gap-3 px-2 py-1">
-          <div className="w-10 h-10 rounded-xl overflow-hidden shrink-0 shadow-soft bg-white border border-slate-100 flex items-center justify-center">
-            <img src="/logo.png" alt="Bhumi-Shield Logo" className="w-full h-full object-cover" />
+    <aside className="w-64 bg-white border-r border-[#E2E8F0] flex flex-col shadow-[4px_0_24px_rgba(0,0,0,0.02)] z-10">
+      <div className="p-6">
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#0B132B] to-[#1C2C59] flex items-center justify-center shadow-lg shadow-blue-900/20">
+            <LayoutDashboard className="text-white w-5 h-5" />
           </div>
           <div>
-            <div className="flex items-center gap-1.5">
-              <span className="font-extrabold text-base tracking-tight text-[#0B132B]">
-                BHUMI-SHIELD
-              </span>
-            </div>
-            <span className="text-[10px] font-extrabold text-indigo-600/90 block leading-tight">
-              Land OS Platform
-            </span>
-          </div>
-        </div>
-
-        {/* Navigation Modules */}
-        <div className="space-y-1">
-          <p className="text-[10px] font-extrabold uppercase tracking-[0.14em] text-slate-400 px-3 mb-2">
-            Workspaces
-          </p>
-
-          <div className="space-y-1">
-            {visibleWorkspaces.map((w) => {
-              const Icon = w.icon;
-              const isActive = activeTab === w.id;
-
-              return (
-                <button
-                  key={w.id}
-                  onClick={() => setActiveTab(w.id)}
-                  className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-2xl text-left transition-all cursor-pointer group ${
-                    isActive
-                      ? 'bg-[#0B132B] text-white shadow-soft font-extrabold'
-                      : 'text-slate-600 hover:text-[#0B132B] hover:bg-slate-100/70 font-extrabold'
-                  }`}
-                >
-                  <div className="flex items-center gap-3 min-w-0">
-                    <div
-                      className={`p-1.5 rounded-xl transition-all ${
-                        isActive
-                          ? 'bg-white/15 text-white'
-                          : 'bg-slate-100 text-slate-500 group-hover:text-indigo-600 group-hover:bg-indigo-50'
-                      }`}
-                    >
-                      <Icon className="w-4 h-4" />
-                    </div>
-                    <span className="text-xs tracking-tight truncate">{w.name}</span>
-                  </div>
-
-                  {w.badge && (
-                    <span
-                      className={`text-[9px] font-extrabold uppercase px-2 py-0.5 rounded-full ${
-                        isActive
-                          ? 'bg-white/20 text-white'
-                          : 'bg-indigo-50 text-indigo-600 border border-indigo-100'
-                      }`}
-                    >
-                      {w.badge}
-                    </span>
-                  )}
-                </button>
-              );
-            })}
+            <h1 className="text-lg font-black tracking-tight text-[#0B132B] leading-none mb-1">
+              BHUMI-SHIELD
+            </h1>
+            <p className="text-[10px] font-bold text-blue-600 tracking-wider uppercase">Land OS Platform</p>
           </div>
         </div>
       </div>
 
-
+      <nav className="flex-1 px-4 pb-6 overflow-y-auto custom-scrollbar space-y-1">
+        <div className="px-3 pb-2 pt-4">
+          <p className="text-[10px] font-extrabold text-slate-400 uppercase tracking-widest">Workspaces</p>
+        </div>
+        {allowedWorkspaces.map((id) => {
+          const ws = WORKSPACE_CONFIG[id];
+          if (!ws) return null;
+          const isActive = activeTab === id;
+          const Icon = ws.icon;
+          return (
+            <button
+              key={id}
+              onClick={() => setActiveTab(id)}
+              className={`w-full flex items-center justify-between px-3 py-3 rounded-xl transition-all duration-200 group relative ${
+                isActive
+                  ? 'bg-[#0B132B] text-white shadow-md shadow-blue-900/10'
+                  : 'text-slate-500 hover:bg-slate-50 hover:text-[#0B132B]'
+              }`}
+            >
+              <div className="flex items-center gap-3 relative z-10">
+                <Icon
+                  className={`w-[18px] h-[18px] transition-colors ${
+                    isActive ? 'text-blue-400' : 'text-slate-400 group-hover:text-blue-600'
+                  }`}
+                  strokeWidth={2.5}
+                />
+                <span className={`text-sm tracking-wide ${isActive ? 'font-bold' : 'font-semibold'}`}>
+                  {ws.name}
+                </span>
+              </div>
+              {ws.badge && (
+                <span
+                  className={`text-[9px] font-black px-2 py-0.5 rounded-full uppercase tracking-wider relative z-10 ${
+                    isActive
+                      ? 'bg-blue-500/20 text-blue-200'
+                      : 'bg-indigo-50 text-indigo-600 group-hover:bg-indigo-100'
+                  }`}
+                >
+                  {ws.badge}
+                </span>
+              )}
+            </button>
+          );
+        })}
+      </nav>
     </aside>
   );
 };

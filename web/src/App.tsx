@@ -45,9 +45,9 @@ export const App: React.FC = () => {
     setIsAuthenticated(true);
     // Redirect to the respective consolidated role-based dashboard
     if (role === 'FIELD_ACQUISITION') {
-      setActiveTab('digital_twin');
+      setActiveTab('my_tasks');
     } else if (role === 'AUDIT_CITIZEN') {
-      setActiveTab('krishi_sathi');
+      setActiveTab('public_projects');
     } else {
       setActiveTab('command_center');
     }
@@ -80,13 +80,13 @@ export const App: React.FC = () => {
         )}
 
         <main className="flex-1 overflow-y-auto bg-[#FAF8F5]">
-          {activeTab === 'command_center' && <CommandCenter />}
-          {activeTab === 'corridor_readiness' && <CorridorReadinessWorkspace />}
-          {activeTab === 'digital_twin' && <ProjectDigitalTwin />}
-          {activeTab === 'ops_intelligence' && <OperationsIntelligenceCenter />}
-          {activeTab === 'admin' && <AdministrationWorkspace />}
-          {activeTab === 'krishi_sathi' && <KrishiSathiWorkspace />}
-          {activeTab === 'structural_valuations' && <StructuralValuationsWorkspace />}
+          {(activeTab === 'command_center' || activeTab === 'public_projects') && <CommandCenter />}
+          {(activeTab === 'gis_heatmap') && <CorridorReadinessWorkspace />}
+          {(activeTab === 'digital_twin' || activeTab === 'projects' || activeTab === 'compensation_rr' || activeTab === 'parcel_verification' || activeTab === 'compensation' || activeTab === 'rr' || activeTab === 'parcel_passport') && <ProjectDigitalTwin />}
+          {(activeTab === 'interventions' || activeTab === 'workload' || activeTab === 'approvals' || activeTab === 'my_tasks') && <OperationsIntelligenceCenter />}
+          {(activeTab === 'reports' || activeTab === 'administration' || activeTab === 'audit' || activeTab === 'iot') && <AdministrationWorkspace />}
+          {(activeTab === 'qr_ar' || activeTab === 'grievances') && <KrishiSathiWorkspace />}
+          {(activeTab === 'evidence' || activeTab === 'field_visits') && <StructuralValuationsWorkspace />}
         </main>
       </div>
 

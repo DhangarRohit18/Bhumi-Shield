@@ -62,41 +62,45 @@ export const OperationsIntelligenceCenter: React.FC = () => {
             <span>Officer Workload Balancer</span>
           </button>
 
-          <button
-            onClick={() => setActiveSubTab('diagnostics')}
-            className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs transition-all cursor-pointer ${
-              activeSubTab === 'diagnostics'
-                ? 'bg-[#0B132B] text-white font-extrabold shadow-soft'
-                : 'text-indigo-600 hover:text-[#0B132B] hover:bg-indigo-50 font-extrabold'
-            }`}
-          >
-            <AlertTriangle className={`w-4 h-4 ${activeSubTab === 'diagnostics' ? 'text-indigo-600' : 'text-[#4F46E5]'}`} />
-            <span>Root-Cause Diagnostics (7 Layers)</span>
-          </button>
+          {activeRole === 'NATIONAL_EXECUTIVE' && (
+            <>
+              <button
+                onClick={() => setActiveSubTab('diagnostics')}
+                className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs transition-all cursor-pointer ${
+                  activeSubTab === 'diagnostics'
+                    ? 'bg-[#0B132B] text-white font-extrabold shadow-soft'
+                    : 'text-indigo-600 hover:text-[#0B132B] hover:bg-indigo-50 font-extrabold'
+                }`}
+              >
+                <AlertTriangle className={`w-4 h-4 ${activeSubTab === 'diagnostics' ? 'text-indigo-600' : 'text-[#4F46E5]'}`} />
+                <span>Root-Cause Diagnostics (7 Layers)</span>
+              </button>
 
-          <button
-            onClick={() => setActiveSubTab('dependencies')}
-            className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs transition-all cursor-pointer ${
-              activeSubTab === 'dependencies'
-                ? 'bg-[#0B132B] text-white font-extrabold shadow-soft'
-                : 'text-indigo-600 hover:text-[#0B132B] hover:bg-indigo-50 font-extrabold'
-            }`}
-          >
-            <Network className={`w-4 h-4 ${activeSubTab === 'dependencies' ? 'text-indigo-600' : 'text-[#4F46E5]'}`} />
-            <span>Statutory Critical Path DAG</span>
-          </button>
+              <button
+                onClick={() => setActiveSubTab('dependencies')}
+                className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs transition-all cursor-pointer ${
+                  activeSubTab === 'dependencies'
+                    ? 'bg-[#0B132B] text-white font-extrabold shadow-soft'
+                    : 'text-indigo-600 hover:text-[#0B132B] hover:bg-indigo-50 font-extrabold'
+                }`}
+              >
+                <Network className={`w-4 h-4 ${activeSubTab === 'dependencies' ? 'text-indigo-600' : 'text-[#4F46E5]'}`} />
+                <span>Statutory Critical Path DAG</span>
+              </button>
 
-          <button
-            onClick={() => setActiveSubTab('simulator')}
-            className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs transition-all cursor-pointer ${
-              activeSubTab === 'simulator'
-                ? 'bg-[#0B132B] text-white font-extrabold shadow-soft'
-                : 'text-indigo-600 hover:text-[#0B132B] hover:bg-indigo-50 font-extrabold'
-            }`}
-          >
-            <Sliders className={`w-4 h-4 ${activeSubTab === 'simulator' ? 'text-indigo-600' : 'text-[#4F46E5]'}`} />
-            <span>What-If Policy Simulator</span>
-          </button>
+              <button
+                onClick={() => setActiveSubTab('simulator')}
+                className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs transition-all cursor-pointer ${
+                  activeSubTab === 'simulator'
+                    ? 'bg-[#0B132B] text-white font-extrabold shadow-soft'
+                    : 'text-indigo-600 hover:text-[#0B132B] hover:bg-indigo-50 font-extrabold'
+                }`}
+              >
+                <Sliders className={`w-4 h-4 ${activeSubTab === 'simulator' ? 'text-indigo-600' : 'text-[#4F46E5]'}`} />
+                <span>What-If Simulator</span>
+              </button>
+            </>
+          )}
         </div>
       </div>
 
