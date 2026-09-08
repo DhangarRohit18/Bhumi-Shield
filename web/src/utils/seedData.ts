@@ -799,41 +799,75 @@ export async function seedBhumiShieldDemoData(logCallback?: (msg: string) => voi
   // 15. OCR & NLP Document Extraction Pipeline
   log('Seeding OCR/NLP Document Extractions...');
   await ocrExtractionService.create({
-    documentId: 'doc-7x12-palghar-01',
+    documentId: 'doc-gazette-sec19-palghar',
     projectId: proj1Id,
     status: 'COMPLETED',
     extractedData: {
       khasraNumber: '142/A-1',
-      ownerName: 'Ramesh Patil',
+      ownerName: 'Shri Eknath M. Patil',
       areaValue: '0.85',
       areaUnit: 'Hectares',
-      gazetteDate: '2025-02-14'
+      gazetteDate: '2025-02-14',
+      surveyNumber: '114/A',
+      landClassification: 'Agricultural',
     },
     confidenceScores: {
       khasraNumber: 0.98,
       ownerName: 0.96,
       areaValue: 0.92,
-      gazetteDate: 0.88
+      gazetteDate: 0.88,
     },
-    humanVerified: true
-  }, 'ocr-palghar-01');
+    humanVerified: true,
+  }, 'ocr-712-palghar-001');
 
-  await ocrExtractionService.create({
-    documentId: 'doc-sale-deed-02',
+  // 15.5 Compensation Awards
+  log('Seeding Compensation Data...');
+  await compensationService.create({
     projectId: proj1Id,
-    status: 'HUMAN_VERIFICATION_REQUIRED',
-    extractedData: {
-      khasraNumber: '142/A-2',
-      ownerName: 'Sunita ?????',
-      compensationAmount: '45,???,000'
-    },
-    confidenceScores: {
-      khasraNumber: 0.85,
-      ownerName: 0.42,
-      compensationAmount: 0.38
-    },
-    humanVerified: false
-  }, 'ocr-palghar-02');
+    parcelId: 'pcl-mum-0012',
+    affectedFamilyId: 'paf-patil-001',
+    basicLandValueINR: 12000000,
+    solatiumFactor: 1.0,
+    solatiumAmountINR: 12000000,
+    assetsValuationINR: 700000,
+    interestAmountINR: 0,
+    totalPayableINR: 24700000,
+    disbursementStatus: 'CREDITED',
+    disbursementDate: '2026-08-15',
+    utrTransactionRef: 'PFMS202608157890123',
+  }, 'comp-palghar-001');
+
+  await compensationService.create({
+    projectId: proj1Id,
+    parcelId: 'pcl-pal-0143',
+    affectedFamilyId: 'paf-patil-001',
+    basicLandValueINR: 8000000,
+    solatiumFactor: 1.0,
+    solatiumAmountINR: 8000000,
+    assetsValuationINR: 0,
+    interestAmountINR: 0,
+    totalPayableINR: 16000000,
+    disbursementStatus: 'APPROVED',
+  }, 'comp-palghar-002');
+
+  // 15.6 Officer Workloads - extra district entries (Varanasi/EDFC)
+  log('Seeding Additional Officer Workload Data...');
+  await officerWorkloadService.create({
+    officerUid: 'off-up-varanasi-01',
+    officerName: 'Shri Manish Kumar Yadav (SDO Varanasi)',
+    role: 'FIELD_ACQUISITION',
+    districtId: 'dist-varanasi',
+    stateId: 'state-up',
+    assignedCases: 55,
+    pendingCases: 41,
+    completedCases: 14,
+    overdueCases: 11,
+    averageResolutionDays: 31,
+    maxCapacity: 35,
+    complexityScore: 4.8,
+    calculatedWorkloadScore: calculateOfficerWorkloadScore(41, 11, 4.8, 35),
+    isAvailable: false,
+  }, 'off-up-varanasi-01');
 
   // 16. Field Reality Verification Visits & Ground Evidence
   log('Seeding General-Purpose Field Operator Verification Records...');

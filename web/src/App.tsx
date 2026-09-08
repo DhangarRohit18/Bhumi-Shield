@@ -56,21 +56,6 @@ export const App: React.FC = () => {
     setIsAuthenticated(false);
   };
 
-  const handleSeed = async () => {
-    setSeeding(true);
-    setSeedNotification('Seeding multi-state corridors and cadastral plots into Firebase...');
-    try {
-      await seedBhumiShieldDemoData((msg) => setSeedNotification(msg));
-      setSeedNotification('Synthetic evaluation dataset successfully synchronized across all workspaces.');
-      setTimeout(() => setSeedNotification(null), 4000);
-    } catch (err: any) {
-      setSeedNotification('ERROR: ' + (err.message || err));
-      setTimeout(() => setSeedNotification(null), 5000);
-    } finally {
-      setSeeding(false);
-    }
-  };
-
   // 1. If not authenticated, render Login Screen
   if (!isAuthenticated) {
     return <LoginScreen onLoginSuccess={handleLoginSuccess} />;

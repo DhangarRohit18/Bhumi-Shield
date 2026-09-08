@@ -46,6 +46,20 @@ export const Header: React.FC<HeaderProps> = ({ onLogout }) => {
           <ChevronDown className="w-3.5 h-3.5 text-slate-500 absolute right-2.5 pointer-events-none" />
         </div>
 
+        {/* Temporary Seed Button */}
+        <button
+          onClick={async () => {
+            const { seedBhumiShieldDemoData } = await import('../utils/seedData');
+            alert('Seeding data... Check console for progress.');
+            await seedBhumiShieldDemoData(console.log);
+            alert('Seeding complete! Please refresh the page.');
+          }}
+          className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-extrabold text-indigo-600 bg-indigo-50 hover:bg-indigo-100 border border-indigo-200 shadow-xs transition-all cursor-pointer"
+        >
+          <Sparkles className="w-3.5 h-3.5" />
+          <span className="hidden md:inline">Seed Sandbox</span>
+        </button>
+
         {/* Logout Button */}
         {onLogout && (
           <button
