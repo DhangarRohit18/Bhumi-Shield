@@ -45,29 +45,7 @@ export const OperationsIntelligenceCenter: React.FC = () => {
             </div>
           </div>
 
-          {/* Governance Model Toggle */}
-          <div className="flex items-center gap-2 bg-transparent border border-slate-200/80 rounded-xl p-1 shadow-xs">
-            <button
-              onClick={() => setModelMode('production')}
-              className={`px-3.5 py-1.5 rounded-2xl text-xs font-extrabold transition-all cursor-pointer ${
-                modelMode === 'production'
-                  ? 'bg-[#0B132B] text-white shadow-soft font-extrabold'
-                  : 'text-indigo-600 hover:text-[#0B132B]'
-              }`}
-            >
-              Production Model (94.2% Conf)
-            </button>
-            <button
-              onClick={() => setModelMode('prototype')}
-              className={`px-3.5 py-1.5 rounded-2xl text-xs font-extrabold transition-all cursor-pointer ${
-                modelMode === 'prototype'
-                  ? 'bg-[#0B132B] text-white shadow-soft font-extrabold'
-                  : 'text-indigo-600 hover:text-[#0B132B]'
-              }`}
-            >
-              Prototype / Simulated Heuristic
-            </button>
-          </div>
+
         </div>
 
         {/* Subtab Navigation */}
