@@ -1,4 +1,4 @@
-﻿export interface GeoCoordinate {
+export interface GeoCoordinate {
   lat: number;
   lng: number;
   zoom?: number;
@@ -38,6 +38,7 @@ export const STRATEGIC_CORRIDORS: CorridorPolyline[] = [
     points: [
       [19.0760, 72.8777], // Mumbai BKC
       [19.2183, 72.9781], // Thane
+      [19.6200, 72.7400], // Kelve
       [19.6967, 72.7699], // Palghar
       [20.3893, 72.9106], // Vapi
       [21.1702, 72.8311], // Surat
@@ -51,7 +52,8 @@ export const STRATEGIC_CORRIDORS: CorridorPolyline[] = [
     color: '#10b981',
     points: [
       [28.6139, 77.2090], // Delhi
-      [27.1767, 78.0081], // Agra region
+      [28.2500, 77.0600], // Gurgaon
+      [26.8900, 76.3300], // Jaipur
       [25.1852, 75.8364], // Kota
       [23.3315, 75.0367], // Ratlam
       [21.1702, 72.8311], // Surat
@@ -63,8 +65,8 @@ export const STRATEGIC_CORRIDORS: CorridorPolyline[] = [
     projectName: 'Eastern Dedicated Freight Corridor (EDFC-UP)',
     color: '#f59e0b',
     points: [
-      [28.7041, 77.1025], // Khurja
-      [27.1767, 78.0081], // Tundla
+      [28.2500, 77.8500], // Khurja
+      [27.2000, 78.2300], // Tundla
       [26.4499, 80.3319], // Kanpur
       [25.4358, 81.8463], // Prayagraj
       [25.3176, 82.9739], // Varanasi / DDU

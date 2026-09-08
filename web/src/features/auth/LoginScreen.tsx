@@ -52,12 +52,16 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ onLoginSuccess }) => {
       {/* Modern Floating Header */}
       <header className="px-6 py-5 max-w-7xl mx-auto w-full flex items-center justify-between z-20">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-[#4F46E5] to-[#7C3AED] text-white shadow-soft flex items-center justify-center">
-            <Shield className="w-5 h-5 text-white stroke-[2.5]" />
+          <div className="w-10 h-10 rounded-xl overflow-hidden shrink-0 shadow-soft bg-white border border-slate-100 flex items-center justify-center">
+            <img src="/logo.png" alt="Bhumi-Shield Logo" className="w-full h-full object-cover" />
           </div>
-          <div>
-            <span className="font-extrabold text-xl tracking-tight text-[#0B132B]">BHUMI-SHIELD</span>
-            <span className="text-[10px] font-extrabold text-indigo-600 block leading-none">The Land Operating System</span>
+          <div className="flex flex-col">
+            <span className="font-extrabold text-xl tracking-tight text-[#0B132B]">
+              BHUMI-SHIELD
+            </span>
+            <span className="text-[10px] font-extrabold text-indigo-600 block leading-none">
+              The Land Operating System
+            </span>
           </div>
         </div>
 

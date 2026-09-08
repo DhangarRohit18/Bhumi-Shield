@@ -88,8 +88,8 @@ export const Sidebar: React.FC<SidebarProps> = ({
       <div className="space-y-6">
         {/* Brand Header */}
         <div className="flex items-center gap-3 px-2 py-1">
-          <div className="w-9 h-9 rounded-2xl bg-gradient-to-tr from-[#4F46E5] to-[#7C3AED] text-white shadow-soft flex items-center justify-center shrink-0">
-            <Shield className="w-4 h-4 text-white stroke-[2.5]" />
+          <div className="w-10 h-10 rounded-xl overflow-hidden shrink-0 shadow-soft bg-white border border-slate-100 flex items-center justify-center">
+            <img src="/logo.png" alt="Bhumi-Shield Logo" className="w-full h-full object-cover" />
           </div>
           <div>
             <div className="flex items-center gap-1.5">

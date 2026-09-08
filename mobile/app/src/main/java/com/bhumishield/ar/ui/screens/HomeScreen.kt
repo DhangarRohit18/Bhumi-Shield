@@ -32,6 +32,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.bhumishield.ar.ui.theme.StatusReadyGreen
 
+import androidx.compose.foundation.Image
+import androidx.compose.ui.res.painterResource
+import com.bhumishield.ar.R
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen() {
@@ -39,12 +43,19 @@ fun HomeScreen() {
         topBar = {
             TopAppBar(
                 title = {
-                    Text(
-                        text = "BHUMI-SHIELD AR",
-                        style = MaterialTheme.typography.titleLarge,
-                        fontWeight = FontWeight.Bold,
-                        color = Color.White
-                    )
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Image(
+                            painter = painterResource(id = R.drawable.logo),
+                            contentDescription = "Logo",
+                            modifier = Modifier.padding(end = 8.dp).size(28.dp)
+                        )
+                        Text(
+                            text = "BHUMI-SHIELD AR",
+                            style = MaterialTheme.typography.titleLarge,
+                            fontWeight = FontWeight.Bold,
+                            color = Color.White
+                        )
+                    }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
                     containerColor = MaterialTheme.colorScheme.primary
@@ -60,6 +71,12 @@ fun HomeScreen() {
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
+            Image(
+                painter = painterResource(id = R.drawable.logo),
+                contentDescription = "Main Logo",
+                modifier = Modifier.size(120.dp).padding(bottom = 16.dp)
+            )
+
             Text(
                 text = "BHUMI-SHIELD AR",
                 style = MaterialTheme.typography.headlineMedium,

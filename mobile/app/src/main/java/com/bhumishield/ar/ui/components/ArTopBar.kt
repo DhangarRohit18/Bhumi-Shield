@@ -26,6 +26,10 @@ import com.bhumishield.ar.location.LocationState
 import com.bhumishield.ar.parcel.Parcel
 import com.bhumishield.ar.ui.theme.StatusReadyGreen
 
+import androidx.compose.foundation.Image
+import androidx.compose.ui.res.painterResource
+import com.bhumishield.ar.R
+
 @Composable
 fun ArTopBar(
     selectedParcel: Parcel?,
@@ -49,6 +53,11 @@ fun ArTopBar(
         ) {
             // Left: Logo & Parcel Badge
             Row(verticalAlignment = Alignment.CenterVertically) {
+                Image(
+                    painter = painterResource(id = R.drawable.logo),
+                    contentDescription = "Bhumi Shield Logo",
+                    modifier = Modifier.padding(end = 6.dp).height(24.dp).width(24.dp)
+                )
                 Text(
                     text = "BHUMI-SHIELD AR",
                     fontSize = 12.sp,
