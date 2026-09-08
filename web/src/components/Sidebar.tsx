@@ -14,6 +14,7 @@ import { UserRole } from '../types';
 
 export type MainWorkspaceId =
   | 'command_center'
+  | 'corridor_readiness'
   | 'digital_twin'
   | 'ops_intelligence'
   | 'admin'

@@ -3,14 +3,17 @@ import { Home, Plus, Building, Search, Hammer, Trash2, IndianRupee } from 'lucid
 import { structureAssetService, compensationService, farmerService } from '../../services/entities.service';
 import { StructureAsset, CompensationAward, FarmerRecord } from '../../types';
 import { FALLBACK_STRUCTURAL_ASSETS } from '../../utils/staticFallbackData';
+import { useAuth } from '../../contexts/AuthContext';
 
 export const StructuralValuationsWorkspace: React.FC = () => {
+  const { activeRole } = useAuth();
   const [structures, setStructures] = useState<StructureAsset[]>([]);
   const [farmers, setFarmers] = useState<FarmerRecord[]>([]);
   const [compensations, setCompensations] = useState<CompensationAward[]>([]);
   
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedFarmerId, setSelectedFarmerId] = useState('');
+  const [houseName, setHouseName] = useState('Kunj House');
   const [structureType, setStructureType] = useState<StructureAsset['structureType']>('PUCCA_HOUSE');
   const [areaSqFt, setAreaSqFt] = useState('');
 
@@ -59,6 +62,7 @@ export const StructuralValuationsWorkspace: React.FC = () => {
       projectId: 'proj-bullet-train-sec-3',
       parcelId: farmer.ulpin,
       farmerName: farmer.farmerName,
+      houseName: houseName || 'Kunj House',
       structureType,
       builtUpAreaSqFt: area,
       assessedValueINR: assessedValue,
@@ -80,6 +84,7 @@ export const StructuralValuationsWorkspace: React.FC = () => {
 
     setIsModalOpen(false);
     setSelectedFarmerId('');
+    setHouseName('Kunj House');
     setAreaSqFt('');
   };
 
@@ -95,13 +100,15 @@ export const StructuralValuationsWorkspace: React.FC = () => {
           </div>
           <p className="text-sm text-slate-500 font-medium">Add houses and structures to automatically increase compensation.</p>
         </div>
-        <button
-          onClick={() => setIsModalOpen(true)}
-          className="flex items-center gap-2 px-4 py-2 bg-[#0B132B] hover:bg-slate-800 text-white text-sm font-extrabold rounded-xl shadow-soft transition-all"
-        >
-          <Plus className="w-4 h-4" />
-          Add New Structure
-        </button>
+        {activeRole !== 'AUDIT_CITIZEN' && (
+          <button
+            onClick={() => setIsModalOpen(true)}
+            className="flex items-center gap-2 px-4 py-2 bg-[#0B132B] hover:bg-slate-800 text-white text-sm font-extrabold rounded-xl shadow-soft transition-all"
+          >
+            <Plus className="w-4 h-4" />
+            Add New Structure
+          </button>
+        )}
       </div>
 
       <div className="flex-1 bg-white rounded-2xl border border-[#E2E8F0] shadow-soft overflow-hidden flex flex-col">
@@ -109,16 +116,24 @@ export const StructuralValuationsWorkspace: React.FC = () => {
           <table className="w-full text-left border-collapse">
             <thead>
               <tr className="bg-slate-50 border-b border-[#E2E8F0]">
+                <th className="px-5 py-3 text-[10px] font-extrabold tracking-wider text-slate-500 uppercase">House Name</th>
                 <th className="px-5 py-3 text-[10px] font-extrabold tracking-wider text-slate-500 uppercase">Landowner & Parcel</th>
                 <th className="px-5 py-3 text-[10px] font-extrabold tracking-wider text-slate-500 uppercase">Structure Type</th>
                 <th className="px-5 py-3 text-[10px] font-extrabold tracking-wider text-slate-500 uppercase">Area (Sq Ft)</th>
                 <th className="px-5 py-3 text-[10px] font-extrabold tracking-wider text-slate-500 uppercase">Assessed Value</th>
-                <th className="px-5 py-3 text-[10px] font-extrabold tracking-wider text-slate-500 uppercase text-right">Actions</th>
+                {activeRole !== 'AUDIT_CITIZEN' && (
+                  <th className="px-5 py-3 text-[10px] font-extrabold tracking-wider text-slate-500 uppercase text-right">Actions</th>
+                )}
               </tr>
             </thead>
             <tbody className="divide-y divide-[#E2E8F0]">
               {structures.map(asset => (
                 <tr key={asset.id} className="hover:bg-slate-50/50 transition-colors">
+                  <td className="px-5 py-4">
+                    <span className="px-3 py-1 rounded-lg text-xs font-extrabold bg-indigo-50 text-indigo-700 border border-indigo-200">
+                      🏡 {asset.houseName || 'Kunj House'}
+                    </span>
+                  </td>
                   <td className="px-5 py-4">
                     <div className="font-extrabold text-[#0B132B] text-sm">{asset.farmerName}</div>
                     <div className="text-xs text-slate-500 font-mono mt-0.5">{asset.parcelId}</div>
@@ -137,17 +152,19 @@ export const StructuralValuationsWorkspace: React.FC = () => {
                       ₹{asset.assessedValueINR.toLocaleString('en-IN')}
                     </span>
                   </td>
-                  <td className="px-5 py-4 text-right">
-                    <button className="p-1.5 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-colors">
-                      <Trash2 className="w-4 h-4" />
-                    </button>
-                  </td>
+                  {activeRole !== 'AUDIT_CITIZEN' && (
+                    <td className="px-5 py-4 text-right">
+                      <button className="p-1.5 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-colors">
+                        <Trash2 className="w-4 h-4" />
+                      </button>
+                    </td>
+                  )}
                 </tr>
               ))}
               {structures.length === 0 && (
                 <tr>
-                  <td colSpan={5} className="px-5 py-8 text-center text-slate-500 text-sm">
-                    No structural assets found. Add a new structure to calculate compensation.
+                  <td colSpan={activeRole === 'AUDIT_CITIZEN' ? 5 : 6} className="px-5 py-8 text-center text-slate-500 text-sm">
+                    No structural assets found.
                   </td>
                 </tr>
               )}
@@ -168,6 +185,34 @@ export const StructuralValuationsWorkspace: React.FC = () => {
             </div>
             
             <form onSubmit={handleAddStructure} className="p-6 space-y-4">
+              <div>
+                <label className="block text-xs font-extrabold text-slate-700 mb-1.5">House Name</label>
+                <input
+                  required
+                  type="text"
+                  value={houseName}
+                  onChange={e => setHouseName(e.target.value)}
+                  placeholder="e.g. Kunj, Vihar, Sarita, Renuka, Manas"
+                  className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm font-extrabold focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white mb-2"
+                />
+                <div className="flex flex-wrap gap-1.5">
+                  {['Kunj House', 'Vihar House', 'Sarita House', 'Renuka House', 'Manas House'].map(name => (
+                    <button
+                      key={name}
+                      type="button"
+                      onClick={() => setHouseName(name)}
+                      className={`px-2.5 py-1 rounded-md text-[10px] font-extrabold border cursor-pointer ${
+                        houseName === name
+                          ? 'bg-indigo-600 text-white border-indigo-600'
+                          : 'bg-slate-100 text-slate-600 border-slate-200 hover:bg-slate-200'
+                      }`}
+                    >
+                      {name}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
               <div>
                 <label className="block text-xs font-extrabold text-slate-700 mb-1.5">Select Landowner</label>
                 <select

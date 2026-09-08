@@ -377,7 +377,9 @@ export const FALLBACK_FARMERS: FarmerRecord[] = [
 ];
 
 export const FALLBACK_STRUCTURAL_ASSETS: any[] = [
-  { id: 'sa-1', projectId: 'proj-bullet-train-sec-3', parcelId: 'ULPIN-RJ-1192J-2026', farmerName: 'Shri Jagdishprasad R. Sharma', structureType: 'PUCCA_HOUSE', builtUpAreaSqFt: 1200, assessedValueINR: 1800000, isDeleted: false },
-  { id: 'sa-2', projectId: 'proj-bullet-train-sec-3', parcelId: 'ULPIN-UP-7124K-2026', farmerName: 'Shri Suresh Chandra Verma', structureType: 'TUBEWELL', builtUpAreaSqFt: 150, assessedValueINR: 75000, isDeleted: false },
-  { id: 'sa-3', projectId: 'proj-bullet-train-sec-3', parcelId: 'ULPIN-MH-142A1-2026', farmerName: 'Shri Dattatray B. Patil', structureType: 'KUTCHA_HOUSE', builtUpAreaSqFt: 850, assessedValueINR: 680000, isDeleted: false }
+  { id: 'sa-1', houseName: 'Kunj House', projectId: 'proj-bullet-train-sec-3', parcelId: 'ULPIN-RJ-1192J-2026', farmerName: 'Shri Jagdishprasad R. Sharma', structureType: 'PUCCA_HOUSE', builtUpAreaSqFt: 1200, assessedValueINR: 1800000, isDeleted: false },
+  { id: 'sa-2', houseName: 'Vihar House', projectId: 'proj-bullet-train-sec-3', parcelId: 'ULPIN-UP-7124K-2026', farmerName: 'Shri Suresh Chandra Verma', structureType: 'PUCCA_HOUSE', builtUpAreaSqFt: 1500, assessedValueINR: 2250000, isDeleted: false },
+  { id: 'sa-3', houseName: 'Sarita House', projectId: 'proj-bullet-train-sec-3', parcelId: 'ULPIN-MH-142A1-2026', farmerName: 'Smt. Anusaya D. Patil', structureType: 'PUCCA_HOUSE', builtUpAreaSqFt: 950, assessedValueINR: 1425000, isDeleted: false },
+  { id: 'sa-4', houseName: 'Renuka House', projectId: 'proj-bullet-train-sec-3', parcelId: 'ULPIN-MH-88B1-2026', farmerName: 'Smt. Kalavati S. More', structureType: 'PUCCA_HOUSE', builtUpAreaSqFt: 1100, assessedValueINR: 1650000, isDeleted: false },
+  { id: 'sa-5', houseName: 'Manas House', projectId: 'proj-bullet-train-sec-3', parcelId: 'ULPIN-UP-55AK-2026', farmerName: 'Shri Ramkhelawan P. Yadav', structureType: 'PUCCA_HOUSE', builtUpAreaSqFt: 1350, assessedValueINR: 2025000, isDeleted: false }
 ];

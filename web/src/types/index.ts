@@ -781,6 +781,7 @@ export interface StructureAsset extends BaseEntity {
   projectId: string;
   parcelId: string;
   farmerName: string;
+  houseName?: string;
   structureType: 'PUCCA_HOUSE' | 'KUTCHA_HOUSE' | 'COMMERCIAL_SHED' | 'TUBEWELL';
   builtUpAreaSqFt: number;
   assessedValueINR: number;

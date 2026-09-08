@@ -48,7 +48,7 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ onLoginSuccess }) => {
 
   return (
     <div className="min-h-screen flex bg-slate-50 overflow-hidden font-sans text-slate-900">
-      
+
       {/* LEFT PANEL: Branding & Authority (Hidden on small mobile) */}
       <div className="hidden lg:flex lg:w-5/12 bg-[#0B132B] relative flex-col justify-between overflow-hidden">
         {/* Background Institutional Pattern */}
@@ -114,7 +114,7 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ onLoginSuccess }) => {
           </div>
 
           <form onSubmit={handleLogin} className="space-y-6">
-            
+
             {/* Role Clearance Selector */}
             <div className="space-y-3">
               <label className="text-xs font-bold text-slate-700 uppercase tracking-wider">Statutory Role Clearance</label>
@@ -126,11 +126,10 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ onLoginSuccess }) => {
                     <div
                       key={opt.value}
                       onClick={() => setSelectedRole(opt.value)}
-                      className={`relative flex items-center p-4 cursor-pointer rounded-xl border-2 transition-all duration-200 ${
-                        isSelected 
-                          ? 'border-indigo-600 bg-indigo-50/50 shadow-sm' 
+                      className={`relative flex items-center p-4 cursor-pointer rounded-xl border-2 transition-all duration-200 ${isSelected
+                          ? 'border-indigo-600 bg-indigo-50/50 shadow-sm'
                           : 'border-slate-100 hover:border-slate-200 bg-white'
-                      }`}
+                        }`}
                     >
                       <div className={`flex items-center justify-center w-10 h-10 rounded-full mr-4 ${isSelected ? 'bg-indigo-600 text-white' : 'bg-slate-100 text-slate-500'}`}>
                         <Icon className="w-5 h-5" />
@@ -209,12 +208,7 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ onLoginSuccess }) => {
             </div>
           </form>
 
-          {/* Institutional Warning */}
-          <div className="mt-8 pt-6 border-t border-slate-100">
-            <p className="text-[10px] text-slate-400 font-medium leading-relaxed text-center">
-              WARNING: This is a restricted government system. Unauthorized access, modification, or distribution of sensitive cadastral records is strictly prohibited and punishable under the Information Technology Act. All access is logged via immutable SHA-256 ledgers.
-            </p>
-          </div>
+
         </div>
       </div>
     </div>
