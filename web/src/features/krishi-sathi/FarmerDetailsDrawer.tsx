@@ -1,6 +1,7 @@
 import React from 'react';
 import { FarmerRecord } from '../../types';
 import { farmerService } from '../../services/entities.service';
+import { useAuth } from '../../contexts/AuthContext';
 import {
   X,
   MapPin,
@@ -30,6 +31,7 @@ export const FarmerDetailsDrawer: React.FC<FarmerDetailsDrawerProps> = ({
   onClose,
   onVisualiseLand,
 }) => {
+  const { activeRole } = useAuth();
   return (
     <div className="fixed inset-y-0 right-0 z-50 w-full max-w-xl bg-white shadow-2xl border-l border-slate-200/80 flex flex-col  animate-in slide-in-from-right duration-200">
       {/* Header */}
@@ -109,6 +111,7 @@ export const FarmerDetailsDrawer: React.FC<FarmerDetailsDrawerProps> = ({
         </div>
 
         {/* Digital Passport QR Code & Field Verification Section */}
+        {activeRole === 'FIELD_ACQUISITION' && (
         <div className="p-4 rounded-xl border border-indigo-100 bg-gradient-to-tr from-white to-indigo-50/60 shadow-soft space-y-3">
           <div className="flex items-start justify-between">
             <div>
@@ -186,6 +189,7 @@ export const FarmerDetailsDrawer: React.FC<FarmerDetailsDrawerProps> = ({
             </div>
           </div>
         </div>
+        )}
 
         {/* 7/12 & Khatauni Land Record Card */}
         <div className="p-4 rounded-xl bg-transparent border border-[#E2E8F0] space-y-2.5">
