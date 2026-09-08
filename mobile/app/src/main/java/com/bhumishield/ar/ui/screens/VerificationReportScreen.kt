@@ -30,6 +30,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.foundation.border
+import androidx.compose.ui.graphics.Brush
 import com.bhumishield.ar.location.LocationState
 import com.bhumishield.ar.parcel.Parcel
 import com.bhumishield.ar.ui.theme.StatusReadyGreen
@@ -50,7 +52,7 @@ fun VerificationReportScreen(
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color(0xFF0F172A))
+            .background(Color(0xFF09090B)) // Deeper dark background
             .padding(16.dp)
     ) {
         Column(
@@ -61,10 +63,15 @@ fun VerificationReportScreen(
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
             // Header
-            Card(
-                modifier = Modifier.fillMaxWidth(),
-                shape = RoundedCornerShape(12.dp),
-                colors = CardDefaults.cardColors(containerColor = Color(0xEE0A192F))
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(
+                        brush = Brush.horizontalGradient(
+                            colors = listOf(Color(0xFF4F46E5), Color(0xFF7C3AED))
+                        ),
+                        shape = RoundedCornerShape(16.dp)
+                    )
             ) {
                 Column(
                     modifier = Modifier
@@ -98,8 +105,8 @@ fun VerificationReportScreen(
 
                     Text(
                         text = "FIELD VERIFICATION REPORT",
-                        fontSize = 16.sp,
-                        fontWeight = FontWeight.Bold,
+                        fontSize = 18.sp,
+                        fontWeight = FontWeight.ExtraBold,
                         color = Color.White
                     )
                 }
@@ -107,9 +114,11 @@ fun VerificationReportScreen(
 
             // Parcel & Result Card
             Card(
-                modifier = Modifier.fillMaxWidth(),
-                shape = RoundedCornerShape(12.dp),
-                colors = CardDefaults.cardColors(containerColor = Color(0xFF1E293B))
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .border(1.dp, Color(0xFF27272A), RoundedCornerShape(16.dp)),
+                shape = RoundedCornerShape(16.dp),
+                colors = CardDefaults.cardColors(containerColor = Color(0xFF18181B))
             ) {
                 Column(
                     modifier = Modifier
@@ -130,12 +139,13 @@ fun VerificationReportScreen(
                         val resultColor = VerificationColors.colorForResult(verificationState.result)
                         Text(
                             text = verificationState.result.name,
-                            fontSize = 14.sp,
+                            fontSize = 13.sp,
                             fontWeight = FontWeight.Bold,
                             color = resultColor,
                             modifier = Modifier
-                                .background(resultColor.copy(alpha = 0.2f), RoundedCornerShape(6.dp))
-                                .padding(horizontal = 10.dp, vertical = 4.dp)
+                                .border(1.dp, resultColor.copy(alpha = 0.5f), RoundedCornerShape(8.dp))
+                                .background(resultColor.copy(alpha = 0.15f), RoundedCornerShape(8.dp))
+                                .padding(horizontal = 12.dp, vertical = 6.dp)
                         )
                     }
 
@@ -154,9 +164,11 @@ fun VerificationReportScreen(
 
             // GPS & Calibration Details Card
             Card(
-                modifier = Modifier.fillMaxWidth(),
-                shape = RoundedCornerShape(12.dp),
-                colors = CardDefaults.cardColors(containerColor = Color(0xFF1E293B))
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .border(1.dp, Color(0xFF27272A), RoundedCornerShape(16.dp)),
+                shape = RoundedCornerShape(16.dp),
+                colors = CardDefaults.cardColors(containerColor = Color(0xFF18181B))
             ) {
                 Column(
                     modifier = Modifier
@@ -174,9 +186,11 @@ fun VerificationReportScreen(
 
             // Boundary Points Table Card
             Card(
-                modifier = Modifier.fillMaxWidth(),
-                shape = RoundedCornerShape(12.dp),
-                colors = CardDefaults.cardColors(containerColor = Color(0xFF1E293B))
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .border(1.dp, Color(0xFF27272A), RoundedCornerShape(16.dp)),
+                shape = RoundedCornerShape(16.dp),
+                colors = CardDefaults.cardColors(containerColor = Color(0xFF18181B))
             ) {
                 Column(
                     modifier = Modifier
@@ -191,8 +205,9 @@ fun VerificationReportScreen(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .padding(vertical = 6.dp)
-                                .background(Color(0x33000000), RoundedCornerShape(6.dp))
-                                .padding(8.dp)
+                                .border(1.dp, Color(0xFF27272A), RoundedCornerShape(12.dp))
+                                .background(Color(0xFF09090B), RoundedCornerShape(12.dp))
+                                .padding(12.dp)
                         ) {
                             Row(
                                 modifier = Modifier.fillMaxWidth(),
@@ -239,9 +254,10 @@ fun VerificationReportScreen(
             OutlinedButton(
                 onClick = onReturnToAr,
                 modifier = Modifier.weight(1f),
-                shape = RoundedCornerShape(8.dp)
+                shape = RoundedCornerShape(12.dp),
+                colors = ButtonDefaults.outlinedButtonColors(contentColor = Color.White)
             ) {
-                Text("RETURN TO AR", fontSize = 11.sp, color = Color.White)
+                Text("RETURN", fontSize = 12.sp, fontWeight = FontWeight.Bold)
             }
 
             Button(
@@ -249,11 +265,11 @@ fun VerificationReportScreen(
                     val reportText = ReportExporter.generateReportText(parcel, locationState, verificationState)
                     ReportExporter.shareReportText(context, reportText, p.parcelId)
                 },
-                modifier = Modifier.weight(1.2f),
-                shape = RoundedCornerShape(8.dp),
-                colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary)
+                modifier = Modifier.weight(1.5f),
+                shape = RoundedCornerShape(12.dp),
+                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF4F46E5)) // Indigo 600
             ) {
-                Text("EXPORT REPORT", fontSize = 11.sp, color = Color.White, fontWeight = FontWeight.Bold)
+                Text("EXPORT REPORT", fontSize = 12.sp, color = Color.White, fontWeight = FontWeight.Bold)
             }
         }
     }

@@ -544,6 +544,7 @@ export const GISCommandMap: React.FC<MapProps> = ({
         onClose={() => {
           setInspectingParcel(null);
           setInspectingMetrics(null);
+          onSelectParcel('');
         }}
         onOpenDigitalTwin={onOpenDigitalTwin}
       />
